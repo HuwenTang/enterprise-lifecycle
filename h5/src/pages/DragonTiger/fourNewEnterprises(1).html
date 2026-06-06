@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>四上企业新增数情况</title>
+    <!-- ECharts & Font Awesome -->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #f5f7fc;
+            font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+            padding-bottom: 70px;
+            color: #1e293b;
+        }
+
+        /* 返回按钮 */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 18px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.1rem;
+            z-index: 10;
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        .back-btn:active {
+            transform: scale(0.95);
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 50px;
+        }
+
+        /* 主容器 */
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #f5f7fc;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            min-height: 100vh;
+        }
+
+        /* 头部 */
+        .header {
+            background: linear-gradient(135deg, #0f2b3d 0%, #1b4a6e 100%);
+            color: white;
+            padding: 20px 18px 18px;
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+        }
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .header h1 i {
+            font-size: 1.5rem;
+            background: rgba(255,255,255,0.2);
+            padding: 6px;
+            border-radius: 50%;
+        }
+        .sub {
+            font-size: 0.75rem;
+            opacity: 0.85;
+            margin-top: 6px;
+            display: flex;
+            justify-content: right;
+            align-items: center;
+        }
+        .data-note {
+            background: rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+        }
+
+        /* 底部导航栏 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 12px 16px;
+            border-top: 1px solid #e2e8f0;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.04);
+            z-index: 20;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            color: #5b6e8c;
+            transition: all 0.2s;
+            cursor: pointer;
+            flex: 1;
+            padding: 6px 0 4px;
+            border-radius: 30px;
+        }
+        .nav-item i {
+            font-size: 1.35rem;
+        }
+        .nav-item.active {
+            color: #1e6f3f;
+            background: #e9f4ef;
+            font-weight: 500;
+        }
+        /* 内容区 */
+        .page-content {
+            padding: 18px 16px 20px;
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .page-content.active-page {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /*内容区筛选按钮*/
+        .filter-btn {
+            padding: 2px 12px;
+            border: 1px solid #4e73df;
+            background: #fff;
+            color: #4e73df;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: #f8f9fc;
+        }
+
+        .filter-btn.active {
+            background: #4e73df;
+            color: #fff;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 16px 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #eef2f8;
+        }
+        .card-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            /*justify-content: space-between;*/
+            justify-content: space-between;
+            gap: 8px;
+            border-left: 4px solid #1e6f3f;
+            padding-left: 12px;
+            color: #0f2b3d;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+        }
+        .card-title:hover {
+            opacity: 0.9;
+        }
+        .card-title i.toggle-icon {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            color: #5b6e8c;
+        }
+        .card-title.collapsed i.toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .card-title a {
+            font-weight: 600;
+            font-size: 0.8rem;
+            align-items: flex-end;
+            margin-left: auto;
+        }
+
+        .collapse-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            max-height: 500px;
+            opacity: 1;
+        }
+        .collapse-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+        .stat-badge {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 12px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 1.7rem;
+            font-weight: 800;
+            /*color: #1e6f3f;*/
+            line-height: 1.2;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: #5b6e8c;
+            margin-top: 4px;
+        }
+        .rank-list {
+            margin-top: 8px;
+        }
+        .rank-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .rank-name {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .rank-num {
+            font-weight: 700;
+            color: #1f4f3a;
+        }
+        .medal {
+            width: 24px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .progress-bar {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .progress-fill {
+            background: #1e6f3f;
+            height: 100%;
+            border-radius: 4px;
+            width: 0%;
+        }
+        .chart-container {
+            height: 280px;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .insight-text {
+            font-size: 0.7rem;
+            color: #6c86a3;
+            background: #f1f5f9;
+            padding: 10px 12px;
+            border-radius: 18px;
+            margin-top: 12px;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .value-highlight {
+            font-weight: 700;
+            color: #1f4f3a;
+        }
+        hr {
+            margin: 12px 0;
+            border-color: #eef2f8;
+        }
+        .tag-sm {
+            background: #eef2ff;
+            color: #1e6f3f;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            /*绝对定位*/
+            /*position: absolute;*/
+            /*right: 50px;*/
+            margin-left: auto;
+        }
+        i.icon-mr {
+            margin-right: 6px;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.6rem;
+            color: #7c8ea0;
+            margin-top: 10px;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='dragonIndex.html'" title="返回首页">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <h1>四上企业新增数情况</h1>
+        <div class="sub">
+            <span>2026 年 1-2 月</span>
+            <span class="data-note"><i class="far fa-calendar-alt"></i> 数据截至 3.20</span>
+        </div>
+    </div>
+
+    <!-- 页面内容容器 -->
+    <div id="homePage" class="page-content active-page">
+        <!--金额筛选-->
+        <div class="justify-content" style="gap: 10px; margin: 15px 0;">
+            <div style="display: flex; align-items: flex-start; gap: 10px; width: 100%;">
+                <span style="font-size: 13px; color: #666; min-width: 70px;">行业分类：</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; flex: 1;">
+                    <button class="filter-btn active" data-amount-four="all">全部</button>
+                    <button class="filter-btn" data-amount-four="industry">工业</button>
+                    <button class="filter-btn" data-amount-four="construction">建筑业</button>
+                    <button class="filter-btn" data-amount-four="piling">批零业</button>
+                    <button class="filter-btn" data-amount-four="zhucan">住餐业</button>
+                    <button class="filter-btn" data-amount-four="realty">房地产业</button>
+                    <button class="filter-btn" data-amount-four="service">服务业</button>
+                </div>
+            </div>
+            <div class="card">
+                <!--            当前完成数-->
+                <div class="card-title" onclick="toggleCollapse('finishedNowRankList', this)">
+                    <span id="rankTitle"><i class="fas fa-handshake"></i> 全部四上企业数量排名</span>
+                    <span class="tag-sm">龙头引领</span>
+                    <i class="fas fa-chevron-up toggle-icon"></i>
+                </div>
+                <div id="sectorDetailList" class="rank-list collapse-content"></div>
+
+                <div class="insight-text">备注： ①“四上”企业新增数情况指2026年1-2月名录库数据； 数据由市统计局提供。</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const all_districts = [
+        { name: "靖江市", all_1e: 27, industry_1e: 14 , construction_1e: 1, piling_1e: 11 , zhucan_1e: 0,realty_le:0, service_1e: 1},
+        { name: "泰兴市", all_1e: 28, industry_1e: 15 , construction_1e: 0, piling_1e: 5 , zhucan_1e:  3,realty_le:0, service_1e: 5},
+        { name: "兴化市", all_1e: 30, industry_1e: 14 , construction_1e: 0, piling_1e: 13 , zhucan_1e: 0,realty_le:0, service_1e: 3},
+        { name: "海陵区", all_1e: 42, industry_1e: 11 , construction_1e: 0, piling_1e: 21 , zhucan_1e: 5,realty_le:0, service_1e: 5},
+        { name: "姜堰区", all_1e: 56, industry_1e: 23 , construction_1e: 0, piling_1e: 17 , zhucan_1e: 7,realty_le:0, service_1e: 9},
+        { name: "医药高新区（高港区）",all_1e: 51 , industry_1e: 13 , construction_1e: 0, piling_1e: 26 , zhucan_1e:3,realty_le:0, service_1e: 9}
+    ];
+
+
+    function updateHomeStats() {
+        // 排名渲染
+        renderRankList('sectorDetailList', all_districts, 'all_1e', '个');
+    }
+
+
+
+
+    function renderRankList(containerId, data, key, suffix, isPercent = false) {
+        const sorted = [...data].sort((a,b) => b[key] - a[key]);
+        const html = sorted.map((item, idx) => {
+            let value = isPercent ? (item[key] * 100).toFixed(2) + suffix : item[key] + suffix;
+            let medal = `${idx + 1}`;
+            return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span> ${item.name}</div><div class="rank-num">${value}</div></div>`;
+        }).join('');
+        document.getElementById(containerId).innerHTML = html;
+    }
+
+
+    //选择器
+    let sectorFilter = "all";
+
+    document.querySelectorAll('[data-amount-four]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-amount-four]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            sectorFilter = btn.getAttribute('data-amount-four');
+            filterSectorList(sectorFilter);
+        });
+    });
+
+    //四上-根据行业筛选和数据类型筛选返回不同的列表
+    function filterSectorList(sectorFilter) {
+        const fixedListDiv = document.getElementById('sectorDetailList');
+        let detailHtml = null;
+        if (sectorFilter === 'all'){
+            const sortedSector = [...all_districts].sort((a,b)=>b.all_1e - a.all_1e);
+            detailHtml = sortedSector.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span class="rank-num">${d.all_1e}个</span></div>`
+            }).join('');
+            document.getElementById('rankTitle').innerHTML = `<i class="fas fa-handshake"></i> 全部四上企业数量排名`;
+
+        }
+        else if (sectorFilter === 'industry'){
+            const sortedSector = [...all_districts].sort((a,b)=>b.industry_1e - a.industry_1e);
+            detailHtml = sortedSector.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span class="rank-num">${d.industry_1e}个</span></div>`
+            }).join('');
+            document.getElementById('rankTitle').innerHTML = `<i class="fas fa-handshake"></i> 四上工业企业数量排名`;
+        }
+        else if (sectorFilter === 'construction'){
+            const sortedSector = [...all_districts].sort((a,b)=>b.construction_1e - a.construction_1e);
+            detailHtml = sortedSector.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span class="rank-num">${d.construction_1e}个</span></div>`
+            }).join('');
+            document.getElementById('rankTitle').innerHTML = `<i class="fas fa-handshake"></i> 四上建筑业企业数量排名`;
+        }
+        else if (sectorFilter === 'piling'){
+            const sortedSector = [...all_districts].sort((a,b)=>b.piling_1e - a.piling_1e);
+            detailHtml = sortedSector.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span class="rank-num">${d.piling_1e}个</span></div>`
+            }).join('');
+            document.getElementById('rankTitle').innerHTML = `<i class="fas fa-handshake"></i> 四上批零业企业数量排名`;
+        }
+        else if (sectorFilter === 'zhucan'){
+            const sortedSector = [...all_districts].sort((a,b)=>b.zhucan_1e - a.zhucan_1e);
+            detailHtml = sortedSector.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span class="rank-num">${d.zhucan_1e}个</span></div>`
+            }).join('');
+            document.getElementById('rankTitle').innerHTML = `<i class="fas fa-handshake"></i> 四上住餐业企业数量排名`;
+        }
+        else if (sectorFilter === 'realty'){
+            const sortedSector = [...all_districts].sort((a,b)=>b.realty_le - a.realty_le);
+            detailHtml = sortedSector.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span class="rank-num">${d.realty_le}个</span></div>`
+            }).join('');
+            document.getElementById('rankTitle').innerHTML = `<i class="fas fa-handshake"></i> 四上房地产业企业数量排名`;
+        }
+        else if (sectorFilter === 'service'){
+            const sortedSector = [...all_districts].sort((a,b)=>b.service_1e - a.service_1e);
+            detailHtml = sortedSector.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span class="rank-num">${d.service_1e}个</span></div>`
+            }).join('');
+            document.getElementById('rankTitle').innerHTML = `<i class="fas fa-handshake"></i> 四上服务业企业数量排名`;
+        }
+
+        fixedListDiv.innerHTML = detailHtml;
+    }
+
+    //投资进度-根据金额筛选和数据类型筛选返回不同的列表
+    function filterFixedProgressList(fixedFilter) {
+        const fixedListDiv = document.getElementById('fixedProgressDetailList');
+        let detailHtml = null;
+        //全部累计
+        if (fixedFilter === 'year'){
+            const sortedSign = [...all_districts].sort((a,b)=>b.predict_progress_year_1e - a.predict_progress_year_1e);
+            detailHtml = sortedSign.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.predict_progress_year_1e}亿元</span></div>``<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_1e}个</span></div>`
+            }).join('');
+
+        }
+        //全部当月新增
+        else if (fixedFilter !== 'year'){
+            const sortedFixed = [...all_districts].sort((a,b)=>b.predict_progress_quarter_1e - a.predict_progress_quarter_1e);
+            detailHtml = sortedFixed.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.predict_progress_quarter_1e}%</span></div>`
+            }).join('');
+        }
+
+        fixedListDiv.innerHTML = detailHtml;
+    }
+
+    // 补充细微数据展示
+    // function enhanceDataNote() {
+    //   // 确保签约当月新增也展示在签约子页面详细排名中丰富信息
+    //   const fixedListDiv = document.getElementById('fixedDetailList');
+    //   const sortedFixed = [...all_districts].sort((a,b)=>b.sign_1e - a.sign_1e);
+    //   const detailHtmlSign = sortedFixed.map((d, idx) => {
+    //     let medal = `${idx + 1}`;
+    //     return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_1e}个</span></div>`
+    //   }).join('');
+    //   fixedListDiv.innerHTML = detailHtmlSign;
+    // }
+
+    // 初始化所有及 resize 适配
+    window.addEventListener('load', () => {
+        updateHomeStats();
+        initAllCharts();
+        enhanceDataNote();
+        setupNavigation();
+        window.addEventListener('resize', () => {
+            ['signChart','recordChart','startChart','completeChart','fixedRateChart','fourNewChart','investRateChart'].forEach(id => {
+                let dom = document.getElementById(id);
+                if(dom && echarts.getInstanceByDom(dom)) echarts.getInstanceByDom(dom).resize();
+            });
+        });
+    });
+</script>
+</body>
+</html>

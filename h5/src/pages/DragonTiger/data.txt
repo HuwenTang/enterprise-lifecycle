@@ -1,0 +1,835 @@
+[
+    {
+        "regionName": "靖江市",
+        "rankings": {
+            "first": null,
+            "second": null,
+            "third": null,
+            "fourth": null,
+            "fifth": null,
+            "sixth": null
+        },
+        "fixedAssetInvestment": {
+            "month1_2Completed": null,
+            "q1Forecast": null,
+            "q1Progress": null,
+            "yearForecast": null,
+            "yearProgress": null
+        },
+        "provincialMajorProjects": {
+            "projectCount": null,
+            "plannedTotalInvestment": null,
+            "annualInvestment": null,
+            "listedProjectCount": null,
+            "actualStoredInvestment": null,
+            "investmentCompletionRate": null,
+            "newStartProjectCount": null,
+            "startedProjectCount": null,
+            "startRate": null,
+            "startedButUnlistedCount": null
+        },
+        "municipalKeyProjects": {
+            "projectCount": 59,
+            "plannedTotalInvestment": 322.5681,
+            "annualInvestment": 84.84,
+            "listedProjectCount": null,
+            "actualStoredInvestment": null,
+            "investmentCompletionRate": null,
+            "newStartProjectCount": null,
+            "startedProjectCount": null,
+            "startRate": null,
+            "startedButUnlistedCount": null
+        },
+        "signedProjects": {
+            "range50mTo100m": {
+                "total": 10,
+                "monthNew": 6
+            },
+            "range100mPlus": {
+                "total": 21,
+                "monthNew": 21
+            },
+            "range30mUsdPlus": {
+                "total": 3,
+                "monthNew": 3
+            },
+            "annualInv100mPlus": {
+                "total": null,
+                "monthNew": null
+            }
+        },
+        "filedProjects": {
+            "range50mTo100m": {
+                "total": 3,
+                "monthNew": 1
+            },
+            "range100mPlus": {
+                "total": 3,
+                "monthNew": 1
+            },
+            "range30mUsdPlus": {
+                "total": 3,
+                "monthNew": 2
+            },
+            "expansionProjects": {
+                "total": 3,
+                "monthNew": 1
+            },
+            "reinvestmentProjects": {
+                "total": 0,
+                "monthNew": 0
+            }
+        },
+        "constructionStartProjects": {
+            "range50mTo100m": {
+                "total": 16,
+                "monthNew": 8
+            },
+            "range100mPlus": {
+                "total": 27,
+                "monthNew": 17
+            },
+            "range30mUsdPlus": {
+                "total": 5,
+                "monthNew": 5
+            }
+        },
+        "constructionStartInvestment": {
+            "range50mTo100m": null,
+            "range100mPlus": null
+        },
+        "completedProjects": {
+            "range50mTo100m": {
+                "total": 2,
+                "monthNew": 2
+            },
+            "range100mPlus": {
+                "total": 10,
+                "monthNew": 8
+            }
+        },
+        "fourAboveEnterprises": {
+            "total": null,
+            "industry": null,
+            "construction": null,
+            "wholesaleRetail": null,
+            "hospitality": null,
+            "realEstate": null,
+            "service": null
+        }
+    },
+    {
+        "regionName": "泰兴市",
+        "rankings": {
+            "first": null,
+            "second": null,
+            "third": null,
+            "fourth": null,
+            "fifth": null,
+            "sixth": null
+        },
+        "fixedAssetInvestment": {
+            "month1_2Completed": null,
+            "q1Forecast": null,
+            "q1Progress": null,
+            "yearForecast": null,
+            "yearProgress": null
+        },
+        "provincialMajorProjects": {
+            "projectCount": null,
+            "plannedTotalInvestment": null,
+            "annualInvestment": null,
+            "listedProjectCount": null,
+            "actualStoredInvestment": null,
+            "investmentCompletionRate": null,
+            "newStartProjectCount": null,
+            "startedProjectCount": null,
+            "startRate": null,
+            "startedButUnlistedCount": null
+        },
+        "municipalKeyProjects": {
+            "projectCount": 37,
+            "plannedTotalInvestment": 399.802227,
+            "annualInvestment": 52.5601,
+            "listedProjectCount": null,
+            "actualStoredInvestment": null,
+            "investmentCompletionRate": null,
+            "newStartProjectCount": null,
+            "startedProjectCount": null,
+            "startRate": null,
+            "startedButUnlistedCount": null
+        },
+        "signedProjects": {
+            "range50mTo100m": {
+                "total": 11,
+                "monthNew": 11
+            },
+            "range100mPlus": {
+                "total": 28,
+                "monthNew": 10
+            },
+            "range30mUsdPlus": {
+                "total": 5,
+                "monthNew": 3
+            },
+            "annualInv100mPlus": {
+                "total": null,
+                "monthNew": null
+            }
+        },
+        "filedProjects": {
+            "range50mTo100m": {
+                "total": 7,
+                "monthNew": 0
+            },
+            "range100mPlus": {
+                "total": 39,
+                "monthNew": 29
+            },
+            "range30mUsdPlus": {
+                "total": 23,
+                "monthNew": 0
+            },
+            "expansionProjects": {
+                "total": 2,
+                "monthNew": 0
+            },
+            "reinvestmentProjects": {
+                "total": 0,
+                "monthNew": 0
+            }
+        },
+        "constructionStartProjects": {
+            "range50mTo100m": {
+                "total": 0,
+                "monthNew": 0
+            },
+            "range100mPlus": {
+                "total": 1,
+                "monthNew": 0
+            },
+            "range30mUsdPlus": {
+                "total": 1,
+                "monthNew": 0
+            }
+        },
+        "constructionStartInvestment": {
+            "range50mTo100m": null,
+            "range100mPlus": null
+        },
+        "completedProjects": {
+            "range50mTo100m": {
+                "total": 0,
+                "monthNew": 0
+            },
+            "range100mPlus": {
+                "total": 0,
+                "monthNew": 0
+            }
+        },
+        "fourAboveEnterprises": {
+            "total": null,
+            "industry": null,
+            "construction": null,
+            "wholesaleRetail": null,
+            "hospitality": null,
+            "realEstate": null,
+            "service": null
+        }
+    },
+    {
+        "regionName": "兴化市",
+        "rankings": {
+            "first": null,
+            "second": null,
+            "third": null,
+            "fourth": null,
+            "fifth": null,
+            "sixth": null
+        },
+        "fixedAssetInvestment": {
+            "month1_2Completed": null,
+            "q1Forecast": null,
+            "q1Progress": null,
+            "yearForecast": null,
+            "yearProgress": null
+        },
+        "provincialMajorProjects": {
+            "projectCount": null,
+            "plannedTotalInvestment": null,
+            "annualInvestment": null,
+            "listedProjectCount": null,
+            "actualStoredInvestment": null,
+            "investmentCompletionRate": null,
+            "newStartProjectCount": null,
+            "startedProjectCount": null,
+            "startRate": null,
+            "startedButUnlistedCount": null
+        },
+        "municipalKeyProjects": {
+            "projectCount": 50,
+            "plannedTotalInvestment": 335.64,
+            "annualInvestment": 107.3189,
+            "listedProjectCount": null,
+            "actualStoredInvestment": null,
+            "investmentCompletionRate": null,
+            "newStartProjectCount": null,
+            "startedProjectCount": null,
+            "startRate": null,
+            "startedButUnlistedCount": null
+        },
+        "signedProjects": {
+            "range50mTo100m": {
+                "total": 0,
+                "monthNew": 0
+            },
+            "range100mPlus": {
+                "total": 16,
+                "monthNew": 12
+            },
+            "range30mUsdPlus": {
+                "total": 3,
+                "monthNew": 3
+            },
+            "annualInv100mPlus": {
+                "total": null,
+                "monthNew": null
+            }
+        },
+        "filedProjects": {
+            "range50mTo100m": {
+                "total": 5,
+                "monthNew": 0
+            },
+            "range100mPlus": {
+                "total": 13,
+                "monthNew": 6
+            },
+            "range30mUsdPlus": {
+                "total": 4,
+                "monthNew": 0
+            },
+            "expansionProjects": {
+                "total": 0,
+                "monthNew": 0
+            },
+            "reinvestmentProjects": {
+                "total": 0,
+                "monthNew": 0
+            }
+        },
+        "constructionStartProjects": {
+            "range50mTo100m": {
+                "total": 1,
+                "monthNew": 0
+            },
+            "range100mPlus": {
+                "total": 3,
+                "monthNew": 1
+            },
+            "range30mUsdPlus": {
+                "total": 0,
+                "monthNew": 0
+            }
+        },
+        "constructionStartInvestment": {
+            "range50mTo100m": null,
+            "range100mPlus": null
+        },
+        "completedProjects": {
+            "range50mTo100m": {
+                "total": 0,
+                "monthNew": 0
+            },
+            "range100mPlus": {
+                "total": 0,
+                "monthNew": 0
+            }
+        },
+        "fourAboveEnterprises": {
+            "total": null,
+            "industry": null,
+            "construction": null,
+            "wholesaleRetail": null,
+            "hospitality": null,
+            "realEstate": null,
+            "service": null
+        }
+    },
+    {
+        "regionName": "海陵区",
+        "rankings": {
+            "first": null,
+            "second": null,
+            "third": null,
+            "fourth": null,
+            "fifth": null,
+            "sixth": null
+        },
+        "fixedAssetInvestment": {
+            "month1_2Completed": null,
+            "q1Forecast": null,
+            "q1Progress": null,
+            "yearForecast": null,
+            "yearProgress": null
+        },
+        "provincialMajorProjects": {
+            "projectCount": null,
+            "plannedTotalInvestment": null,
+            "annualInvestment": null,
+            "listedProjectCount": null,
+            "actualStoredInvestment": null,
+            "investmentCompletionRate": null,
+            "newStartProjectCount": null,
+            "startedProjectCount": null,
+            "startRate": null,
+            "startedButUnlistedCount": null
+        },
+        "municipalKeyProjects": {
+            "projectCount": 5,
+            "plannedTotalInvestment": 16.00,
+            "annualInvestment": 9.00,
+            "listedProjectCount": null,
+            "actualStoredInvestment": null,
+            "investmentCompletionRate": null,
+            "newStartProjectCount": null,
+            "startedProjectCount": null,
+            "startRate": null,
+            "startedButUnlistedCount": null
+        },
+        "signedProjects": {
+            "range50mTo100m": {
+                "total": 12,
+                "monthNew": 8
+            },
+            "range100mPlus": {
+                "total": 11,
+                "monthNew": 9
+            },
+            "range30mUsdPlus": {
+                "total": 0,
+                "monthNew": 0
+            },
+            "annualInv100mPlus": {
+                "total": null,
+                "monthNew": null
+            }
+        },
+        "filedProjects": {
+            "range50mTo100m": {
+                "total": 7,
+                "monthNew": 0
+            },
+            "range100mPlus": {
+                "total": 31,
+                "monthNew": 30
+            },
+            "range30mUsdPlus": {
+                "total": 7,
+                "monthNew": 0
+            },
+            "expansionProjects": {
+                "total": 0,
+                "monthNew": 0
+            },
+            "reinvestmentProjects": {
+                "total": 0,
+                "monthNew": 0
+            }
+        },
+        "constructionStartProjects": {
+            "range50mTo100m": {
+                "total": 0,
+                "monthNew": 0
+            },
+            "range100mPlus": {
+                "total": 4,
+                "monthNew": 4
+            },
+            "range30mUsdPlus": {
+                "total": 0,
+                "monthNew": 0
+            }
+        },
+        "constructionStartInvestment": {
+            "range50mTo100m": null,
+            "range100mPlus": null
+        },
+        "completedProjects": {
+            "range50mTo100m": {
+                "total": 0,
+                "monthNew": 0
+            },
+            "range100mPlus": {
+                "total": 0,
+                "monthNew": 0
+            }
+        },
+        "fourAboveEnterprises": {
+            "total": null,
+            "industry": null,
+            "construction": null,
+            "wholesaleRetail": null,
+            "hospitality": null,
+            "realEstate": null,
+            "service": null
+        }
+    },
+    {
+        "regionName": "姜堰区",
+        "rankings": {
+            "first": null,
+            "second": null,
+            "third": null,
+            "fourth": null,
+            "fifth": null,
+            "sixth": null
+        },
+        "fixedAssetInvestment": {
+            "month1_2Completed": null,
+            "q1Forecast": null,
+            "q1Progress": null,
+            "yearForecast": null,
+            "yearProgress": null
+        },
+        "provincialMajorProjects": {
+            "projectCount": null,
+            "plannedTotalInvestment": null,
+            "annualInvestment": null,
+            "listedProjectCount": null,
+            "actualStoredInvestment": null,
+            "investmentCompletionRate": null,
+            "newStartProjectCount": null,
+            "startedProjectCount": null,
+            "startRate": null,
+            "startedButUnlistedCount": null
+        },
+        "municipalKeyProjects": {
+            "projectCount": 15,
+            "plannedTotalInvestment": 77.36,
+            "annualInvestment": 27.60,
+            "listedProjectCount": null,
+            "actualStoredInvestment": null,
+            "investmentCompletionRate": null,
+            "newStartProjectCount": null,
+            "startedProjectCount": null,
+            "startRate": null,
+            "startedButUnlistedCount": null
+        },
+        "signedProjects": {
+            "range50mTo100m": {
+                "total": 14,
+                "monthNew": 14
+            },
+            "range100mPlus": {
+                "total": 11,
+                "monthNew": 10
+            },
+            "range30mUsdPlus": {
+                "total": 1,
+                "monthNew": 1
+            },
+            "annualInv100mPlus": {
+                "total": null,
+                "monthNew": null
+            }
+        },
+        "filedProjects": {
+            "range50mTo100m": {
+                "total": 1,
+                "monthNew": 0
+            },
+            "range100mPlus": {
+                "total": 4,
+                "monthNew": 4
+            },
+            "range30mUsdPlus": {
+                "total": 1,
+                "monthNew": 0
+            },
+            "expansionProjects": {
+                "total": 0,
+                "monthNew": 0
+            },
+            "reinvestmentProjects": {
+                "total": 0,
+                "monthNew": 0
+            }
+        },
+        "constructionStartProjects": {
+            "range50mTo100m": {
+                "total": 1,
+                "monthNew": 1
+            },
+            "range100mPlus": {
+                "total": 1,
+                "monthNew": 0
+            },
+            "range30mUsdPlus": {
+                "total": 0,
+                "monthNew": 0
+            }
+        },
+        "constructionStartInvestment": {
+            "range50mTo100m": null,
+            "range100mPlus": null
+        },
+        "completedProjects": {
+            "range50mTo100m": {
+                "total": 0,
+                "monthNew": 0
+            },
+            "range100mPlus": {
+                "total": 0,
+                "monthNew": 0
+            }
+        },
+        "fourAboveEnterprises": {
+            "total": null,
+            "industry": null,
+            "construction": null,
+            "wholesaleRetail": null,
+            "hospitality": null,
+            "realEstate": null,
+            "service": null
+        }
+    },
+    {
+        "regionName": "医药高新区（高港区）",
+        "rankings": {
+            "first": null,
+            "second": null,
+            "third": null,
+            "fourth": null,
+            "fifth": null,
+            "sixth": null
+        },
+        "fixedAssetInvestment": {
+            "month1_2Completed": null,
+            "q1Forecast": null,
+            "q1Progress": null,
+            "yearForecast": null,
+            "yearProgress": null
+        },
+        "provincialMajorProjects": {
+            "projectCount": null,
+            "plannedTotalInvestment": null,
+            "annualInvestment": null,
+            "listedProjectCount": null,
+            "actualStoredInvestment": null,
+            "investmentCompletionRate": null,
+            "newStartProjectCount": null,
+            "startedProjectCount": null,
+            "startRate": null,
+            "startedButUnlistedCount": null
+        },
+        "municipalKeyProjects": {
+            "projectCount": 28,
+            "plannedTotalInvestment": 141.33,
+            "annualInvestment": 52.75,
+            "listedProjectCount": null,
+            "actualStoredInvestment": null,
+            "investmentCompletionRate": null,
+            "newStartProjectCount": null,
+            "startedProjectCount": null,
+            "startRate": null,
+            "startedButUnlistedCount": null
+        },
+        "signedProjects": {
+            "range50mTo100m": {
+                "total": 15,
+                "monthNew": 14
+            },
+            "range100mPlus": {
+                "total": 13,
+                "monthNew": 9
+            },
+            "range30mUsdPlus": {
+                "total": 1,
+                "monthNew": 1
+            },
+            "annualInv100mPlus": {
+                "total": null,
+                "monthNew": null
+            }
+        },
+        "filedProjects": {
+            "range50mTo100m": {
+                "total": 19,
+                "monthNew": 3
+            },
+            "range100mPlus": {
+                "total": 25,
+                "monthNew": 17
+            },
+            "range30mUsdPlus": {
+                "total": 14,
+                "monthNew": 6
+            },
+            "expansionProjects": {
+                "total": 10,
+                "monthNew": 3
+            },
+            "reinvestmentProjects": {
+                "total": 0,
+                "monthNew": 0
+            }
+        },
+        "constructionStartProjects": {
+            "range50mTo100m": {
+                "total": 5,
+                "monthNew": 3
+            },
+            "range100mPlus": {
+                "total": 12,
+                "monthNew": 11
+            },
+            "range30mUsdPlus": {
+                "total": 4,
+                "monthNew": 3
+            }
+        },
+        "constructionStartInvestment": {
+            "range50mTo100m": null,
+            "range100mPlus": null
+        },
+        "completedProjects": {
+            "range50mTo100m": {
+                "total": 6,
+                "monthNew": 3
+            },
+            "range100mPlus": {
+                "total": 3,
+                "monthNew": 2
+            }
+        },
+        "fourAboveEnterprises": {
+            "total": null,
+            "industry": null,
+            "construction": null,
+            "wholesaleRetail": null,
+            "hospitality": null,
+            "realEstate": null,
+            "service": null
+        }
+    },
+    {
+        "regionName": "全市",
+        "rankings": {
+            "first": null,
+            "second": null,
+            "third": null,
+            "fourth": null,
+            "fifth": null,
+            "sixth": null
+        },
+        "fixedAssetInvestment": {
+            "month1_2Completed": null,
+            "q1Forecast": null,
+            "q1Progress": null,
+            "yearForecast": null,
+            "yearProgress": null
+        },
+        "provincialMajorProjects": {
+            "projectCount": null,
+            "plannedTotalInvestment": null,
+            "annualInvestment": null,
+            "listedProjectCount": null,
+            "actualStoredInvestment": null,
+            "investmentCompletionRate": null,
+            "newStartProjectCount": null,
+            "startedProjectCount": null,
+            "startRate": null,
+            "startedButUnlistedCount": null
+        },
+        "municipalKeyProjects": {
+            "projectCount": 194,
+            "plannedTotalInvestment": 1292.700327,
+            "annualInvestment": 334.0690,
+            "listedProjectCount": null,
+            "actualStoredInvestment": null,
+            "investmentCompletionRate": null,
+            "newStartProjectCount": null,
+            "startedProjectCount": null,
+            "startRate": null,
+            "startedButUnlistedCount": null
+        },
+        "signedProjects": {
+            "range50mTo100m": {
+                "total": 62,
+                "monthNew": 53
+            },
+            "range100mPlus": {
+                "total": 100,
+                "monthNew": 71
+            },
+            "range30mUsdPlus": {
+                "total": 13,
+                "monthNew": 11
+            },
+            "annualInv100mPlus": {
+                "total": null,
+                "monthNew": null
+            }
+        },
+        "filedProjects": {
+            "range50mTo100m": {
+                "total": 42,
+                "monthNew": 4
+            },
+            "range100mPlus": {
+                "total": 115,
+                "monthNew": 87
+            },
+            "range30mUsdPlus": {
+                "total": 52,
+                "monthNew": 8
+            },
+            "expansionProjects": {
+                "total": 15,
+                "monthNew": 4
+            },
+            "reinvestmentProjects": {
+                "total": 0,
+                "monthNew": 0
+            }
+        },
+        "constructionStartProjects": {
+            "range50mTo100m": {
+                "total": 23,
+                "monthNew": 12
+            },
+            "range100mPlus": {
+                "total": 48,
+                "monthNew": 33
+            },
+            "range30mUsdPlus": {
+                "total": 10,
+                "monthNew": 8
+            }
+        },
+        "constructionStartInvestment": {
+            "range50mTo100m": null,
+            "range100mPlus": null
+        },
+        "completedProjects": {
+            "range50mTo100m": {
+                "total": 8,
+                "monthNew": 5
+            },
+            "range100mPlus": {
+                "total": 13,
+                "monthNew": 10
+            }
+        },
+        "fourAboveEnterprises": {
+            "total": null,
+            "industry": null,
+            "construction": null,
+            "wholesaleRetail": null,
+            "hospitality": null,
+            "realEstate": null,
+            "service": null
+        }
+    }
+]

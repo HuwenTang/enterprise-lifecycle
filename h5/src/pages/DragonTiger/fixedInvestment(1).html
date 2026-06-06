@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>固定资产投资情况</title>
+  <!-- ECharts & Font Awesome -->
+  <!--    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: #f5f7fc;
+      font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+      padding-bottom: 70px;
+      color: #1e293b;
+    }
+
+    /* 返回按钮 */
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 18px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1.1rem;
+      z-index: 10;
+    }
+    .back-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
+    }
+    .back-btn:active {
+      transform: scale(0.95);
+    }
+
+    .header h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 50px;
+    }
+
+    /* 主容器 */
+    .app-container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #f5f7fc;
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+      min-height: 100vh;
+    }
+
+    /* 头部 */
+    .header {
+      background: linear-gradient(135deg, #0f2b3d 0%, #1b4a6e 100%);
+      color: white;
+      padding: 20px 18px 18px;
+      border-radius: 0 0 24px 24px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    }
+    .header h1 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .header h1 i {
+      font-size: 1.5rem;
+      background: rgba(255,255,255,0.2);
+      padding: 6px;
+      border-radius: 50%;
+    }
+    .sub {
+      font-size: 0.75rem;
+      opacity: 0.85;
+      margin-top: 6px;
+      display: flex;
+      justify-content: right;
+      align-items: center;
+    }
+    .data-note {
+      background: rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.7rem;
+    }
+
+    /* 底部导航栏 */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 500px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 12px 16px;
+      border-top: 1px solid #e2e8f0;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.04);
+      z-index: 20;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      color: #5b6e8c;
+      transition: all 0.2s;
+      cursor: pointer;
+      flex: 1;
+      padding: 6px 0 4px;
+      border-radius: 30px;
+    }
+    .nav-item i {
+      font-size: 1.35rem;
+    }
+    .nav-item.active {
+      color: #1e6f3f;
+      background: #e9f4ef;
+      font-weight: 500;
+    }
+    /* 内容区 */
+    .page-content {
+      padding: 18px 16px 20px;
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+    .page-content.active-page {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    /*内容区筛选按钮*/
+    .filter-btn {
+      padding: 2px 12px;
+      border: 1px solid #4e73df;
+      background: #fff;
+      color: #4e73df;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.3s;
+    }
+
+    .filter-btn:hover {
+      background: #f8f9fc;
+    }
+
+    .filter-btn.active {
+      background: #4e73df;
+      color: #fff;
+    }
+
+    /* 卡片样式 */
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      border: 1px solid #eef2f8;
+    }
+    .card-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      /*justify-content: space-between;*/
+      justify-content: space-between;
+      gap: 8px;
+      border-left: 4px solid #1e6f3f;
+      padding-left: 12px;
+      color: #0f2b3d;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+    }
+    .card-title:hover {
+      opacity: 0.9;
+    }
+    .card-title i.toggle-icon {
+      font-size: 0.7rem;
+      transition: transform 0.3s ease;
+      color: #5b6e8c;
+    }
+    .card-title.collapsed i.toggle-icon {
+      transform: rotate(-90deg);
+    }
+
+    .card-title a {
+      font-weight: 600;
+      font-size: 0.8rem;
+      align-items: flex-end;
+      margin-left: auto;
+    }
+
+    .collapse-content {
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+      max-height: 500px;
+      opacity: 1;
+    }
+    .collapse-content.collapsed {
+      max-height: 0;
+      opacity: 0;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+    .stat-badge {
+      background: #f8fafc;
+      border-radius: 20px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 1.7rem;
+      font-weight: 800;
+      /*color: #1e6f3f;*/
+      line-height: 1.2;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      color: #5b6e8c;
+      margin-top: 4px;
+    }
+    .rank-list {
+      margin-top: 8px;
+    }
+    .rank-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #edf2f7;
+    }
+    .rank-name {
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .rank-num {
+      font-weight: 700;
+      color: #1f4f3a;
+    }
+    .medal {
+      width: 24px;
+      text-align: center;
+      font-weight: bold;
+    }
+    .progress-bar {
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .progress-fill {
+      background: #1e6f3f;
+      height: 100%;
+      border-radius: 4px;
+      width: 0%;
+    }
+    .chart-container {
+      height: 280px;
+      width: 100%;
+      margin: 10px 0;
+    }
+    .insight-text {
+      font-size: 0.7rem;
+      color: #6c86a3;
+      background: #f1f5f9;
+      padding: 10px 12px;
+      border-radius: 18px;
+      margin-top: 12px;
+    }
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .value-highlight {
+      font-weight: 700;
+      color: #1f4f3a;
+    }
+    hr {
+      margin: 12px 0;
+      border-color: #eef2f8;
+    }
+    .tag-sm {
+      background: #eef2ff;
+      color: #1e6f3f;
+      border-radius: 20px;
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      /*绝对定位*/
+      /*position: absolute;*/
+      /*right: 50px;*/
+      margin-left: auto;
+    }
+    i.icon-mr {
+      margin-right: 6px;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.6rem;
+      color: #7c8ea0;
+      margin-top: 10px;
+      padding-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <div class="header">
+    <button class="back-btn" onclick="window.location.href='dragonIndex.html'" title="返回首页">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <h1>固定资产投资情况</h1>
+    <div class="sub">
+      <span>2026 年 1-2 月</span>
+      <span class="data-note"><i class="far fa-calendar-alt"></i> 数据截至 3.20</span>
+    </div>
+  </div>
+
+  <!-- 页面内容容器 -->
+  <div id="homePage" class="page-content active-page">
+    <!--金额筛选-->
+    <div class="justify-content" style="gap: 10px; margin: 15px 0;">
+      <div style="display: flex; align-items: flex-start; gap: 10px; width: 100%;">
+        <span style="font-size: 13px; color: #666; min-width: 70px;">金额范围：</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; flex: 1;">
+          <button class="filter-btn active" data-amount-fixed="year">全年</button>
+          <button class="filter-btn" data-amount-fixed="first_quarter">一季度</button>
+          <button class="filter-btn" data-amount-fixed="second_quarter">二季度</button>
+          <button class="filter-btn" data-amount-fixed="third_quarter">三季度</button>
+          <button class="filter-btn" data-amount-fixed="fourth_quarter">四季度</button>
+        </div>
+      </div>
+      <div class="card">
+        <!--            当前完成数-->
+        <div class="card-title" onclick="toggleCollapse('finishedNowRankList', this)">
+          <span><i class="fas fa-handshake"></i> 当前完成数排名</span>
+          <span class="tag-sm">龙头引领</span>
+          <i class="fas fa-chevron-up toggle-icon"></i>
+        </div>
+        <div id="finishedNowRankList" class="rank-list collapse-content"></div>
+
+        <!--            预测数-->
+        <div class="card-title" onclick="toggleCollapse('predictRankList', this)" style="margin-top: 16px;">
+          <span><i class="fas fa-handshake"></i> 固投预测数排名</span>
+          <span class="tag-sm">龙头引领</span>
+          <i class="fas fa-chevron-up toggle-icon"></i>
+        </div>
+        <div id="fixedDetailList" class="rank-list collapse-content" style="margin-top: 8px;"></div>
+
+        <!--            榜单3-->
+        <div class="card-title collapsed" onclick="toggleCollapse('progressRankList', this)" style="margin-top: 16px;">
+          <span><i class="fas fa-hard-hat"></i> 固投完成进度排名</span>
+          <span class="tag-sm">建设热度</span>
+          <i class="fas fa-chevron-up toggle-icon"></i>
+        </div>
+        <div id="fixedProgressDetailList" class="rank-list collapse-content" style="margin-top: 8px;"></div>
+        <div class="insight-text">备注：
+          ①固定资产投资情况为1-2月列统投资数据；
+          ②一季度完成进度为1-2月固投完成数占一季度预测数的比重；
+          ③全年完成进度为1-2月固投完成数占全年预测数的比重；
+          数据由市统计局提供。</div>
+      </div>
+    </div>
+  </div>
+<!--  renderRankList('finishedNowRankList', all_districts, 'finished_1e', '个');-->
+<!--  renderRankList('predictQuarterRankList', all_districts, 'predict_quarter_1e', '个');-->
+<!--  renderRankList('predictProgressQuarterRankList', all_districts, 'predict_progress_quarter_1e', '%');-->
+<!--  renderRankList('predictYearRankList', all_districts, 'predict_year_1e', '个');-->
+<!--  renderRankList('predictProgressYearRankList', all_districts, 'predict_progress_year_1e', '%');-->
+
+
+    <!-- 投资速览 -->
+    <!--        <div class="card">-->
+    <!--            <div class="card-title"><i class="fas fa-coins"></i> 开工项目投资完成率(1亿+)</div>-->
+    <!--            <div id="investRateChart" style="height: 220px;"></div>-->
+    <!--            <div class="insight-text">*开工投资数据为1-2月列统，医药高新区完成率11.58%居首，全市整体进度有待加速。</div>-->
+    <!--        </div>-->
+  </div>
+
+
+
+<!--  &lt;!&ndash; 底部导航栏 &ndash;&gt;-->
+<!--  <div class="bottom-nav">-->
+<!--    <div class="nav-item active" data-page="home"><i class="fas fa-chart-simple"></i><span>总览</span></div>-->
+<!--    <div class="nav-item" data-page="sign"><i class="fas fa-file-signature"></i><span>签约</span></div>-->
+<!--    <div class="nav-item" data-page="record"><i class="fas fa-archive"></i><span>备案</span></div>-->
+<!--    <div class="nav-item" data-page="start"><i class="fas fa-play"></i><span>开工</span></div>-->
+<!--    <div class="nav-item" data-page="complete"><i class="fas fa-check-circle"></i><span>竣工</span></div>-->
+<!--    &lt;!&ndash;        <div class="nav-item" data-page="fixed"><i class="fas fa-chart-line"></i><span>固投</span></div>&ndash;&gt;-->
+<!--  </div>-->
+
+
+
+<script>
+  const all_districts = [
+    { name: "靖江市", finished_1e: 39.7 , predict_quarter_1e: 67.8 , predict_progress_quarter_1e: "58.6", predict_year_1e: 330 , predict_progress_year_1e: "12.03"},
+    { name: "泰兴市", finished_1e: 22.4 , predict_quarter_1e: 67.8 , predict_progress_quarter_1e: "33.0", predict_year_1e: 330 , predict_progress_year_1e: "6.78"},
+    { name: "兴化市", finished_1e: 35.8 , predict_quarter_1e: 63.7 , predict_progress_quarter_1e: "56.2", predict_year_1e: 310 , predict_progress_year_1e: "11.54"},
+    { name: "海陵区", finished_1e: 28.6 , predict_quarter_1e: 51.5 , predict_progress_quarter_1e: "55.5", predict_year_1e: 250 , predict_progress_year_1e: "11.43"},
+    { name: "姜堰区", finished_1e: 30.1 , predict_quarter_1e: 53.4 , predict_progress_quarter_1e: "56.4", predict_year_1e: 260 , predict_progress_year_1e: "11.57"},
+    { name: "医药高新区（高港区）", finished_1e: 40.5, predict_quarter_1e: 65.8, predict_progress_quarter_1e: "61.6", predict_year_1e: 320, predict_progress_year_1e: "12.65"}
+  ];
+
+  const fixed_asset_quarter_districts = [
+    { name: "靖江市", finished_1e: 39.7 , predict_quarter_1e: 67.8 , predict_progress_quarter_1e: "58.6%", predict_year_1e: 330 , predict_progress_year_1e: "12.03%"},
+    { name: "泰兴市", finished_1e: 22.4 , predict_quarter_1e: 67.8 , predict_progress_quarter_1e: "33.0%", predict_year_1e: 330 , predict_progress_year_1e: "6.78%"},
+    { name: "兴化市", finished_1e: 35.8 , predict_quarter_1e: 63.7 , predict_progress_quarter_1e: "56.2%", predict_year_1e: 310 , predict_progress_year_1e: "11.54%"},
+    { name: "海陵区", finished_1e: 28.6 , predict_quarter_1e: 51.5 , predict_progress_quarter_1e: "55.5%", predict_year_1e: 250 , predict_progress_year_1e: "11.43%"},
+    { name: "姜堰区", finished_1e: 30.1 , predict_quarter_1e: 53.4 , predict_progress_quarter_1e: "56.4%", predict_year_1e: 260 , predict_progress_year_1e: "11.57%"},
+    { name: "医药高新区（高港区）", finished_1e: 40.5, predict_quarter_1e: 65.8, predict_progress_quarter_1e: "61.6%", predict_year_1e: 320, predict_progress_year_1e: "12.65%"}
+  ];
+
+  // 图表通用函数 (柱状图)
+  function renderBarChart(elementId, xAxisData, seriesData, yName = '项目数', color = '#2c7a4d') {
+    const chart = echarts.init(document.getElementById(elementId));
+    chart.setOption({
+      grid: { top: 30, left: 45, right: 10, bottom: 25, containLabel: true },
+      tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+      xAxis: { type: 'category', data: xAxisData, axisLabel: { rotate: 30, fontSize: 10, interval: 0 } },
+      yAxis: { type: 'value', name: yName, nameStyle: { fontSize: 10 } },
+      series: [{
+        data: seriesData, type: 'bar', barWidth: '40%', itemStyle: { borderRadius: [6,6,0,0], color: color },
+        label: { show: true, position: 'top', fontSize: 10 }
+      }]
+    });
+    return chart;
+  }
+
+
+  function updateHomeStats() {
+    // 排名渲染
+    renderRankList('finishedNowRankList', all_districts, 'finished_1e', '亿元');
+
+    renderRankList('fixedDetailList', all_districts, 'predict_year_1e', '亿元');
+    renderRankList('fixedProgressDetailList', all_districts, 'predict_progress_year_1e', '%');
+  }
+
+  let timeFilter = "year";
+
+  document.querySelectorAll('[data-amount-fixed]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-amount-fixed]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      timeFilter = btn.getAttribute('data-amount-fixed');
+      filterFixedList(timeFilter);
+      filterFixedProgressList(timeFilter);
+    });
+  });
+
+
+  function renderRankList(containerId, data, key, suffix, isPercent = false) {
+    const sorted = [...data].sort((a,b) => b[key] - a[key]);
+    const html = sorted.map((item, idx) => {
+      let value = isPercent ? (item[key] * 100).toFixed(2) + suffix : item[key] + suffix;
+      let medal = `${idx + 1}`;
+      return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span> ${item.name}</div><div class="rank-num">${value}</div></div>`;
+    }).join('');
+    document.getElementById(containerId).innerHTML = html;
+  }
+
+  // 折叠/展开功能
+  function toggleCollapse(contentId, titleElement) {
+    const content = document.getElementById(contentId);
+    const isCollapsed = content.classList.contains('collapsed');
+
+    if (isCollapsed) {
+      content.classList.remove('collapsed');
+      titleElement.classList.remove('collapsed');
+    } else {
+      content.classList.add('collapsed');
+      titleElement.classList.add('collapsed');
+
+    }
+  }
+
+
+  //投资预测-根据金额筛选和数据类型筛选返回不同的列表
+  function filterFixedList(fixedFilter) {
+    const fixedListDiv = document.getElementById('fixedDetailList');
+    let detailHtml = null;
+    //全部累计
+    if (fixedFilter === 'year'){
+      const sortedSign = [...all_districts].sort((a,b)=>b.predict_year_1e - a.predict_year_1e);
+      detailHtml = sortedSign.map((d, idx) => {
+        let medal = `${idx + 1}`;
+        return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.predict_year_1e}亿元</span></div>`
+      }).join('');
+
+    }
+    //全部当月新增
+    else if (fixedFilter !== 'year'){
+      const sortedFixed = [...all_districts].sort((a,b)=>b.predict_quarter_1e - a.predict_quarter_1e);
+      detailHtml = sortedFixed.map((d, idx) => {
+        let medal = `${idx + 1}`;
+        return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.predict_quarter_1e}亿元</span></div>`
+      }).join('');
+    }
+
+    fixedListDiv.innerHTML = detailHtml;
+  }
+
+  //投资进度-根据金额筛选和数据类型筛选返回不同的列表
+  function filterFixedProgressList(fixedFilter) {
+    const fixedListDiv = document.getElementById('fixedProgressDetailList');
+    let detailHtml = null;
+    //全部累计
+    if (fixedFilter === 'year'){
+      const sortedSign = [...all_districts].sort((a,b)=>b.predict_progress_year_1e - a.predict_progress_year_1e);
+      detailHtml = sortedSign.map((d, idx) => {
+        let medal = `${idx + 1}`;
+        return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.predict_progress_year_1e}亿元</span></div>``<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_1e}个</span></div>`
+      }).join('');
+
+    }
+    //全部当月新增
+    else if (fixedFilter !== 'year'){
+      const sortedFixed = [...all_districts].sort((a,b)=>b.predict_progress_quarter_1e - a.predict_progress_quarter_1e);
+      detailHtml = sortedFixed.map((d, idx) => {
+        let medal = `${idx + 1}`;
+        return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.predict_progress_quarter_1e}%</span></div>`
+      }).join('');
+    }
+
+    fixedListDiv.innerHTML = detailHtml;
+  }
+
+  // 补充细微数据展示
+  // function enhanceDataNote() {
+  //   // 确保签约当月新增也展示在签约子页面详细排名中丰富信息
+  //   const fixedListDiv = document.getElementById('fixedDetailList');
+  //   const sortedFixed = [...all_districts].sort((a,b)=>b.sign_1e - a.sign_1e);
+  //   const detailHtmlSign = sortedFixed.map((d, idx) => {
+  //     let medal = `${idx + 1}`;
+  //     return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_1e}个</span></div>`
+  //   }).join('');
+  //   fixedListDiv.innerHTML = detailHtmlSign;
+  // }
+
+  // 初始化所有及 resize 适配
+  window.addEventListener('load', () => {
+    updateHomeStats();
+    initAllCharts();
+    enhanceDataNote();
+    setupNavigation();
+    window.addEventListener('resize', () => {
+      ['signChart','recordChart','startChart','completeChart','fixedRateChart','fourNewChart','investRateChart'].forEach(id => {
+        let dom = document.getElementById(id);
+        if(dom && echarts.getInstanceByDom(dom)) echarts.getInstanceByDom(dom).resize();
+      });
+    });
+  });
+</script>
+</body>
+</html>

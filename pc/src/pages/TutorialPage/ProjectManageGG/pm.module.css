@@ -1,0 +1,6 @@
+.benchtable{
+  :global(.ant-table-thead> tr >th){
+    color:royalblue;
+    text-align:center
+  }
+}

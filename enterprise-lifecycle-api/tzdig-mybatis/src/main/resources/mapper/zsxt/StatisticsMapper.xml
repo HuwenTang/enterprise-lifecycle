@@ -1,0 +1,967 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tzdig.framework.mybatis.mapper.zsxt.StatisticsMapper">
+
+    <resultMap id="SignedProjectInfoVOMap" type="com.tzdig.framework.mybatis.vo.SignedProjectInfoVO">
+        <result column="district" property="district"/>
+        <result column="district_code" property="districtCode"/>
+        <result column="proj_nums" property="projNums"/>
+        <result column="proj_tb" property="projTb"/>
+        <result column="ztz" property="ztz"/>
+        <result column="ztz_tb" property="ztzTb"/>
+        <result column="nz_proj_num" property="nzProjNum"/>
+        <result column="nz_tz" property="nzTz"/>
+        <result column="wz_proj_num" property="wzProjNum"/>
+        <result column="wz_tz" property="wzTz"/>
+        <result column="last_year_proj_nums" property="lastYearProjNums"/>
+        <result column="last_ztz" property="lastZtz"/>
+        <result column="ndmbrws" property="ndmbrws"/>
+        <result column="ndmbwcl" property="ndmbwcl"/>
+    </resultMap>
+
+    <resultMap id="ProjectInfoVOMap" type="com.tzdig.framework.mybatis.vo.ProjectInfoVO">
+        <result column="district_code" property="districtCode"/>
+        <result column="district" property="district"/>
+        <result column="proj_nums" property="projNums"/>
+        <result column="ztz" property="ztz"/>
+    </resultMap>
+
+    <resultMap id="ProjectStatusInfoVOMap" type="com.tzdig.framework.mybatis.vo.ProjectStatusInfoVO">
+        <result column="code" property="code"/>
+        <result column="district_code" property="districtCode"/>
+        <result column="progress" property="progress"/>
+        <result column="proj_nums" property="projNums"/>
+        <result column="ztz" property="ztz"/>
+    </resultMap>
+
+    <resultMap id="HalfYearProjectInfoVOMap" type="com.tzdig.framework.mybatis.vo.HalfYearProjectInfoVO">
+        <result column="xqyxmsOne" property="xqyxmsOne"/>
+        <result column="xqytzeOne" property="xqytzeOne"/>
+        <result column="xqyxmsFive" property="xqyxmsFive"/>
+        <result column="xqytzeFive" property="xqytzeFive"/>
+        <result column="xqyxmsTen" property="xqyxmsTen"/>
+        <result column="xqytzeTen" property="xqytzeTen"/>
+        <result column="nzxqyxmsOne" property="nzxqyxmsOne"/>
+        <result column="nzxqytzeOne" property="nzxqytzeOne"/>
+        <result column="wzxqyxmsOne" property="wzxqyxmsOne"/>
+        <result column="wzxqytzeOne" property="wzxqytzeOne"/>
+    </resultMap>
+
+    <resultMap id="KeyZoneProjInfoVOMap" type="com.tzdig.framework.mybatis.vo.KeyZoneProjInfoVO">
+        <result column="nz_proj_nums" property="nzProjNums"/>
+        <result column="wz_proj_nums" property="wzProjNums"/>
+        <result column="nz_tz" property="nzTz"/>
+        <result column="wz_tz" property="wzTz"/>
+    </resultMap>
+
+    <resultMap id="QxScoreVOMap" type="com.tzdig.framework.mybatis.vo.QxScoreVO">
+        <result column="district_code" property="districtCode"/>
+        <result column="district" property="district"/>
+        <result column="one_task_count" property="oneTaskCount"/>
+        <result column="five_task_count" property="fiveTaskCount"/>
+        <result column="ten_task_count" property="tenTaskCount"/>
+        <result column="one_count" property="oneCount"/>
+        <result column="five_count" property="fiveCount"/>
+        <result column="ten_count" property="tenCount"/>
+    </resultMap>
+
+    <select id="statisticsSignedProjectInfo" resultMap="SignedProjectInfoVOMap">
+        SELECT 
+            t.dept_name as district,
+            t.dept_code as district_code,
+            IFNULL(m.proj_nums, 0) as proj_nums,
+            IFNULL(n.proj_nums, 0) as last_year_proj_nums,
+            CASE 
+                WHEN IFNULL(n.proj_nums, 0) = 0 THEN '-'
+                ELSE CONCAT(ROUND(((IFNULL(m.proj_nums, 0) - IFNULL(n.proj_nums, 0)) / IFNULL(n.proj_nums, 0)) * 100, 2), '%')
+            END as proj_tb,
+            IFNULL(ROUND(m.qyje, 2), 0) as ztz,
+            IFNULL(ROUND(n.qyje, 2), 0) as last_ztz,
+            CASE 
+                WHEN IFNULL(ROUND(n.qyje, 2), 0) = 0 THEN '-'
+                ELSE CONCAT(ROUND(((IFNULL(ROUND(m.qyje, 2), 0) - IFNULL(ROUND(n.qyje, 2), 0)) / IFNULL(ROUND(n.qyje, 2), 0)) * 100, 2))
+            END as ztz_tb,
+            IFNULL(x.nz_proj_num, 0) as nz_proj_num,
+            IFNULL(ROUND(x.nz_tz, 2), 0) as nz_tz,
+            IFNULL(x.wz_proj_num, 0) as wz_proj_num,
+            IFNULL(ROUND(x.wz_tz, 2), 0) as wz_tz,
+            IFNULL(h.ndmbrws, 0) as ndmbrws,
+            CASE 
+                WHEN IFNULL(h.ndmbrws, 0) = 0 THEN '-'
+                ELSE CONCAT(ROUND((IFNULL(m.proj_nums, 0) / IFNULL(h.ndmbrws, 0)) * 100, 2), '%')
+            END as ndmbwcl
+        FROM t_common_dept t
+        LEFT JOIN (
+            SELECT 
+                district_code,
+                district,
+                COUNT(1) as proj_nums,
+                SUM(qyje) as qyje
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+                <choose>
+                    <when test="rmb == 4">
+                        AND ((p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1) OR (p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000))
+                    </when>
+                    <otherwise>
+                        AND ((p_type = 1 AND invest_money &gt;= #{rmb}) OR (p_type = 2 AND invest_money &gt;= #{dollar}))
+                    </otherwise>
+                </choose>
+                AND signed_stat_date >= #{currStartDate}
+                AND signed_stat_date &lt;= #{currEndDate}
+            GROUP BY district_code, district
+        ) m ON t.dept_code = m.district_code
+        LEFT JOIN (
+            SELECT
+                district_code,
+                district,
+                COUNT(1) as proj_nums,
+                SUM(qyje) as qyje
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+                <choose>
+                    <when test="rmb == 4">
+                        AND ((p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1) OR (p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000))
+                    </when>
+                    <otherwise>
+                        AND ((p_type = 1 AND invest_money &gt;= #{rmb}) OR (p_type = 2 AND invest_money &gt;= #{dollar}))
+                    </otherwise>
+                </choose>
+                AND signed_stat_date >= #{lastYearStartDate}
+                AND signed_stat_date &lt;= #{lastYearEndDate}
+            GROUP BY district_code, district
+        ) n ON t.dept_code = n.district_code
+        LEFT JOIN (
+            SELECT
+                district_code,
+                <choose>
+                    <when test="rmb == 4">
+                        SUM(CASE WHEN p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1 THEN 1 ELSE 0 END) as nz_proj_num,
+                        SUM(CASE WHEN p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1 THEN qyje ELSE 0 END) as nz_tz,
+                        SUM(CASE WHEN p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000 THEN 1 ELSE 0 END) as wz_proj_num,
+                        SUM(CASE WHEN p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000 THEN IFNULL(invest_money, 0) ELSE 0 END) / 10000 as wz_tz
+                    </when>
+                    <otherwise>
+                        SUM(CASE WHEN p_type = 1 AND invest_money &gt;= #{rmb} THEN 1 ELSE 0 END) as nz_proj_num,
+                        SUM(CASE WHEN p_type = 1 AND invest_money &gt;= #{rmb} THEN qyje ELSE 0 END) as nz_tz,
+                        SUM(CASE WHEN p_type = 2 AND invest_money &gt;= #{dollar} THEN 1 ELSE 0 END) as wz_proj_num,
+                        SUM(CASE WHEN p_type = 2 AND invest_money &gt;= #{dollar} THEN IFNULL(invest_money, 0) ELSE 0 END) / 10000 as wz_tz
+                    </otherwise>
+                </choose>
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+                AND signed_stat_date >= #{currStartDate}
+                AND signed_stat_date &lt;= #{currEndDate}
+            GROUP BY district_code
+        ) x ON t.dept_code = x.district_code
+        LEFT JOIN (
+            SELECT 
+                district_code,
+                CASE 
+                    WHEN #{rmb} = 1 THEN SUM(one_count)
+                    WHEN #{rmb} = 5 THEN SUM(five_count)
+                    WHEN #{rmb} = 10 THEN SUM(ten_count)
+                    ELSE 0
+                END as ndmbrws
+            FROM t_proj_task
+            WHERE b_year = YEAR(#{currStartDate}) AND sfqx = 1
+            GROUP BY district_code
+        ) h ON t.dept_code = h.district_code
+        WHERE t._code IS NOT NULL 
+            AND t._code != ''
+            AND t.dept_status = true
+            AND t.deleted = false
+        ORDER BY t.dept_code
+    </select>
+
+    <select id="statisticsSignedProjectInfoYq" resultMap="SignedProjectInfoVOMap">
+        SELECT 
+            t.dept_name as district,
+            t.dept_code as district_code,
+            IFNULL(m.proj_nums, 0) as proj_nums,
+            IFNULL(n.proj_nums, 0) as last_year_proj_nums,
+            CASE 
+                WHEN IFNULL(n.proj_nums, 0) = 0 THEN '-'
+                ELSE ROUND(((IFNULL(m.proj_nums, 0) - IFNULL(n.proj_nums, 0)) / IFNULL(n.proj_nums, 0)) * 100, 2)
+            END as proj_tb,
+            IFNULL(ROUND(m.qyje, 2), 0) as ztz,
+            IFNULL(ROUND(n.qyje, 2), 0) as last_ztz,
+            CASE 
+                WHEN IFNULL(ROUND(n.qyje, 2), 0) = 0 THEN '-'
+                ELSE ROUND(((IFNULL(ROUND(m.qyje, 2), 0) - IFNULL(ROUND(n.qyje, 2), 0)) / IFNULL(ROUND(n.qyje, 2), 0)) * 100, 2)
+            END as ztz_tb,
+            IFNULL(x.nz_proj_num, 0) as nz_proj_num,
+            IFNULL(ROUND(x.nz_tz, 2), 0) as nz_tz,
+            IFNULL(x.wz_proj_num, 0) as wz_proj_num,
+            IFNULL(ROUND(x.wz_tz, 2), 0) as wz_tz,
+            h.ndmbrws as ndmbrws,
+            '-' as ndmbwcl
+        FROM (select dept_code ,dept_name from t_common_dept where dept_type = '3' and dept_status = 1
+        and dept_code like concat(#{deptCode},'%')) t
+        LEFT JOIN (
+            SELECT
+                zone_code,
+                COUNT(1) as proj_nums,
+                SUM(qyje) as qyje
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+                <choose>
+                    <when test="rmb == 4">
+                        AND ((p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1) OR (p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000))
+                    </when>
+                    <otherwise>
+                        AND ((p_type = 1 AND invest_money &gt;= #{rmb}) OR (p_type = 2 AND invest_money &gt;= #{dollar}))
+                    </otherwise>
+                </choose>
+                AND signed_stat_date >= #{currStartDate}
+                AND signed_stat_date &lt;= #{currEndDate}
+            GROUP BY zone_code
+        ) m ON t.dept_code = m.zone_code
+        LEFT JOIN (
+            SELECT
+                zone_code,
+                COUNT(1) as proj_nums,
+                SUM(qyje) as qyje
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+                <choose>
+                    <when test="rmb == 4">
+                        AND ((p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1) OR (p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000))
+                    </when>
+                    <otherwise>
+                        AND ((p_type = 1 AND invest_money &gt;= #{rmb}) OR (p_type = 2 AND invest_money &gt;= #{dollar}))
+                    </otherwise>
+                </choose>
+                AND signed_stat_date >= #{lastYearStartDate}
+                AND signed_stat_date &lt;= #{lastYearEndDate}
+            GROUP BY zone_code
+        ) n ON t.dept_code = n.zone_code
+        LEFT JOIN (
+            SELECT
+                zone_code,
+                <choose>
+                    <when test="rmb == 4">
+                        SUM(CASE WHEN p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1 THEN 1 ELSE 0 END) as nz_proj_num,
+                        SUM(CASE WHEN p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1 THEN qyje ELSE 0 END) as nz_tz,
+                        SUM(CASE WHEN p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000 THEN 1 ELSE 0 END) as wz_proj_num,
+                        SUM(CASE WHEN p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000 THEN IFNULL(invest_money, 0) ELSE 0 END) / 10000 as wz_tz
+                    </when>
+                    <otherwise>
+                        SUM(CASE WHEN p_type = 1 AND invest_money &gt;= #{rmb} THEN 1 ELSE 0 END) as nz_proj_num,
+                        SUM(CASE WHEN p_type = 1 AND invest_money &gt;= #{rmb} THEN qyje ELSE 0 END) as nz_tz,
+                        SUM(CASE WHEN p_type = 2 AND invest_money &gt;= #{dollar} THEN 1 ELSE 0 END) as wz_proj_num,
+                        SUM(CASE WHEN p_type = 2 AND invest_money &gt;= #{dollar} THEN IFNULL(invest_money, 0) ELSE 0 END) / 10000 as wz_tz
+                    </otherwise>
+                </choose>
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+                AND signed_stat_date >= #{currStartDate}
+                AND signed_stat_date &lt;= #{currEndDate}
+            GROUP BY zone_code
+        ) x ON t.dept_code = x.zone_code
+        LEFT JOIN (
+        SELECT zone_code as district_code,
+        case when #{rmb}=1 then sum(one_count)
+        when #{rmb} =5 then sum(five_count)
+        when #{rmb} =10 then sum(ten_count)
+        else 0 end as ndmbrws
+        from t_proj_task
+        where b_year = YEAR(#{currStartDate}) and sfqx=2
+        GROUP BY zone_code
+        ) h on h.district_code = t.dept_code
+        ORDER BY t.dept_code
+    </select>
+
+    <select id="queryProjectsByDateRange" resultType="com.tzdig.framework.mybatis.entity.zsxt.TProjProjectSigned">
+        SELECT * FROM t_proj_project_signed
+        WHERE deleted = false
+            AND signed_stat_date >= #{startDate}
+            AND signed_stat_date &lt;= #{endDate}
+    </select>
+
+    <select id="queryProjectsByDistrictAndDateRange" resultType="com.tzdig.framework.mybatis.entity.zsxt.TProjProjectSigned">
+        SELECT * FROM t_proj_project_signed
+        WHERE deleted = false
+            AND district_code = #{districtCode}
+            AND signed_stat_date >= #{startDate}
+            AND signed_stat_date &lt;= #{endDate}
+    </select>
+
+    <select id="queryProjectsByZoneAndDateRange" resultType="com.tzdig.framework.mybatis.entity.zsxt.TProjProjectSigned">
+        SELECT * FROM t_proj_project_signed
+        WHERE deleted = false
+            AND zone_code = #{zoneCode}
+            AND signed_stat_date >= #{startDate}
+            AND signed_stat_date &lt;= #{endDate}
+    </select>
+
+    <select id="statisticsProjectInfo" resultMap="ProjectInfoVOMap">
+        SELECT
+            district_code,
+            district,
+            COUNT(1) as proj_nums,
+            ROUND(SUM(qyje), 2) as ztz
+        FROM t_proj_project_signed
+        WHERE deleted = false
+            AND (progress > 0 OR (progress = 0 AND check_status = 1))
+        <choose>
+            <when test="rmb == 4">
+                AND ((p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1) OR (p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000))
+            </when>
+            <otherwise>
+                AND ((p_type = 1 AND invest_money &gt;= #{rmb}) OR (p_type = 2 AND invest_money &gt;= #{dollar}))
+            </otherwise>
+        </choose>
+            AND signed_stat_date >= #{startDate}
+            AND signed_stat_date &lt;= #{endDate}
+        GROUP BY district_code, district
+    </select>
+
+    <select id="statisticsProjectInfoList" resultMap="ProjectInfoVOMap">
+        SELECT
+            d.district_code,
+            d.district,
+            COUNT(p.id) as proj_nums,
+            ROUND(IFNULL(SUM(p.qyje), 0), 2) as ztz
+        FROM (
+            SELECT dept_code as district_code, dept_name as district
+            FROM t_common_dept
+            WHERE _code IS NOT NULL AND _code != '' AND dept_status = 1
+        ) d
+        LEFT JOIN (
+            SELECT id, qyje, district_code
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+        <choose>
+            <when test="rmb == 4">
+                AND ((p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1) OR (p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000))
+            </when>
+            <otherwise>
+                AND ((p_type = 1 AND invest_money &gt;= #{rmb}) OR (p_type = 2 AND invest_money &gt;= #{dollar}))
+            </otherwise>
+        </choose>
+                AND signed_stat_date >= #{startDate}
+                AND signed_stat_date &lt;= #{endDate}
+        ) p ON d.district_code = p.district_code
+        GROUP BY d.district_code, d.district
+    </select>
+
+    <select id="statisticsProjectStatusInfo" resultMap="ProjectStatusInfoVOMap">
+        SELECT
+            CONCAT(district_code, '_', r_progress) as code,
+            district_code,
+            r_progress as progress,
+            COUNT(1) as proj_nums,
+            ROUND(SUM(qyje), 2) as ztz
+        FROM t_proj_project_signed
+        WHERE deleted = false
+            AND r_progress in (1,2,4,5)
+        <choose>
+            <when test="rmb == 4">
+                AND ((p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1) OR (p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000))
+            </when>
+            <otherwise>
+                AND ((p_type = 1 AND invest_money &gt;= #{rmb}) OR (p_type = 2 AND invest_money &gt;= #{dollar}))
+            </otherwise>
+        </choose>
+            AND signed_stat_date >= #{startDate}
+            AND signed_stat_date &lt;= #{endDate}
+        GROUP BY district_code, r_progress
+    </select>
+
+    <select id="statisticsSixCode" resultMap="SignedProjectInfoVOMap">
+        SELECT
+            m._code as projType,
+            COUNT(n.id) as proj_nums,
+            IFNULL(ROUND(SUM(n.qyje), 2), 0) as ztz
+        FROM t_proj_type m
+        LEFT JOIN (
+            SELECT id, qyje, proj_type
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+        <choose>
+            <when test="rmb == 4">
+                AND ((p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1) OR (p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000))
+            </when>
+            <otherwise>
+                AND ((p_type = 1 AND invest_money &gt;= #{rmb}) OR (p_type = 2 AND invest_money &gt;= #{dollar}))
+            </otherwise>
+        </choose>
+                AND signed_stat_date >= #{startDate}
+                AND signed_stat_date &lt;= #{endDate}
+        ) n ON n.proj_type LIKE CONCAT(m._code, '%')
+        WHERE m.deleted = false
+            AND m.level = 1
+        GROUP BY m._code
+    </select>
+
+    <select id="statisticProjForQxMap" resultMap="SignedProjectInfoVOMap">
+        SELECT 
+            district,
+            district_code,
+            COUNT(1) as proj_nums,
+            ROUND(SUM(qyje), 2) as ztz
+        FROM t_proj_project_signed
+        WHERE deleted = false
+            AND (progress > 0 OR (progress = 0 AND check_status = 1))
+        <choose>
+            <when test="rmb == 4">
+                AND ((p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1) OR (p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000))
+            </when>
+            <otherwise>
+                AND ((p_type = 1 AND invest_money &gt;= #{rmb}) OR (p_type = 2 AND invest_money &gt;= #{dollar}))
+            </otherwise>
+        </choose>
+            <if test="startDate != null">
+                AND signed_stat_date >= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND signed_stat_date &lt;= #{endDate}
+            </if>
+        GROUP BY district, district_code
+    </select>
+
+    <select id="statisticsOnePlusFourForQx" resultMap="SignedProjectInfoVOMap">
+        SELECT
+            CONCAT(m.district_code, '_', n.code) as projType,
+            COUNT(m.id) as proj_nums,
+            ROUND(SUM(m.qyje), 2) as ztz
+        FROM (
+            SELECT id, district_code, qyje, proj_type
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+        <choose>
+            <when test="rmb == 4">
+                AND ((p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1) OR (p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000))
+            </when>
+            <otherwise>
+                AND ((p_type = 1 AND invest_money &gt;= #{rmb}) OR (p_type = 2 AND invest_money &gt;= #{dollar}))
+            </otherwise>
+        </choose>
+                AND signed_stat_date >= #{startDate}
+                AND signed_stat_date &lt;= #{endDate}
+        ) m
+        JOIN (
+            SELECT _code code
+            FROM t_proj_type
+            WHERE deleted = false
+                AND level = 2
+        ) n ON m.proj_type LIKE CONCAT(n.code, '%')
+        GROUP BY m.district_code, n.code
+    </select>
+
+    <select id="statisticProjForQxMapYq" resultMap="SignedProjectInfoVOMap">
+        SELECT
+            z.dept_name as district,
+            z.dept_code as district_code,
+            COUNT(m.id) as proj_nums,
+            ROUND(SUM(m.qyje), 2) as ztz
+        FROM t_proj_project_signed m
+        JOIN t_common_dept z ON m.zone_code = z.dept_code
+        WHERE m.deleted = false
+            AND z.deleted = false
+            AND z.dept_code LIKE CONCAT(#{deptCode}, '%')
+            AND (m.progress > 0 OR (m.progress = 0 AND m.check_status = 1))
+            and z.dept_type = 3 and z.dept_status = 1
+        <choose>
+            <when test="rmb == 4">
+                AND ((m.p_type = 1 AND m.invest_money &gt;= 0.05 AND m.invest_money &lt; 1) OR (m.p_type = 2 AND m.invest_money &gt;= 50 AND m.invest_money &lt; 1000))
+            </when>
+            <otherwise>
+                AND ((m.p_type = 1 AND m.invest_money &gt;= #{rmb}) OR (m.p_type = 2 AND m.invest_money &gt;= #{dollar}))
+            </otherwise>
+        </choose>
+            <if test="startDate != null">
+                AND m.signed_stat_date >= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND m.signed_stat_date &lt;= #{endDate}
+            </if>
+        GROUP BY z.dept_name, z.dept_code
+    </select>
+
+    <select id="statisticsOnePlusFourForQxYq" resultMap="SignedProjectInfoVOMap">
+        SELECT
+            CONCAT(m.zone_code, '_', n.code) as projType,
+            COUNT(m.id) as proj_nums,
+            ROUND(SUM(m.qyje), 2) as tze
+        FROM (
+            SELECT id, zone_code, qyje, proj_type
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+        <choose>
+            <when test="rmb == 4">
+                AND ((p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1) OR (p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000))
+            </when>
+            <otherwise>
+                AND ((p_type = 1 AND invest_money &gt;= #{rmb}) OR (p_type = 2 AND invest_money &gt;= #{dollar}))
+            </otherwise>
+        </choose>
+                AND signed_stat_date >= #{startDate}
+                AND signed_stat_date &lt;= #{endDate}
+        ) m
+        JOIN (
+            SELECT _code code
+            FROM t_proj_type
+            WHERE deleted = false
+                AND level = 2
+        ) n ON m.proj_type LIKE CONCAT(n.code, '%')
+        JOIN t_common_dept z ON m.zone_code = z.dept_code
+        WHERE z.dept_code LIKE CONCAT(#{deptCode}, '%')
+        AND z.deleted = false and z.dept_type = 3 and z.dept_status = 1
+        GROUP BY m.zone_code, n.code
+    </select>
+
+    <select id="statisticsKeyZoneProjInfo" resultMap="KeyZoneProjInfoVOMap">
+        SELECT
+            SUM(CASE WHEN m.p_type = 1 AND m.invest_money >= #{rmb} THEN 1 ELSE 0 END) as nz_proj_nums,
+            SUM(CASE WHEN m.p_type = 2 AND IFNULL(m.invest_money, 0) >= #{dollar} THEN 1 ELSE 0 END) as wz_proj_nums,
+            SUM(CASE WHEN m.p_type = 1 AND m.invest_money >= #{rmb} THEN m.qyje ELSE 0 END) as nz_tz,
+            SUM(CASE WHEN m.p_type = 2 AND IFNULL(m.invest_money, 0) >= #{dollar} THEN m.qyje ELSE 0 END) as wz_tz
+        FROM t_proj_project_signed m
+        JOIN (
+            SELECT dept_code FROM t_biz_zone WHERE key_zone = true AND deleted = false
+        ) n ON m.zone_code = n.dept_code
+        WHERE m.deleted = false
+            AND (m.progress > 0 OR (m.progress = 0 AND m.check_status = 1))
+            AND m.signed_stat_date >= #{startDate}
+            AND m.signed_stat_date &lt;= #{endDate}
+    </select>
+
+    <select id="statisticsXmzyxx" resultMap="HalfYearProjectInfoVOMap">
+        SELECT
+            IFNULL(SUM(xqyxmsOne), 0) as xqyxmsOne,
+            ROUND(IFNULL(SUM(xqytzeOne), 0), 2) as xqytzeOne,
+            IFNULL(SUM(xqyxmsFive), 0) as xqyxmsFive,
+            ROUND(IFNULL(SUM(xqytzeFive), 0), 2) as xqytzeFive,
+            IFNULL(SUM(xqyxmsTen), 0) as xqyxmsTen,
+            ROUND(IFNULL(SUM(xqytzeTen), 0), 3) as xqytzeTen,
+            IFNULL(SUM(nzxqyxmsOne), 0) as nzxqyxmsOne,
+            ROUND(IFNULL(SUM(nzxqytzeOne), 0), 2) as nzxqytzeOne,
+            IFNULL(SUM(wzxqyxmsOne), 0) as wzxqyxmsOne,
+            ROUND(IFNULL(SUM(wzxqytzeOne), 0), 2) as wzxqytzeOne
+        FROM (
+            SELECT district_code,
+                   SUM(CASE WHEN ((p_type = 1 AND invest_money >= 1) OR (p_type = 2 AND invest_money >= 1000)) THEN 1 ELSE 0 END) as xqyxmsOne,
+                   SUM(CASE WHEN ((p_type = 1 AND invest_money >= 1) OR (p_type = 2 AND invest_money >= 1000)) THEN qyje ELSE 0 END) as xqytzeOne,
+                   SUM(CASE WHEN ((p_type = 1 AND invest_money >= 5) OR (p_type = 2 AND invest_money >= 3000)) THEN 1 ELSE 0 END) as xqyxmsFive,
+                   SUM(CASE WHEN ((p_type = 1 AND invest_money >= 5) OR (p_type = 2 AND invest_money >= 3000)) THEN qyje ELSE 0 END) as xqytzeFive,
+                   SUM(CASE WHEN ((p_type = 1 AND invest_money >= 10) OR (p_type = 2 AND invest_money >= 10000)) THEN 1 ELSE 0 END) as xqyxmsTen,
+                   SUM(CASE WHEN ((p_type = 1 AND invest_money >= 10) OR (p_type = 2 AND invest_money >= 10000)) THEN qyje ELSE 0 END) as xqytzeTen,
+                   SUM(CASE WHEN (p_type = 1 AND invest_money >= 1) THEN 1 ELSE 0 END) as nzxqyxmsOne,
+                   SUM(CASE WHEN (p_type = 1 AND invest_money >= 1) THEN qyje ELSE 0 END) as nzxqytzeOne,
+                   SUM(CASE WHEN (p_type = 2 AND invest_money >= 1000) THEN 1 ELSE 0 END) as wzxqyxmsOne,
+                   SUM(CASE WHEN (p_type = 2 AND invest_money >= 1000) THEN invest_money / 10000 ELSE 0 END) as wzxqytzeOne
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+                AND signed_stat_date >= #{currStartDate}
+                AND signed_stat_date &lt;= #{currEndDate}
+            GROUP BY district_code
+        ) x
+    </select>
+
+    <select id="statisticsHalfYearProjIncFirst" resultType="java.util.HashMap">
+        SELECT 
+            SUM(CASE WHEN p_type = 1 AND qyje >= 5 THEN 1 ELSE 0 END) as nz_proj_nums,
+            SUM(CASE WHEN p_type = 2 AND IFNULL(invest_money, 0) >= 3000 THEN 1 ELSE 0 END) as wz_proj_nums,
+            SUM(CASE WHEN p_type = 1 AND qyje >= 5 THEN qyje ELSE 0 END) as nz_tz,
+            SUM(CASE WHEN p_type = 2 AND IFNULL(invest_money, 0) >= 3000 THEN qyje ELSE 0 END) as wz_tz,
+            SUM(CASE WHEN p_type = 2 AND IFNULL(invest_money, 0) >= 3000 THEN IFNULL(invest_money, 0) ELSE 0 END) / 10000 as wz_tz_dollar
+        FROM t_proj_project_signed
+        WHERE deleted = false
+            AND (progress > 0 OR (progress = 0 AND check_status = 1))
+            AND signed_stat_date >= #{startDate}
+            AND signed_stat_date &lt;= #{endDate}
+    </select>
+
+    <select id="statisticsHalfYearProjIncSec" resultType="java.util.HashMap">
+        SELECT
+            SUM(CASE WHEN p_type = 1 AND qyje >= 10 THEN 1 ELSE 0 END) as nz_proj_nums,
+            SUM(CASE WHEN p_type = 2 AND IFNULL(invest_money, 0) / 10000 >= 1 THEN 1 ELSE 0 END) as wz_proj_nums,
+            SUM(CASE WHEN p_type = 1 AND qyje >= 10 THEN qyje ELSE 0 END) as nz_tz,
+            SUM(CASE WHEN p_type = 2 AND IFNULL(invest_money, 0) / 10000 >= 1 THEN qyje ELSE 0 END) as wz_tz
+        FROM t_proj_project_signed
+        WHERE deleted = false
+            AND (progress > 0 OR (progress = 0 AND check_status = 1))
+            AND signed_stat_date >= #{startDate}
+            AND signed_stat_date &lt;= #{endDate}
+    </select>
+
+    <select id="statisticsQxCompleteProjNums" resultMap="QxScoreVOMap">
+        SELECT
+            m.dept_code as district_code,
+            m.dept_name as district,
+            IFNULL(t.one_count, 0) as one_task_count,
+            IFNULL(t.five_count, 0) as five_task_count,
+            IFNULL(t.ten_count, 0) as ten_task_count,
+            IFNULL(n.one_count, 0) as one_count,
+            IFNULL(n.five_count, 0) as five_count,
+            IFNULL(n.ten_count, 0) as ten_count
+        FROM (
+            SELECT dept_code, dept_name
+            FROM t_common_dept
+            WHERE _code IS NOT NULL AND _code != '' AND dept_status = 1 AND deleted = false
+        ) m
+        LEFT JOIN (
+            SELECT
+                district_code,
+                SUM(CASE WHEN (p_type = 1 AND qyje >= 1) OR (p_type = 2 AND IFNULL(invest_money, 0) >= 1000) THEN 1 ELSE 0 END) as one_count,
+                SUM(CASE WHEN (p_type = 1 AND qyje >= 5) OR (p_type = 2 AND IFNULL(invest_money, 0) >= 3000) THEN 1 ELSE 0 END) as five_count,
+                SUM(CASE WHEN (p_type = 1 AND qyje >= 10) OR (p_type = 2 AND IFNULL(invest_money, 0) / 10000 >= 1) THEN 1 ELSE 0 END) as ten_count
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+                AND signed_stat_date >= #{startDate}
+                AND signed_stat_date &lt;= #{endDate}
+            GROUP BY district_code
+        ) n ON m.dept_code = n.district_code
+        LEFT JOIN (
+            SELECT district_code, SUM(one_count) as one_count, SUM(five_count) as five_count, SUM(ten_count) as ten_count
+            FROM t_proj_task
+            WHERE b_year = #{year} AND sfqx = 1 AND deleted = false
+            GROUP BY district_code
+        ) t ON m.dept_code = t.district_code
+    </select>
+
+    <select id="statisticsQxScorePlus" resultType="com.tzdig.framework.mybatis.vo.QxScoreVO">
+        SELECT n.dept_code AS districtCode,
+               n.dept_name AS district,
+               (IFNULL(m.score_five, 0) + IFNULL(m.score_ten, 0) + IFNULL(t.score, 0)) AS scorePlus
+        FROM (
+            SELECT dept_code, dept_name
+            FROM t_common_dept
+            WHERE dept_code IS NOT NULL AND _code != '' AND dept_status = 1 AND deleted = false
+        ) n
+        LEFT JOIN (
+            SELECT district_code,
+                SUM(CASE WHEN (p_type = 1 AND qyje >= 50 AND qyje &lt; 100)
+                    OR (p_type = 2 AND IFNULL(invest_money, 0) / 10000 >= 5 AND IFNULL(invest_money, 0) / 10000 &lt;= 10)
+                    THEN 0.2 ELSE 0 END) AS score_five,
+                SUM(CASE WHEN (p_type = 1 AND qyje >= 100)
+                    OR (p_type = 2 AND IFNULL(invest_money, 0) / 10000 >= 10)
+                    THEN 0.3 ELSE 0 END) AS score_ten
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+                AND signed_stat_date &gt;= #{currStartDate}
+                AND signed_stat_date &lt;= #{currEndDate}
+            GROUP BY district_code
+        ) m ON n.dept_code = m.district_code
+        LEFT JOIN (
+            SELECT district_code, SUM(score) AS score
+            FROM t_proj_score
+            WHERE year = #{year} AND `month` BETWEEN #{startMonth} AND #{endMonth}
+            GROUP BY district_code
+        ) t ON n.dept_code = t.district_code
+        ORDER BY n.dept_code
+    </select>
+
+    <select id="statisticsKeyZoneScorePlus" resultType="com.tzdig.framework.mybatis.vo.KeyZoneScoreVO">
+        SELECT t.dept_code AS zoneCode,
+               t.name AS zoneName,
+               t.gear AS gear,
+               (IFNULL(n.score_five, 0) + IFNULL(n.score_ten, 0) + IFNULL(s.score, 0)) AS scorePlus
+        FROM (
+            SELECT dept_code, _name name, gear
+            FROM t_biz_zone
+            WHERE key_zone = 1 AND deleted = false
+        ) t
+        LEFT JOIN (
+            SELECT zone_code,
+                SUM(CASE WHEN (p_type = 1 AND qyje >= 50 AND qyje &lt; 100)
+                    OR (p_type = 2 AND IFNULL(invest_money, 0) / 10000 >= 5 AND IFNULL(invest_money, 0) / 10000 &lt;= 10)
+                    THEN 0.2 ELSE 0 END) AS score_five,
+                SUM(CASE WHEN (p_type = 1 AND qyje >= 100)
+                    OR (p_type = 2 AND IFNULL(invest_money, 0) / 10000 >= 10)
+                    THEN 0.3 ELSE 0 END) AS score_ten
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+                AND signed_stat_date &gt;= #{currStartDate}
+                AND signed_stat_date &lt;= #{currEndDate}
+            GROUP BY zone_code
+        ) n ON t.dept_code = n.zone_code
+        LEFT JOIN (
+            SELECT zone_code, SUM(score) AS score
+            FROM t_proj_score
+            WHERE year = #{year} AND `month` BETWEEN #{startMonth} AND #{endMonth}
+            GROUP BY zone_code
+        ) s ON t.dept_code = s.zone_code
+        ORDER BY t.dept_code
+    </select>
+
+    <select id="statisticsKeyZoneCompleteProjNums" resultType="com.tzdig.framework.mybatis.vo.KeyZoneScoreVO">
+        SELECT m.dept_code AS zoneCode,
+               m.name AS zoneName,
+               m.gear AS gear,
+               IFNULL(t.one_count, 0) AS oneTaskCount,
+               IFNULL(t.five_count, 0) AS fiveTaskCount,
+               IFNULL(t.ten_count, 0) AS tenTaskCount,
+               IFNULL(n.one_count, 0) AS oneCount,
+               IFNULL(n.five_count, 0) AS fiveCount,
+               IFNULL(n.ten_count, 0) AS tenCount
+        FROM (
+            SELECT dept_code, _name name , gear
+            FROM t_biz_zone
+            WHERE key_zone = 1 AND deleted = false
+        ) m
+        LEFT JOIN (
+            SELECT zone_code, one_count, five_count, ten_count
+            FROM t_proj_task
+            WHERE b_year = #{year} AND sfqx = 2 AND deleted = false
+        ) t ON m.dept_code = t.zone_code
+        LEFT JOIN (
+            SELECT zone_code,
+                SUM(CASE WHEN (p_type = 1 AND qyje >= 1) OR (p_type = 2 AND IFNULL(invest_money, 0) >= 1000) THEN 1 ELSE 0 END) AS one_count,
+                SUM(CASE WHEN (p_type = 1 AND qyje >= 5) OR (p_type = 2 AND IFNULL(invest_money, 0) >= 3000) THEN 1 ELSE 0 END) AS five_count,
+                SUM(CASE WHEN (p_type = 1 AND qyje >= 10) OR (p_type = 2 AND IFNULL(invest_money, 0) / 10000 >= 1) THEN 1 ELSE 0 END) AS ten_count
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+                AND signed_stat_date &gt;= #{currStartDate}
+                AND signed_stat_date &lt;= #{currEndDate}
+            GROUP BY zone_code
+        ) n ON m.dept_code = n.zone_code
+        ORDER BY m.dept_code
+    </select>
+
+    <select id="countSignedProjType" resultType="com.tzdig.framework.mybatis.vo.SignedCylVo">
+        SELECT
+        name,
+        px,
+        SUM(CASE WHEN district = '靖江市' THEN total_num ELSE 0 END) AS jjsNum,
+        SUM(CASE WHEN district = '靖江市' THEN qyje ELSE 0 END) AS jjsQyje,
+        SUM(CASE WHEN district = '泰兴市' THEN total_num ELSE 0 END) AS txsNum,
+        SUM(CASE WHEN district = '泰兴市' THEN qyje ELSE 0 END) AS txsQyje,
+        SUM(CASE WHEN district = '兴化市' THEN total_num ELSE 0 END) AS xhsNum,
+        SUM(CASE WHEN district = '兴化市' THEN qyje ELSE 0 END) AS xhsQyje,
+        SUM(CASE WHEN district = '海陵区' THEN total_num ELSE 0 END) AS hlqNum,
+        SUM(CASE WHEN district = '海陵区' THEN qyje ELSE 0 END) AS hlqQyje,
+        SUM(CASE WHEN district = '姜堰区' THEN total_num ELSE 0 END) AS jyqNum,
+        SUM(CASE WHEN district = '姜堰区' THEN qyje ELSE 0 END) AS jyqQyje,
+        SUM(CASE WHEN district = '医药高新区(高港区)' THEN total_num ELSE 0 END) AS yygxqNum,
+        SUM(CASE WHEN district = '医药高新区(高港区)' THEN qyje ELSE 0 END) AS yygxqQyje,
+        SUM(CASE WHEN district in ('医药高新区(高港区)','靖江市','泰兴市','兴化市','海陵区','姜堰区') THEN total_num ELSE 0 END) AS total,
+        SUM(CASE WHEN district in ('医药高新区(高港区)','靖江市','泰兴市','兴化市','海陵区','姜堰区') THEN qyje ELSE 0 END) AS totalQyje
+        FROM (
+        -- 原查询（确保每个区域和类型都有记录，包括 0 值）
+        SELECT
+        pt.name,
+        pt.px,
+        COALESCE(SUM(a.num), 0) AS total_num,
+        COALESCE(SUM(a.qyje), 0) AS qyje,
+        d.district
+        FROM
+        (SELECT dept_code AS district_code, dept_name AS district
+        FROM t_common_dept
+        WHERE _code IS NOT NULL AND _code != '' AND dept_status = 1) d
+        CROSS JOIN
+        (SELECT name, px, code FROM ls_proj_type) pt
+        LEFT JOIN (
+        SELECT
+        a.name,
+        a.px,
+        b.district_code,
+        COUNT(1) AS num,
+        sum(qyje) qyje
+        FROM ls_proj_type a
+        JOIN t_proj_project_signed b ON a.code LIKE CONCAT('%', b.proj_type, '%')
+        WHERE
+        b._status = 1 AND (b.progress > 0 OR (b.progress = 0 AND b.check_status = 1)) AND b.proj_type != 2
+        and b.signed_stat_date >= #{currStartDate}
+        and b.signed_stat_date &lt;= #{currEndDate}
+        <choose>
+            <when test="rmb == 4">
+                AND ((b.p_type = 1 AND b.invest_money &gt;= 0.05 AND b.invest_money &lt; 1) OR (b.p_type = 2 AND b.invest_money &gt;= 50 AND b.invest_money &lt; 1000))
+            </when>
+            <otherwise>
+                AND ((b.p_type = 1 AND b.invest_money &gt;= #{rmb}) OR (b.p_type = 2 AND b.invest_money &gt;= #{dollar}))
+            </otherwise>
+        </choose>
+        GROUP BY a.name, a.px, b.district_code
+        ) a ON d.district_code = a.district_code AND pt.name = a.name
+        GROUP BY pt.name, pt.px, d.district,a.qyje
+        ) AS subquery
+        -- 按项目和优先级分组
+        GROUP BY name, px
+        -- 按优先级排序
+        ORDER BY px
+    </select>
+
+    <select id="countProjSigned" resultType="com.tzdig.framework.mybatis.vo.ProjSignedDetailVo">
+        SELECT
+            a.name AS name,
+            a.invest_money AS investMoney,
+            a.district AS district,
+            a.zone_name AS zoneName,
+            a.investor AS investor,
+            a.desc AS projDesc,
+            CASE WHEN (a.progress = 0 AND a.check_status = 1 OR a.progress = 0 AND a.check_status = 2 OR a.progress = 1 AND a.check_status = 3) THEN '已签约'
+                 WHEN (a.progress = 1 AND a.check_status = 1 OR a.progress = 1 AND a.check_status = 2 OR a.progress = 5 AND a.check_status = 3) THEN '已注册'
+                 WHEN (a.progress = 2 AND a.check_status = 1 OR a.progress = 2 AND a.check_status = 2 OR a.progress = 3 AND a.check_status = 3) THEN '已开工'
+                 WHEN (a.progress = 3 AND a.check_status = 1 OR a.progress = 3 AND a.check_status = 2) THEN '已竣工'
+                 WHEN (a.progress = 4 AND a.check_status = 1 OR a.progress = 4 AND a.check_status = 2 OR a.progress = 2 AND a.check_status = 3) THEN '已报批'
+                 WHEN (a.progress = 5 AND a.check_status = 1 OR a.progress = 5 AND a.check_status = 2 OR a.progress = 4 AND a.check_status = 3) THEN '已备案'
+                 ELSE NULL END AS progressRd
+        FROM t_proj_project_signed a
+        WHERE a.deleted = false
+            AND (a.progress > 0 OR (a.progress = 0 AND a.check_status = 1))
+            <if test="currStartDate != null and currStartDate != ''">
+                AND a.signed_stat_date &gt;= #{currStartDate}
+            </if>
+            <if test="currEndDate != null and currEndDate != ''">
+                AND a.signed_stat_date &lt;= #{currEndDate}
+            </if>
+            <if test="projType != null and projType != ''">
+                AND a.proj_type LIKE CONCAT(#{projType}, '%')
+            </if>
+        <choose>
+            <when test="rmb == 4">
+                AND ((a.p_type = 1 AND a.invest_money &gt;= 0.05 AND a.invest_money &lt; 1) OR (a.p_type = 2 AND a.invest_money &gt;= 50 AND a.invest_money &lt; 1000))
+            </when>
+            <otherwise>
+                AND ((a.p_type = 1 AND a.invest_money &gt;= #{rmb}) OR (a.p_type = 2 AND a.invest_money &gt;= #{dollar}))
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="statisticsProjectInfoListYq" resultMap="ProjectInfoVOMap">
+        SELECT d.district_code,d.district,count(p.id) as proj_nums,round(sum(p.qyje),2) as ztz
+        from (
+        select dept_code as district_code,dept_name as district
+        from t_common_dept
+        where dept_type = '3' and dept_status = 1
+        and dept_code like concat(#{deptCode},'%')
+        ) d
+        left join (
+        select id,qyje,zone_code as district_code,zone_name as district
+        from t_proj_project_signed
+        where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1
+        and  signed_stat_date >=#{startDate} and #{endDate} >=signed_stat_date
+        <choose>
+            <when test="rmb == 4">
+                AND ((p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1) OR (p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000))
+            </when>
+            <otherwise>
+                AND ((p_type = 1 AND invest_money &gt;= #{rmb}) OR (p_type = 2 AND invest_money &gt;= #{dollar}))
+            </otherwise>
+        </choose>
+        ) p on d.district_code = p.district_code
+        group by d.district_code,d.district
+    </select>
+
+    <select id="statisticsProjectStatusInfoYq" resultMap="ProjectStatusInfoVOMap">
+        SELECT
+        CONCAT(zone_code, '_', r_progress) as code,
+        zone_code districtCode ,
+        r_progress as progress,
+        COUNT(1) as proj_nums,
+        ROUND(SUM(qyje), 2) as ztz
+        FROM t_proj_project_signed
+        WHERE deleted = false
+        AND r_progress in (1,2,4,5) and zone_code like concat(#{deptCode},'%')
+        <choose>
+            <when test="rmb == 4">
+                AND ((p_type = 1 AND invest_money &gt;= 0.05 AND invest_money &lt; 1) OR (p_type = 2 AND invest_money &gt;= 50 AND invest_money &lt; 1000))
+            </when>
+            <otherwise>
+                AND ((p_type = 1 AND invest_money &gt;= #{rmb}) OR (p_type = 2 AND invest_money &gt;= #{dollar}))
+            </otherwise>
+        </choose>
+        AND signed_stat_date >= #{startDate}
+        AND signed_stat_date &lt;= #{endDate}
+        GROUP BY zone_code, r_progress
+    </select>
+
+    <select id="countSignedProjQyqs" resultType="com.tzdig.framework.mybatis.vo.SignedProjectInfoVO">
+        SELECT
+            COUNT(1) as projNums,
+            ROUND(SUM(qyje), 2) as ztz,
+            LEFT(signed_stat_date, 7) as signedDate
+        FROM t_proj_project_signed
+        WHERE deleted = false
+            AND (progress > 0 OR (progress = 0 AND check_status = 1))
+            <if test="currStartDate != null and currStartDate != ''">
+                AND signed_stat_date >= #{currStartDate}
+            </if>
+            <if test="currEndDate != null and currEndDate != ''">
+                AND signed_stat_date &lt;= #{currEndDate}
+            </if>
+            <if test="districtCode != null and districtCode != ''">
+                AND zone_code LIKE CONCAT(#{districtCode}, '%')
+            </if>
+        GROUP BY LEFT(signed_stat_date, 7)
+        ORDER BY LEFT(signed_stat_date, 7)
+    </select>
+
+    <select id="countSignedProjCyfb" resultType="com.tzdig.framework.mybatis.vo.SignedProjectInfoVO">
+        SELECT
+            COUNT(b.id) as projNums,
+            a._code as projType,
+            a._name as projName
+        FROM t_proj_type a
+        LEFT JOIN (
+            SELECT id, proj_type
+            FROM t_proj_project_signed
+            WHERE deleted = false
+                AND (progress > 0 OR (progress = 0 AND check_status = 1))
+                <if test="currStartDate != null and currStartDate != ''">
+                    AND signed_stat_date >= #{currStartDate}
+                </if>
+                <if test="currEndDate != null and currEndDate != ''">
+                    AND signed_stat_date &lt;= #{currEndDate}
+                </if>
+                <if test="districtCode != null and districtCode != ''">
+                    AND zone_code LIKE CONCAT(#{districtCode}, '%')
+                </if>
+        ) b ON b.proj_type LIKE CONCAT(a._code, '%')
+        WHERE a.deleted = false
+            AND (a.p_id = '1' OR a._code = '2')
+        GROUP BY a._code, a._name
+        ORDER BY a._code
+    </select>
+
+    <select id="countPendingReviewSigned" resultType="long">
+        SELECT COUNT(1)
+        FROM t_proj_project_signed
+        WHERE deleted = false
+            AND _status = 1
+            AND progress NOT IN (2, 3)
+            AND district_code like concat(#{deptCode},'%')
+            <choose>
+                <when test="deptCode != null and deptCode.length() > 3">
+                    AND check_status = 0
+                </when>
+                <otherwise>
+                    AND check_status = 2
+                </otherwise>
+            </choose>
+    </select>
+
+    <select id="countPendingReviewFill" resultType="long">
+        SELECT COUNT(1)
+        FROM t_proj_project
+        WHERE deleted = false
+            AND _status = 1
+            <choose>
+                <when test="deptCode != null and deptCode.length() > 3">
+                    AND district_code = #{deptCode}
+                    AND check_status = 2
+                </when>
+                <otherwise>
+                    AND check_status = 0
+                </otherwise>
+            </choose>
+    </select>
+</mapper>

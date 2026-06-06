@@ -1,0 +1,583 @@
+[
+  {
+    "value": "321202000000",
+    "label": "海陵区",
+    "children": [
+      {
+        "value": "321202001000",
+        "label": "城东街道",
+        "children": []
+      },
+      {
+        "value": "321202002000",
+        "label": "城西街道",
+        "children": []
+      },
+      {
+        "value": "321202003000",
+        "label": "城南街道",
+        "children": []
+      },
+      {
+        "value": "321202004000",
+        "label": "城中街道",
+        "children": []
+      },
+      {
+        "value": "321202005000",
+        "label": "城北街道",
+        "children": []
+      },
+      {
+        "value": "321202007000",
+        "label": "京泰路街道",
+        "children": []
+      },
+      {
+        "value": "321202050000",
+        "label": "红旗街道",
+        "children": []
+      },
+      {
+        "value": "321202100000",
+        "label": "九龙镇",
+        "children": []
+      },
+      {
+        "value": "321202101000",
+        "label": "罡杨镇",
+        "children": []
+      },
+      {
+        "value": "321202102000",
+        "label": "苏陈镇",
+        "children": []
+      },
+      {
+        "value": "321202103000",
+        "label": "华港镇",
+        "children": []
+      },
+      {
+        "value": "321202406000",
+        "label": "海陵工业园区",
+        "children": []
+      },
+      {
+        "value": "321202407000",
+        "label": "农业示范园区",
+        "children": []
+      },
+      {
+        "value": "321202408000",
+        "label": "火车站街区",
+        "children": []
+      }
+    ]
+  },
+  {
+    "value": "321203000000",
+    "label": "新高区",
+    "children": [
+      {
+        "value": "321203001000",
+        "label": "口岸街道",
+        "children": []
+      },
+      {
+        "value": "321203002000",
+        "label": "刁铺街道",
+        "children": []
+      },
+      {
+        "value": "321203003000",
+        "label": "许庄街道",
+        "children": []
+      },
+      {
+        "value": "321203004000",
+        "label": "凤凰街道",
+        "children": []
+      },
+      {
+        "value": "321203005000",
+        "label": "寺巷街道",
+        "children": []
+      },
+      {
+        "value": "321203006000",
+        "label": "明珠街道",
+        "children": []
+      },
+      {
+        "value": "321203007000",
+        "label": "化学新材料产业园-沿江街道",
+        "children": []
+      },
+      {
+        "value": "321203100000",
+        "label": "港口物流产业园-永安洲镇",
+        "children": []
+      },
+      {
+        "value": "321203101000",
+        "label": "白马镇",
+        "children": []
+      },
+      {
+        "value": "321203103000",
+        "label": "胡庄镇",
+        "children": []
+      },
+      {
+        "value": "321203104000",
+        "label": "大泗镇",
+        "children": []
+      },
+      {
+        "value": "321203105000",
+        "label": "野徐镇",
+        "children": []
+      },
+      {
+        "value": "321203400000",
+        "label": "高端装备制造产业园",
+        "children": []
+      },
+      {
+        "value": "321203401000",
+        "label": "生物医药产业园",
+        "children": []
+      },
+      {
+        "value": "321203402000",
+        "label": "电子信息产业园",
+        "children": []
+      }
+    ]
+  },
+  {
+    "value": "321204000000",
+    "label": "姜堰区",
+    "children": [
+      {
+        "value": "321204001000",
+        "label": "罗塘街道",
+        "children": []
+      },
+      {
+        "value": "321204002000",
+        "label": "三水街道",
+        "children": []
+      },
+      {
+        "value": "321204003000",
+        "label": "天目山街道",
+        "children": []
+      },
+      {
+        "value": "321204004000",
+        "label": "梁徐街道",
+        "children": []
+      },
+      {
+        "value": "321204101000",
+        "label": "溱潼镇",
+        "children": []
+      },
+      {
+        "value": "321204102000",
+        "label": "蒋垛镇",
+        "children": []
+      },
+      {
+        "value": "321204103000",
+        "label": "顾高镇",
+        "children": []
+      },
+      {
+        "value": "321204104000",
+        "label": "大伦镇",
+        "children": []
+      },
+      {
+        "value": "321204105000",
+        "label": "张甸镇",
+        "children": []
+      },
+      {
+        "value": "321204110000",
+        "label": "淤溪镇",
+        "children": []
+      },
+      {
+        "value": "321204111000",
+        "label": "白米镇",
+        "children": []
+      },
+      {
+        "value": "321204112000",
+        "label": "娄庄镇",
+        "children": []
+      },
+      {
+        "value": "321204115000",
+        "label": "俞垛镇",
+        "children": []
+      },
+      {
+        "value": "321204401000",
+        "label": "溱湖风景区",
+        "children": []
+      },
+      {
+        "value": "321204403000",
+        "label": "林场",
+        "children": []
+      },
+      {
+        "value": "321204404000",
+        "label": "种猪场",
+        "children": []
+      },
+      {
+        "value": "321204405000",
+        "label": "林业站",
+        "children": []
+      },
+      {
+        "value": "321204406000",
+        "label": "渔业社",
+        "children": []
+      }
+    ]
+  },
+  {
+    "value": "321281000000",
+    "label": "兴化市",
+    "children": [
+      {
+        "value": "321281001000",
+        "label": "昭阳街道",
+        "children": []
+      },
+      {
+        "value": "321281002000",
+        "label": "临城街道",
+        "children": []
+      },
+      {
+        "value": "321281003000",
+        "label": "垛田街道",
+        "children": []
+      },
+      {
+        "value": "321281100000",
+        "label": "戴窑镇",
+        "children": []
+      },
+      {
+        "value": "321281101000",
+        "label": "合陈镇",
+        "children": []
+      },
+      {
+        "value": "321281102000",
+        "label": "永丰镇",
+        "children": []
+      },
+      {
+        "value": "321281103000",
+        "label": "新垛镇",
+        "children": []
+      },
+      {
+        "value": "321281104000",
+        "label": "安丰镇",
+        "children": []
+      },
+      {
+        "value": "321281105000",
+        "label": "海南镇",
+        "children": []
+      },
+      {
+        "value": "321281106000",
+        "label": "钓鱼镇",
+        "children": []
+      },
+      {
+        "value": "321281107000",
+        "label": "大邹镇",
+        "children": []
+      },
+      {
+        "value": "321281108000",
+        "label": "沙沟镇",
+        "children": []
+      },
+      {
+        "value": "321281109000",
+        "label": "中堡镇",
+        "children": []
+      },
+      {
+        "value": "321281114000",
+        "label": "竹泓镇",
+        "children": []
+      },
+      {
+        "value": "321281115000",
+        "label": "沈伦镇",
+        "children": []
+      },
+      {
+        "value": "321281116000",
+        "label": "大垛镇",
+        "children": []
+      },
+      {
+        "value": "321281117000",
+        "label": "荻垛镇",
+        "children": []
+      },
+      {
+        "value": "321281118000",
+        "label": "陶庄镇",
+        "children": []
+      },
+      {
+        "value": "321281119000",
+        "label": "昌荣镇",
+        "children": []
+      },
+      {
+        "value": "321281121000",
+        "label": "周庄镇",
+        "children": []
+      },
+      {
+        "value": "321281122000",
+        "label": "陈堡镇",
+        "children": []
+      },
+      {
+        "value": "321281123000",
+        "label": "戴南镇",
+        "children": []
+      },
+      {
+        "value": "321281126000",
+        "label": "大营镇",
+        "children": []
+      },
+      {
+        "value": "321281129000",
+        "label": "兴东镇",
+        "children": []
+      },
+      {
+        "value": "321281130000",
+        "label": "千垛镇",
+        "children": []
+      },
+      {
+        "value": "321281204000",
+        "label": "林湖乡",
+        "children": []
+      },
+      {
+        "value": "321281400000",
+        "label": "开发区",
+        "children": []
+      },
+      {
+        "value": "321281401000",
+        "label": "良种场",
+        "children": []
+      }
+    ]
+  },
+  {
+    "value": "321282000000",
+    "label": "靖江市",
+    "children": [
+      {
+        "value": "321282001000",
+        "label": "靖城街道",
+        "children": []
+      },
+      {
+        "value": "321282101000",
+        "label": "新桥镇",
+        "children": []
+      },
+      {
+        "value": "321282102000",
+        "label": "东兴镇",
+        "children": []
+      },
+      {
+        "value": "321282103000",
+        "label": "斜桥镇",
+        "children": []
+      },
+      {
+        "value": "321282104000",
+        "label": "西来镇",
+        "children": []
+      },
+      {
+        "value": "321282105000",
+        "label": "季市镇",
+        "children": []
+      },
+      {
+        "value": "321282106000",
+        "label": "孤山镇",
+        "children": []
+      },
+      {
+        "value": "321282108000",
+        "label": "生祠镇",
+        "children": []
+      },
+      {
+        "value": "321282109000",
+        "label": "马桥镇",
+        "children": []
+      },
+      {
+        "value": "321282401000",
+        "label": "城南办事处",
+        "children": []
+      },
+      {
+        "value": "321282402000",
+        "label": "新港城",
+        "children": []
+      },
+      {
+        "value": "321282403000",
+        "label": "城北园区",
+        "children": []
+      },
+      {
+        "value": "321282404000",
+        "label": "江阴园区",
+        "children": []
+      },
+      {
+        "value": "321282406000",
+        "label": "滨江新城",
+        "children": []
+      }
+    ]
+  },
+  {
+    "value": "321283000000",
+    "label": "泰兴市",
+    "children": [
+      {
+        "value": "321283001000",
+        "label": "济川街道",
+        "children": []
+      },
+      {
+        "value": "321283002000",
+        "label": "延令街道",
+        "children": []
+      },
+      {
+        "value": "321283003000",
+        "label": "姚王街道",
+        "children": []
+      },
+      {
+        "value": "321283100000",
+        "label": "黄桥镇",
+        "children": []
+      },
+      {
+        "value": "321283101000",
+        "label": "分界镇",
+        "children": []
+      },
+      {
+        "value": "321283102000",
+        "label": "古溪镇",
+        "children": []
+      },
+      {
+        "value": "321283104000",
+        "label": "元竹镇",
+        "children": []
+      },
+      {
+        "value": "321283105000",
+        "label": "珊瑚镇",
+        "children": []
+      },
+      {
+        "value": "321283106000",
+        "label": "广陵镇",
+        "children": []
+      },
+      {
+        "value": "321283108000",
+        "label": "曲霞镇",
+        "children": []
+      },
+      {
+        "value": "321283109000",
+        "label": "张桥镇",
+        "children": []
+      },
+      {
+        "value": "321283112000",
+        "label": "河失镇",
+        "children": []
+      },
+      {
+        "value": "321283113000",
+        "label": "新街镇",
+        "children": []
+      },
+      {
+        "value": "321283115000",
+        "label": "宣堡镇",
+        "children": []
+      },
+      {
+        "value": "321283123000",
+        "label": "滨江镇",
+        "children": []
+      },
+      {
+        "value": "321283124000",
+        "label": "虹桥镇",
+        "children": []
+      },
+      {
+        "value": "321283200000",
+        "label": "根思乡",
+        "children": []
+      },
+      {
+        "value": "321283401000",
+        "label": "市农科所",
+        "children": []
+      },
+      {
+        "value": "321283402000",
+        "label": "城东高新技术产业园",
+        "children": []
+      },
+      {
+        "value": "321283403000",
+        "label": "农产品加工园",
+        "children": []
+      }
+    ]
+  }
+]

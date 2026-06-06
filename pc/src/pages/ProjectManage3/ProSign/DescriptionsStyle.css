@@ -1,0 +1,108 @@
+/* 保持原有样式不变 */
+.descriptions-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 24px auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.custom-descriptions {
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden; /* 保持 overflow hidden 以显示圆角 */
+}
+
+/*
+ * 双列 bordered：每行 th/td/th/td。用 fixed + 列宽比例限制 value 过宽；
+ * 仅对 colspan=1 的内容格设宽，整行 span=2 的内容格为 colspan=3，不设宽以免再次出现右侧被压没。
+ */
+.custom-descriptions .ant-descriptions-view > table {
+  table-layout: fixed !important;
+  width: 100%;
+}
+
+.custom-descriptions .ant-descriptions-table {
+  table-layout: fixed !important;
+  width: 100%;
+}
+
+.custom-descriptions.ant-descriptions-bordered .ant-descriptions-row > th.ant-descriptions-item-label {
+  width: 14%;
+  min-width: 100px;
+  max-width: 200px;
+  box-sizing: border-box;
+}
+
+.custom-descriptions.ant-descriptions-bordered .ant-descriptions-row > td.ant-descriptions-item-content[colspan='1'] {
+  width: 36%;
+  box-sizing: border-box;
+}
+
+/* 确保所有单元格和行高度自适应，内容完整显示 */
+.custom-descriptions .ant-descriptions-row > td {
+  height: auto !important; /* 高度自适应 */
+  overflow: visible !important; /* 内容可见 */
+  max-height: none !important; /* 无最大高度限制 */
+  vertical-align: top; /* 顶部对齐，多行内容时更美观 */
+}
+
+.custom-descriptions .ant-descriptions-row {
+  height: auto !important; /* 行高自适应 */
+}
+
+/* 确保表格容器允许内容扩展 */
+.custom-descriptions .ant-descriptions-view {
+  overflow: visible;
+}
+
+.custom-descriptions .ant-descriptions-item-label span {
+  max-width: none !important;
+}
+
+.custom-descriptions .ant-descriptions-label {
+  background-color: #f6f8fe !important;
+  font-weight: 500;
+  color: #2c3e50;
+  padding: 12px 16px;
+  min-width: 0;
+  width: auto;
+  height: auto !important; /* 标签高度也自适应 */
+  overflow: visible !important; /* 标签内容可见 */
+  vertical-align: top; /* 标签顶部对齐，多行内容时更美观 */
+}
+
+.custom-descriptions .ant-descriptions-item-content {
+  padding: 12px 16px;
+  line-height: 1.6;
+  min-width: 0; /* 允许内容区域收缩 */
+  flex: 1; /* 允许内容区域自适应 */
+  word-break: break-word; /* 允许单词内换行 */
+  word-wrap: break-word; /* 旧版浏览器兼容 */
+  overflow-wrap: break-word; /* 标准属性 */
+  white-space: normal; /* 允许自动换行 */
+  overflow: visible !important; /* 确保内容完全可见 */
+  height: auto !important; /* 高度自适应 */
+  max-height: none !important; /* 无最大高度限制 */
+}
+
+/* 奇数行内容（1,3,5...） */
+.custom-descriptions .ant-descriptions-row:nth-child(odd) .ant-descriptions-item-content {
+  background-color: #fafafa;
+}
+
+/* 偶数行内容（2,4,6...） */
+.custom-descriptions .ant-descriptions-row:nth-child(even) .ant-descriptions-item-content {
+  background-color: #ffffff;
+}
+
+/* 单独占行的项，可选加边距 */
+.full-row .ant-descriptions-item-content {
+  white-space: pre-wrap; /* 保留换行 */
+  word-wrap: break-word;
+  overflow: visible; /* 允许内容显示完整 */
+}
+
+/* 为内容添加 Tooltip 支持 - 单行文本截断 */
+.custom-descriptions .ant-descriptions-item-content > div {
+  max-width: 100%;
+}

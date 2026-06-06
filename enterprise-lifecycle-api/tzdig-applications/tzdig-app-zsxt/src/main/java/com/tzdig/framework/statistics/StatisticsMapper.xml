@@ -1,0 +1,800 @@
+<!--<?xml version="1.0" encoding="UTF-8" ?>-->
+<!--<!DOCTYPE mapper-->
+<!--        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"-->
+<!--        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+<!--<mapper namespace="com.qry.statistics.StatisticsMapper">-->
+
+<!--    &lt;!&ndash;废弃 规则变化 请用statisticsSignedProjectInfo &ndash;&gt;-->
+<!--    <select id="statisticsSignedProjectInfoOld" resultType="com.qry.statistics.SignedProjectInfo">-->
+<!--        select t.district,t.district_code,m.proj_nums,n.proj_nums as last_year_proj_nums,-->
+<!--               IFNULL(ROUND(((m.proj_nums - n.proj_nums)/n.proj_nums * 100),2),"-") as proj_tb,-->
+<!--               round(m.qyje,2) as ztz,round(n.qyje,2) as last_ztz,IFNULL(ROUND(((m.qyje-n.qyje)/n.qyje * 100),2),"-") as-->
+<!--                   ztz_tb,x.nz_proj_num,round(x.nz_tz,2) as nz_tz,x.wz_proj_num,round(x.wz_tz,2) as wz_tz-->
+<!--                ,y.proj_total_nums,round(y.proj_total_tz,2) as proj_total_tz-->
+<!--        from-->
+<!--            (-->
+<!--                select dept_code as district_code,dept_name as district from t_common_dept where _code is not null and _code !='' and dept_status = 1-->
+<!--            ) t-->
+<!--                left join-->
+<!--            (-->
+<!--                select district_code,district,count(1) as proj_nums,sum(qyje) as qyje-->
+<!--                from t_proj_project_signed where  (progress > 0 or (progress = 0 and check_status = 1))-->
+<!--                                             and  ((p_type =1 and invest_money >=5) OR (p_type = 2 and invest_money >=3000))-->
+<!--                                             and signed_stat_date >=#{req.currStartDate} and #{req.currEndDate} >=signed_stat_date  and _status = 1-->
+<!--                GROUP BY district_code,district-->
+<!--            )m on m.district_code = t.district_code-->
+<!--                left join-->
+<!--            (-->
+<!--                select district_code,district,count(1) as proj_nums,sum(qyje) as qyje-->
+<!--                from t_proj_project_signed-->
+<!--                where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--                  and  ((p_type =1 and invest_money >=5) OR (p_type = 2 and invest_money >=3000))-->
+<!--                  and signed_stat_date >=#{req.lastYearStartDate} and #{req.lastYearEndDate}>=signed_stat_date-->
+<!--                GROUP BY district_code,district-->
+<!--            ) n on t.district_code = n.district_code-->
+
+<!--                left join (-->
+<!--                select district_code,sum(CASE WHEN (p_type =1 and invest_money >=5) THEN 1 ELSE 0 END) as nz_proj_num,-->
+<!--                       sum(CASE WHEN (p_type =1 and invest_money >=5) THEN qyje ELSE 0 END) as nz_tz,-->
+<!--                       sum(CASE WHEN (p_type = 2 and invest_money >=3000) THEN 1 ELSE 0 END) as wz_proj_num,-->
+<!--                       sum(CASE WHEN (p_type = 2 and invest_money >=3000) THEN IFNULL(invest_money,0) ELSE 0 END)/10000 as wz_tz-->
+<!--                from t_proj_project_signed-->
+<!--                where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--                  and signed_stat_date >=#{req.currStartDate} and #{req.currEndDate} >=signed_stat_date-->
+<!--                GROUP BY district_code-->
+<!--            ) x on x.district_code = t.district_code-->
+<!--            &#45;&#45; 统计其中10亿以上-->
+<!--            left join (-->
+<!--                select m.district_code,(m.nzpn+m.wzpn) as proj_total_nums,(m.nzqyje+m.wzqyje) as proj_total_tz-->
+<!--                FROM (-->
+<!--                         select district_code,-->
+<!--                                sum(CASE WHEN p_type = 1 AND qyje>=10 THEN 1 ELSE 0 END) as nzpn,-->
+<!--                                sum(CASE WHEN p_type = 1 AND qyje>=10 THEN qyje ELSE 0 END) as nzqyje,-->
+<!--                                sum(CASE WHEN p_type = 2 AND IFNULL(invest_money,0)/10000 >=1 THEN 1 ELSE 0 END) as wzpn,-->
+<!--                                sum(CASE WHEN p_type = 2 AND IFNULL(invest_money,0)/10000 >=1 THEN qyje ELSE 0 END) as wzqyje-->
+<!--                         from t_proj_project_signed-->
+<!--                         where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--                           and signed_stat_date >=#{req.currStartDate} and #{req.currEndDate} >=signed_stat_date-->
+<!--                         GROUP BY district_code-->
+<!--                     ) m-->
+
+<!--            ) y on y.district_code = t.district_code-->
+<!--    </select>-->
+
+<!--    <select id="statisticsSignedProjectInfo" resultType="com.qry.statistics.SignedProjectInfo">-->
+<!--        select t.district,t.district_code,m.proj_nums,n.proj_nums as last_year_proj_nums,-->
+<!--               IFNULL(ROUND(((m.proj_nums - n.proj_nums)/n.proj_nums * 100),2),"-") as proj_tb,-->
+<!--               round(m.qyje,2) as ztz,round(n.qyje,2) as last_ztz,IFNULL(ROUND(((m.qyje-n.qyje)/n.qyje * 100),2),"-") as-->
+<!--                   ztz_tb,x.nz_proj_num,round(x.nz_tz,2) as nz_tz,x.wz_proj_num,round(x.wz_tz,2) as wz_tz,h.ndmbrws,-->
+<!--               if(h.ndmbrws=0,"-",ROUND((m.proj_nums/h.ndmbrws * 100),2)) as ndmbwcl-->
+<!--        from-->
+<!--            (-->
+<!--                select dept_code as district_code,dept_name as district from t_common_dept where _code is not null and _code !='' and dept_status = 1-->
+<!--            ) t-->
+<!--            left join-->
+<!--            (-->
+<!--                select district_code,district,count(1) as proj_nums,sum(qyje) as qyje-->
+<!--                from t_proj_project_signed-->
+<!--                where  (progress > 0 or (progress = 0 and check_status = 1))-->
+<!--                     and  ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money  >=#{dollar}))-->
+<!--                     and signed_stat_date >=#{req.currStartDate} and #{req.currEndDate} >=signed_stat_date-->
+<!--                     and _status = 1-->
+<!--                GROUP BY district_code,district-->
+<!--            )m on m.district_code = t.district_code-->
+<!--            left join-->
+<!--            (-->
+<!--                select district_code,district,count(1) as proj_nums,sum(qyje) as qyje-->
+<!--                from t_proj_project_signed-->
+<!--                where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--                  and  ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money >=#{dollar}))-->
+<!--                  and signed_stat_date >=#{req.lastYearStartDate} and #{req.lastYearEndDate}>=signed_stat_date-->
+<!--                GROUP BY district_code,district-->
+<!--            ) n on t.district_code = n.district_code-->
+<!--                left join (-->
+<!--                select district_code,-->
+<!--                       sum(CASE WHEN (p_type =1 and invest_money >=#{rmb}) THEN 1 ELSE 0 END) as nz_proj_num,-->
+<!--                       sum(CASE WHEN (p_type =1 and invest_money >=#{rmb}) THEN qyje ELSE 0 END) as nz_tz,-->
+<!--                       sum(CASE WHEN (p_type = 2 and invest_money >=#{dollar}) THEN 1 ELSE 0 END) as wz_proj_num,-->
+<!--                       sum(CASE WHEN (p_type = 2 and invest_money >=#{dollar}) THEN IFNULL(invest_money,0) ELSE 0 END)/10000 as wz_tz-->
+<!--                from t_proj_project_signed-->
+<!--                where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--                  and signed_stat_date >=#{req.currStartDate} and #{req.currEndDate} >=signed_stat_date-->
+<!--                GROUP BY district_code-->
+<!--            ) x on x.district_code = t.district_code-->
+<!--            LEFT JOIN (-->
+<!--                SELECT district_code,-->
+<!--                       case when #{rmb}=1 then sum(one_count)-->
+<!--                        when #{rmb}=5 then sum(five_count)-->
+<!--                        when #{rmb}=10 then sum(ten_count)-->
+<!--                        else 0 end as ndmbrws-->
+<!--                from t_proj_task-->
+<!--                where b_year = #{req.year} and sfqx=1-->
+<!--                GROUP BY district_code-->
+<!--            ) h on h.district_code = t.district_code-->
+<!--    </select>-->
+
+<!--    <select id="statisticsHalfYearProjIncFirst" resultType="com.qry.statistics.second.SignedIncDto">-->
+<!--        select-->
+<!--            sum(CASE WHEN p_type = 1 AND qyje>=5 THEN 1 ELSE 0 END) as nz_proj_nums,-->
+<!--            sum(CASE WHEN p_type = 2 AND IFNULL(invest_money,0) >=3000  THEN 1 ELSE 0 END) as wz_proj_nums,-->
+<!--            sum(CASE WHEN p_type = 1 AND qyje>=5 THEN qyje ELSE 0 END) as nz_tz,-->
+<!--            sum(CASE WHEN p_type = 2 AND IFNULL(invest_money,0) >=3000 THEN qyje ELSE 0 END) as wz_tz,-->
+<!--            sum(CASE WHEN p_type = 2 AND IFNULL(invest_money,0) >=3000 THEN invest_money ELSE 0 END)/10000 as-->
+<!--                wz_tz_dollar-->
+<!--        from t_proj_project_signed-->
+<!--        where  (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--          and signed_stat_date >=#{startDate} and #{endDate} >=signed_stat_date-->
+<!--    </select>-->
+
+<!--    <select id="statisticsHalfYearProjIncSec" resultType="com.qry.statistics.second.SignedIncDto">-->
+<!--        select-->
+<!--            sum(CASE WHEN p_type = 1 AND qyje>=10 THEN 1 ELSE 0 END) as nz_proj_nums,-->
+<!--            sum(CASE WHEN p_type = 2 AND IFNULL(invest_money,0)/10000 >=1  THEN 1 ELSE 0 END) as wz_proj_nums,-->
+<!--            sum(CASE WHEN p_type = 1 AND qyje>=10 THEN qyje ELSE 0 END) as nz_tz,-->
+<!--            sum(CASE WHEN p_type = 2 AND IFNULL(invest_money,0)/10000 >=1 THEN qyje ELSE 0 END) as wz_tz-->
+<!--        from t_proj_project_signed-->
+<!--        where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1 and signed_stat_date >=#{startDate} and #{endDate} >=signed_stat_date-->
+<!--    </select>-->
+
+<!--    <select id="sumTaskForYear" resultType="com.qry.statistics.ProjectTask">-->
+<!--        select SUM(five_count) as five_count,SUM(ten_count) as ten_count-->
+<!--        from t_proj_task where b_year = #{year} and sfqx = #{sfqx}-->
+<!--    </select>-->
+
+<!--    <select id="statisticsKeyZoneProjInfo" resultType="com.qry.statistics.second.SignedIncDto">-->
+<!--        select-->
+<!--        sum(CASE WHEN m.p_type = 1 AND m.qyje >=#{rmb} THEN 1 ELSE 0 END) as nz_proj_nums,-->
+<!--        sum(CASE WHEN m.p_type = 2 AND IFNULL(m.invest_money,0) >=#{dollar}  THEN 1 ELSE 0 END) as wz_proj_nums,-->
+
+<!--        sum(CASE WHEN m.p_type = 1 AND m.qyje>=#{rmb} THEN m.qyje ELSE 0 END) as nz_tz,-->
+<!--        sum(CASE WHEN m.p_type = 2 AND IFNULL(m.invest_money,0) >=#{dollar} THEN m.qyje ELSE 0 END) as wz_tz-->
+<!--        from t_proj_project_signed  m-->
+<!--        join (-->
+<!--        select dept_code from t_biz_zone where key_zone = 1 and _status = 1-->
+<!--        )n on m.zone_code = n.dept_code-->
+<!--        where (m.progress > 0 or (m.progress = 0 and m.check_status = 1)) and m._status = 1 and m.signed_stat_date >=#{startDate} and #{endDate} >=m.signed_stat_date-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;统计全市的项目数量和总投资 &ndash;&gt;-->
+<!--    <select id="statisticsSignedProjectInfoTz" resultType="com.qry.statistics.second.SignedProjectInfoDto">-->
+<!--        select count(m._id) as proj_nums,sum(m.qyje) as ztz-->
+<!--        from t_proj_project_signed m-->
+<!--        where (m.progress > 0 or (m.progress = 0 and m.check_status = 1)) and m._status = 1-->
+<!--        and m.signed_stat_date >=#{startDate} and #{endDate} >=m.signed_stat_date-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;统计全市"大海新晨产业数量以及签约额"  &ndash;&gt;-->
+<!--&lt;!&ndash;    <select id="statisticsSixCodeOld" resultType="com.qry.statistics.second.SignedProjectInfoDto">&ndash;&gt;-->
+<!--&lt;!&ndash;        select sixpro_code as code ,count(_id) as proj_nums,sum(qyje) as ztz from t_proj_project_signed&ndash;&gt;-->
+<!--&lt;!&ndash;        where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1 and  signed_stat_date >=#{startDate}&ndash;&gt;-->
+<!--&lt;!&ndash;          and #{endDate} >=signed_stat_date&ndash;&gt;-->
+<!--&lt;!&ndash;        and is_sixpro = 1 and ((p_type =1 and invest_money >=5) OR (p_type = 2 and invest_money >=3000))&ndash;&gt;-->
+<!--&lt;!&ndash;        GROUP BY sixpro_code &ndash;&gt;-->
+<!--&lt;!&ndash;    </select>&ndash;&gt;-->
+
+<!--    <select id="statisticsSixCode" resultType="com.qry.statistics.second.SignedProjectInfoDto">-->
+<!--        select m._code as code ,count(n._id) as proj_nums,IFNULL(sum(n.qyje),0) as ztz-->
+<!--        from (-->
+<!--                 select _code,_name from t_proj_type where _status = 1 and level = 1-->
+<!--             ) m-->
+<!--       left join (-->
+<!--            select _id,qyje,proj_type  from t_proj_project_signed-->
+<!--            where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1 and  signed_stat_date >=#{startDate}-->
+<!--              and #{endDate} >=signed_stat_date-->
+<!--              and ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money >=#{dollar}))-->
+<!--        )n-->
+<!--        on n.proj_type like CONCAT(m._code,'%')-->
+<!--        group by m._code-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;统计各区县项目数量和投资金额 &ndash;&gt;-->
+<!--    <select id="statisticProjForQxMap" resultType="com.qry.statistics.second.SignedProjectInfoDto">-->
+<!--        select district ,district_code,count(_id) as proj_nums,round(sum(qyje),2) as ztz-->
+<!--        from t_proj_project_signed-->
+<!--        where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--              and ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money >=#{dollar}))-->
+<!--        <if test="null neq startDate">and signed_stat_date >=#{startDate}</if>-->
+<!--        <if test="null neq endDate">and #{endDate} >=signed_stat_date</if>-->
+
+<!--        group by district,district_code-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;统计各区县统计1+4 &ndash;&gt;-->
+<!--&lt;!&ndash;    <select id="statisticsOnePlusFourForQx" resultType="com.qry.statistics.second.SignedProjectInfoDto">&ndash;&gt;-->
+<!--&lt;!&ndash;        select concat(district_code,sixpro_code) as code ,count(_id) as proj_nums,sum(qyje) as ztz from&ndash;&gt;-->
+<!--&lt;!&ndash;        t_proj_project_signed&ndash;&gt;-->
+<!--&lt;!&ndash;        where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1  and is_sixpro = 1&ndash;&gt;-->
+<!--&lt;!&ndash;              and ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money >=#{dollar}))&ndash;&gt;-->
+<!--&lt;!&ndash;        <if test="null neq startDate">and signed_stat_date >=#{startDate}</if>&ndash;&gt;-->
+<!--&lt;!&ndash;        <if test="null neq endDate">and #{endDate} >=signed_stat_date</if>&ndash;&gt;-->
+<!--&lt;!&ndash;        <if test="moneyType != null and moneyType != '' ">&ndash;&gt;-->
+<!--&lt;!&ndash;            <if test="moneyType =='1'.toString() ">&ndash;&gt;-->
+<!--&lt;!&ndash;                and ((p_type =1 and invest_money >=5) OR (p_type = 2 and invest_money >=3000))&ndash;&gt;-->
+<!--&lt;!&ndash;            </if>&ndash;&gt;-->
+<!--&lt;!&ndash;            <if test="moneyType == '2'.toString() ">&ndash;&gt;-->
+<!--&lt;!&ndash;                and ((p_type =1 and invest_money >=10) OR (p_type = 2 and invest_money >=10000))&ndash;&gt;-->
+<!--&lt;!&ndash;            </if>&ndash;&gt;-->
+<!--&lt;!&ndash;        </if>&ndash;&gt;-->
+<!--&lt;!&ndash;        GROUP BY district_code,sixpro_code&ndash;&gt;-->
+<!--&lt;!&ndash;    </select>&ndash;&gt;-->
+<!--    <select id="statisticsOnePlusFourForQx" resultType="com.qry.statistics.second.SignedProjectInfoDto">-->
+<!--        select CONCAT(m.district_code,"_",n._code) as code ,count(m._id) as proj_nums,round(sum(qyje),2) as ztz-->
+<!--        from (-->
+<!--                 select _id,district_code,proj_type,qyje-->
+<!--                 from t_proj_project_signed-->
+<!--                 where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--                   and ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money >=#{dollar}))-->
+<!--                   and signed_stat_date >=#{startDate}  and #{endDate} >=signed_stat_date-->
+<!--        ) m-->
+<!--        join (-->
+<!--            select _code,_name from t_proj_type where _status = 1 and level = 2-->
+<!--        ) n-->
+<!--        on m.proj_type like CONCAT(n._code,'%')-->
+<!--        GROUP BY m.district_code,n._code-->
+<!--    </select>-->
+
+
+<!--    &lt;!&ndash;统计重点园区 重大项目加分 &ndash;&gt;-->
+<!--    <select id="statisticsKeyZoneScorePlus" resultType="com.qry.statistics.fourth.KeyZoneScoreVo">-->
+<!--        select t.* from (-->
+<!--        select m.dept_code as zone_code,m._name as zone_name,m.gear,-->
+<!--        (IFNULL(n.score_five,0) + IFNULL(n.score_ten,0)+IFNULL(t.score,0)) as score_plus-->
+<!--        from (-->
+<!--        select dept_code,_name,gear from t_biz_zone where key_zone = 1 and _status = 1)m-->
+<!--        left join (-->
+<!--        select-->
+<!--        zone_code,-->
+<!--        sum(CASE WHEN (p_type = 1 AND qyje>=50 and qyje&lt;100)-->
+<!--        OR (p_type = 2 AND IFNULL(invest_money,0)/10000 >=5-->
+<!--        and IFNULL(invest_money,0)/10000 &lt;10) THEN 0.2 ELSE 0 END) as score_five,-->
+
+<!--        sum(CASE WHEN (p_type = 1 AND qyje>=100)-->
+<!--        OR (p_type = 2 AND IFNULL(invest_money,0)/10000 >=10) THEN 0.3 ELSE 0 END) as score_ten-->
+
+<!--        from t_proj_project_signed-->
+<!--        where  (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1 and signed_stat_date >=#{startDate} and #{endDate} >=signed_stat_date-->
+<!--        GROUP BY zone_code-->
+<!--        ) n on m.dept_code = n.zone_code-->
+<!--        LEFT JOIN (-->
+<!--             select zone_code,sum(score) as score-->
+<!--             from t_proj_score where year =#{year} and `month` BETWEEN #{startMonth} AND  #{endMonth}-->
+<!--             group by zone_code-->
+<!--        )t on m.dept_code = t.zone_code) t order by left(t.zone_code,6) ,t.gear ,t.zone_code-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;统计重点园区任务数和完成项目数量 &ndash;&gt;-->
+<!--    <select id="statisticsKeyZoneCompleteProjNums" resultType="com.qry.statistics.fourth.KeyZoneScoreVo">-->
+<!--        &#45;&#45; 重点园区-->
+<!--        select m.dept_code as zone_code,-->
+<!--               IFNULL(t.one_count,0) as one_task_count,-->
+<!--               IFNULL(t.five_count,0) as five_task_count,-->
+<!--               IFNULL(t.ten_count,0) as ten_task_count ,-->
+<!--               IFNULL(n.one_count,0) one_count,-->
+<!--               IFNULL(n.five_count,0) five_count,-->
+<!--               IFNULL(n.ten_count,0) as ten_count-->
+<!--        from (-->
+
+<!--            select dept_code,_name,gear from t_biz_zone where key_zone = 1 and _status = 1-->
+<!--        ) m-->
+<!--        LEFT JOIN-->
+<!--         (-->
+<!--             select-->
+<!--                 zone_code,-->
+<!--                 sum(CASE WHEN (p_type = 1 AND qyje >=1) or (p_type = 2 AND IFNULL(invest_money,0) >=1000)  THEN 1 ELSE 0 END) as one_count,-->
+<!--                 sum(CASE WHEN (p_type = 1 AND qyje >=5) or (p_type = 2 AND IFNULL(invest_money,0) >=3000)  THEN 1 ELSE 0 END) as five_count,-->
+<!--                 sum(CASE WHEN (p_type = 1 AND qyje >=10) or (p_type = 2 AND IFNULL(invest_money,0)/10000 >=1)  THEN 1 ELSE 0 END) as ten_count-->
+<!--             from t_proj_project_signed-->
+<!--             where  (progress > 0 or (progress = 0 and check_status = 1))  and _status = 1 and signed_stat_date >=#{startDate} and #{endDate} >=signed_stat_date-->
+<!--             GROUP BY zone_code-->
+<!--         ) n on  m.dept_code = n.zone_code-->
+<!--        LEFT JOIN-->
+<!--        (    SELECT zone_code,one_count,five_count,ten_count-->
+<!--             from t_proj_task-->
+<!--             where b_year = #{year} and sfqx = 2-->
+<!--        )t on m.dept_code = t.zone_code-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;统计区县的加分项 &ndash;&gt;-->
+<!--    <select id="statisticsQxScorePlus" resultType="com.qry.statistics.fourth.QxScoreVo">-->
+<!--        select n.dept_code district_code,n.dept_name as district,-->
+<!--               (IFNULL(m.score_five,0) + IFNULL(m.score_ten,0)+IFNULL(t.score,0)) as score_plus-->
+<!--        from-->
+<!--        (-->
+<!--                select dept_code,dept_name from t_common_dept where _code is not null and _code !='' and dept_status = 1-->
+<!--        )n-->
+<!--        left join-->
+<!--        (-->
+<!--                select-->
+<!--                    district_code,-->
+<!--                    sum(CASE WHEN (p_type = 1 AND qyje>=50 and qyje&lt;100)-->
+<!--                    OR (p_type = 2 AND IFNULL(invest_money,0)/10000 >=5-->
+<!--                    and IFNULL(invest_money,0)/10000 &lt;10) THEN 0.2 ELSE 0 END) as score_five,-->
+
+<!--                    sum(CASE WHEN (p_type = 1 AND qyje>=100)-->
+<!--                    OR (p_type = 2 AND IFNULL(invest_money,0)/10000 >=10) THEN 0.3 ELSE 0 END) as score_ten-->
+
+<!--                from t_proj_project_signed-->
+<!--                where  (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1 and signed_stat_date >=#{startDate} and #{endDate} >=signed_stat_date-->
+<!--                GROUP BY district_code-->
+<!--        ) m on n.dept_code = m.district_code-->
+<!--        LEFT JOIN (-->
+<!--                select district_code,sum(score) as score-->
+<!--                FROM t_proj_score-->
+<!--                where year =#{year} and `month` BETWEEN #{startMonth} AND  #{endMonth}-->
+<!--                GROUP BY district_code-->
+<!--        )t on m.district_code = t.district_code order by district_code-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;统计区县任务数和完成项目数量 &ndash;&gt;-->
+<!--    <select id="statisticsQxCompleteProjNums" resultType="com.qry.statistics.fourth.QxScoreVo">-->
+<!--        select m.dept_code as district_code,-->
+<!--                IFNULL(t.one_count,0) as one_task_count,-->
+<!--                IFNULL(t.five_count,0) as five_task_count,-->
+<!--                IFNULL(t.ten_count,0) as ten_task_count ,-->
+<!--                IFNULL(n.one_count,0) one_count,-->
+<!--                IFNULL(n.five_count,0) five_count,-->
+<!--                IFNULL(n.ten_count,0) as ten_count-->
+<!--        from (-->
+<!--            select dept_code,dept_name from t_common_dept where _code is not null and _code !='' and dept_status = 1-->
+<!--        ) m-->
+<!--        LEFT JOIN-->
+<!--        (-->
+<!--            select-->
+<!--            district_code,-->
+<!--            sum(CASE WHEN (p_type = 1 AND qyje >=1) or (p_type = 2 AND IFNULL(invest_money,0) >=1000) THEN 1 ELSE 0 END) as one_count,-->
+<!--            sum(CASE WHEN (p_type = 1 AND qyje >=5) or (p_type = 2 AND IFNULL(invest_money,0) >=3000) THEN 1 ELSE 0 END) as five_count,-->
+<!--            sum(CASE WHEN (p_type = 1 AND qyje >=10) or (p_type = 2 AND IFNULL(invest_money,0)/10000 >=1) THEN 1 ELSE 0 END) as ten_count-->
+<!--            from t_proj_project_signed-->
+<!--            where  (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1 and signed_stat_date >=#{startDate} and #{endDate} >=signed_stat_date-->
+<!--            GROUP BY district_code-->
+<!--        ) n on  m.dept_code = n.district_code-->
+<!--        LEFT JOIN (-->
+<!--                SELECT district_code,sum(one_count) as one_count,sum(five_count) as five_count,sum(ten_count) as ten_count-->
+<!--                from t_proj_task-->
+<!--                where b_year = #{year} and sfqx=1-->
+<!--                GROUP BY district_code-->
+<!--        )-->
+<!--        t on m.dept_code = t.district_code-->
+<!--    </select>-->
+
+<!--    <select id="countSignedProj" resultType="com.qry.statistics.SignedProjectInfo">-->
+<!--        select a.dept_code district_code,a.dept_name district,sum(b.num) proj_nums,round(sum(b.qyje),2) ztz from-->
+<!--        (select dept_code,dept_name from t_common_dept where p_id = #{req.districtCode} and dept_status = 1) a-->
+<!--        left join (select zone_code,count(1) num,sum(qyje) qyje from t_proj_project_signed-->
+<!--        where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--        <if test="req.type == 0">-->
+<!--            and ((p_type = 1 and  invest_money >= 1) or (p_type = 2 and invest_money >= 1000))-->
+<!--        </if>-->
+<!--        <if test="req.type == 1">-->
+<!--            and ((p_type = 1 and  invest_money >= 5) or (p_type = 2 and invest_money >= 3000))-->
+<!--        </if>-->
+<!--        <if test="req.type == 2">-->
+<!--            and ((p_type = 1 and  invest_money >= 10) or (p_type = 2 and invest_money >= 10000))-->
+<!--        </if>-->
+<!--        <if test="req.currStartDate!=null">-->
+<!--            and signed_stat_date >= #{req.currStartDate}-->
+<!--        </if>-->
+<!--        <if test="req.currEndDate!=null">-->
+<!--            and signed_stat_date &lt;= #{req.currEndDate}-->
+<!--        </if>-->
+<!--        <if test="req.districtCode!=null and req.districtCode !=''">-->
+<!--            and zone_code like concat(#{req.districtCode},'%')-->
+<!--        </if>-->
+<!--        group by zone_code) b on b.zone_code like concat(a.dept_code,'%') group by a.dept_code,a.dept_name order by a.dept_code-->
+<!--    </select>-->
+
+<!--    <select id="countSignedProjQyqs" resultType="com.qry.statistics.SignedProjectInfo">-->
+<!--        SELECT-->
+<!--        count( 1 ) projNums,round(sum(qyje ),2) ztz,left( signed_stat_date, 7 ) signedDate from-->
+<!--        t_proj_project_signed-->
+<!--        where-->
+<!--        (progress > 0 or ( progress = 0 AND check_status = 1 )) and _status = 1-->
+<!--        <if test="req.currStartDate!=null">-->
+<!--            and signed_stat_date >= #{req.currStartDate}-->
+<!--        </if>-->
+<!--        <if test="req.currEndDate!=null">-->
+<!--            and signed_stat_date &lt;= #{req.currEndDate}-->
+<!--        </if>-->
+<!--        <if test="req.districtCode!=null and req.districtCode !=''">-->
+<!--            and zone_code like concat(#{req.districtCode},'%')-->
+<!--        </if>-->
+<!--        group by left (signed_stat_date,7) order by left (signed_stat_date,7)-->
+<!--    </select>-->
+
+<!--    <select id="countSignedProjCyfb" resultType="com.qry.statistics.SignedProjectInfo">-->
+<!--        select count(b._id) as projNums,a._code as projType,a._name as projName from t_proj_type a-->
+<!--        left join-->
+<!--        (select a._id,a.proj_type from t_proj_project_signed a-->
+<!--        where (a.progress > 0 OR ( a.progress = 0 AND a.check_status = 1 )) AND a._status = 1-->
+<!--        <if test="req.currStartDate!=null">-->
+<!--            and signed_stat_date >= #{req.currStartDate}-->
+<!--        </if>-->
+<!--        <if test="req.currEndDate!=null">-->
+<!--            and signed_stat_date &lt;= #{req.currEndDate}-->
+<!--        </if>-->
+<!--        <if test="req.districtCode!=null and req.districtCode !=''">-->
+<!--            and zone_code like concat(#{req.districtCode},'%')-->
+<!--        </if>-->
+<!--        )-->
+<!--        b on b.proj_type like CONCAT(a._code,'%')-->
+<!--        where (a.p_id = '1' or a._code = 2) group by a._code-->
+<!--&lt;!&ndash;        union all&ndash;&gt;-->
+<!--&lt;!&ndash;        select count(b._id) as projNums,a._code as projType,a._name as projName from t_proj_type a&ndash;&gt;-->
+<!--&lt;!&ndash;        left join&ndash;&gt;-->
+<!--&lt;!&ndash;        (select a._id,a.proj_type from t_proj_project_signed a&ndash;&gt;-->
+<!--&lt;!&ndash;        where (a.progress > 0 OR ( a.progress = 0 AND a.check_status = 1 )) AND a._status = 1&ndash;&gt;-->
+<!--&lt;!&ndash;        <if test="req.currStartDate!=null">&ndash;&gt;-->
+<!--&lt;!&ndash;            and signed_stat_date >= #{req.currStartDate}&ndash;&gt;-->
+<!--&lt;!&ndash;        </if>&ndash;&gt;-->
+<!--&lt;!&ndash;        <if test="req.currEndDate!=null">&ndash;&gt;-->
+<!--&lt;!&ndash;            and signed_stat_date &lt;= #{req.currEndDate}&ndash;&gt;-->
+<!--&lt;!&ndash;        </if>&ndash;&gt;-->
+<!--&lt;!&ndash;        <if test="req.districtCode!=null and req.districtCode !=''">&ndash;&gt;-->
+<!--&lt;!&ndash;            and zone_code like concat(#{req.districtCode},'%')&ndash;&gt;-->
+<!--&lt;!&ndash;        </if>&ndash;&gt;-->
+<!--&lt;!&ndash;        )&ndash;&gt;-->
+<!--&lt;!&ndash;        b on b.proj_type like CONCAT(a._code,'%')&ndash;&gt;-->
+<!--&lt;!&ndash;        where a._code = '2' group by a._code&ndash;&gt;-->
+<!--    </select>-->
+
+<!--    <select id="countSignedProjZoneTask" resultType="com.qry.statistics.fourth.QxScoreVo">-->
+<!--        select m.dept_code as district_code,m.dept_name district,-->
+<!--               IFNULL(t.one_count,0) as one_task_count,-->
+<!--               IFNULL(t.five_count,0) as five_task_count,-->
+<!--               IFNULL(t.ten_count,0) as ten_task_count ,-->
+<!--               IFNULL(n.one_count,0) as one_count ,-->
+<!--               IFNULL(n.five_count,0) five_count,-->
+<!--               IFNULL(n.ten_count,0) as ten_count-->
+<!--        from (-->
+<!--            select dept_code,dept_name from t_biz_zone where p_code > 0 and _status = 1-->
+<!--                <if test="req.districtCode!=null and req.districtCode !=''">-->
+<!--                    and dept_code like concat(#{req.districtCode},'%')-->
+<!--                </if>-->
+<!--             ) m left join-->
+<!--             (select zone_code,-->
+<!--                sum(CASE WHEN (p_type = 1 AND qyje >=1) or (p_type = 2 AND IFNULL(invest_money,0) >=1000) THEN 1 ELSE 0 END) as one_count,-->
+<!--             sum(CASE WHEN (p_type = 1 AND qyje >=5) or (p_type = 2 AND IFNULL(invest_money,0) >=3000) THEN 1 ELSE 0 END) as five_count,-->
+<!--             sum(CASE WHEN (p_type = 1 AND qyje >=10) or (p_type = 2 AND IFNULL(invest_money,0)/10000 >=1) THEN 1 ELSE 0 END) as ten_count-->
+<!--             from t_proj_project_signed-->
+<!--             where  (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--             <if test="req.currStartDate!=null">-->
+<!--                and signed_stat_date >= #{req.currStartDate}-->
+<!--             </if>-->
+<!--             <if test="req.currEndDate!=null">-->
+<!--                and signed_stat_date &lt;= #{req.currEndDate}-->
+<!--             </if>-->
+<!--             <if test="req.districtCode!=null and req.districtCode !=''">-->
+<!--                and zone_code like concat(#{req.districtCode},'%')-->
+<!--             </if>-->
+<!--             GROUP BY zone_code-->
+<!--             ) n on  m.dept_code = n.zone_code-->
+<!--                 LEFT JOIN (-->
+<!--            SELECT zone_code,sum(one_count) as one_count,sum(five_count) as five_count,sum(ten_count) as ten_count-->
+<!--            from t_proj_task-->
+<!--            where b_year = #{req.year} and sfqx=2-->
+<!--            <if test="req.districtCode!=null and req.districtCode !=''">-->
+<!--                and zone_code like concat(#{req.districtCode},'%')-->
+<!--            </if>-->
+<!--            GROUP BY zone_code-->
+<!--        )-->
+<!--            t on m.dept_code = t.zone_code-->
+<!--    </select>-->
+
+<!--    <select id="countSignedProjSqTask" resultType="com.qry.statistics.fourth.QxScoreVo">-->
+<!--        select m.dept_code as district_code,m.dept_name district,-->
+<!--               IFNULL(t.one_count,0) as one_task_count,-->
+<!--               IFNULL(t.five_count,0) as five_task_count,-->
+<!--               IFNULL(t.ten_count,0) as ten_task_count ,-->
+<!--               IFNULL(n.one_count,0) as one_count ,-->
+<!--               IFNULL(n.five_count,0) five_count,-->
+<!--               IFNULL(n.ten_count,0) as ten_count-->
+<!--        from (-->
+<!--                 select dept_code,dept_name from t_common_dept where _code is not null and _code !='' and dept_status = 1-->
+<!--             ) m-->
+<!--                 LEFT JOIN-->
+<!--             (-->
+<!--                 select-->
+<!--                     district_code,-->
+<!--                     sum(CASE WHEN (p_type = 1 AND qyje >=1) or (p_type = 2 AND IFNULL(invest_money,0) >=1000) THEN 1 ELSE 0 END) as one_count,-->
+<!--                     sum(CASE WHEN (p_type = 1 AND qyje >=5) or (p_type = 2 AND IFNULL(invest_money,0) >=3000) THEN 1 ELSE 0 END) as five_count,-->
+<!--                     sum(CASE WHEN (p_type = 1 AND qyje >=10) or (p_type = 2 AND IFNULL(invest_money,0)/10000 >=1) THEN 1 ELSE 0 END) as ten_count-->
+<!--                 from t_proj_project_signed-->
+<!--                 where  (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1 and signed_stat_date >=#{req.currStartDate} and #{req.currEndDate} >=signed_stat_date-->
+<!--                 GROUP BY district_code-->
+<!--             ) n on  m.dept_code = n.district_code-->
+<!--                 LEFT JOIN (-->
+<!--            SELECT district_code,sum(one_count) as one_count,sum(five_count) as five_count,sum(ten_count) as ten_count-->
+<!--            from t_proj_task-->
+<!--            where b_year = #{req.year} and sfqx=1-->
+<!--            GROUP BY district_code-->
+<!--        )-->
+<!--            t on m.dept_code = t.district_code-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;按照区划统计项目的数量和金额 &ndash;&gt;-->
+<!--    <select id="statisticsProjectInfo" resultType="com.qry.statistics.fifth.ProjectInfo">-->
+<!--        SELECT d.district_code,d.district,count(p._id) as proj_nums,round(sum(p.qyje),2) as qyje-->
+<!--        from (-->
+<!--                 select dept_code as district_code,dept_name as district-->
+<!--                 from t_common_dept-->
+<!--                 where _code is not null and _code !='' and dept_status = 1-->
+<!--        ) d-->
+<!--        left join (-->
+<!--            select _id,qyje,district_code,district-->
+<!--            from t_proj_project_signed-->
+<!--            where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--              and  signed_stat_date >=#{startDate} and #{endDate} >=signed_stat_date-->
+<!--              <if test="null neq rmb">-->
+<!--                  and ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money >=#{dollar}))-->
+<!--              </if>-->
+<!--        ) p on d.district_code = p.district_code-->
+<!--        group by d.district_code,d.district-->
+<!--    </select>-->
+
+<!--    <select id="statisticsProjectInfoList" resultType="com.qry.statistics.fifth.ProjectInfo">-->
+<!--        SELECT d.district_code,d.district,count(p._id) as proj_nums,round(sum(p.qyje),2) as qyje-->
+<!--        from (-->
+<!--        select dept_code as district_code,dept_name as district-->
+<!--        from t_common_dept-->
+<!--        where _code is not null and _code !='' and dept_status = 1-->
+<!--        ) d-->
+<!--        left join (-->
+<!--        select _id,qyje,district_code,district-->
+<!--        from t_proj_project_signed-->
+<!--        where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--        and  signed_stat_date >=#{startDate} and #{endDate} >=signed_stat_date-->
+<!--        <if test="null neq rmb">-->
+<!--            and ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money >=#{dollar}))-->
+<!--        </if>-->
+<!--        ) p on d.district_code = p.district_code-->
+<!--        group by d.district_code,d.district-->
+<!--    </select>-->
+
+
+<!--    &lt;!&ndash;按照区划和状态统计项目的数量和金额 &ndash;&gt;-->
+<!--    <select id="statisticsProjectStatusInfo" resultType="com.qry.statistics.fifth.ProjectStatusInfo">-->
+<!--        select district_code,CONCAT(district_code,"_",r_progress) as code ,count(_id) as proj_nums,round(sum(qyje),2) as qyje-->
+<!--        from t_proj_project_signed-->
+<!--        where r_progress in (1,2,4,5) and _status = 1-->
+<!--          and signed_stat_date >=#{startDate} and #{endDate} >=signed_stat_date-->
+<!--          <if test="null neq rmb">-->
+<!--            and ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money >=#{dollar}))-->
+<!--          </if>-->
+<!--        GROUP BY district_code,r_progress-->
+<!--    </select>-->
+<!--    <select id="statisticsXmzyxx" resultType="com.qry.statistics.second.SignedProjectInc">-->
+<!--        select t.district,t.district_code,-->
+<!--               IFNULL(xqyxmsOne,0) as xqyxmsOne,-->
+<!--               round(IFNULL(xqytzeOne,0),2) as xqytzeOne,-->
+<!--               IFNULL(xqyxmsFive,0) as xqyxmsFive,-->
+<!--               round(IFNULL(xqytzeFive,0),2) as xqytzeFive,-->
+<!--               IFNULL(xqyxmsTen,0) as xqyxmsTen,-->
+<!--               round(IFNULL(xqytzeTen,0),2) as xqytzeTen,-->
+<!--               IFNULL(nzxqyxmsOne,0) as nzxqyxmsOne,-->
+<!--               round(IFNULL(nzxqytzeOne,0),2) as nzxqytzeOne,-->
+<!--               IFNULL(wzxqyxmsOne,0) as wzxqyxmsOne,-->
+<!--               round(IFNULL(wzxqytzeOne,0),2) as wzxqytzeOne-->
+<!--        from-->
+<!--            (-->
+<!--                select dept_code as district_code,dept_name as district from t_common_dept where _code is not null and _code !='' and dept_status = 1-->
+<!--            ) t-->
+<!--            left join (-->
+<!--                select district_code,-->
+<!--                       sum(CASE WHEN ((p_type =1 and invest_money >=1) OR (p_type = 2 and invest_money >=1000)) THEN 1 ELSE 0 END) as xqyxmsOne,-->
+<!--                       sum(CASE WHEN ((p_type =1 and invest_money >=1) OR (p_type = 2 and invest_money >=1000)) THEN qyje ELSE 0 END) as xqytzeOne,-->
+<!--                       sum(CASE WHEN ((p_type =1 and invest_money >=5) OR (p_type = 2 and invest_money >=3000)) THEN 1 ELSE 0 END) as xqyxmsFive,-->
+<!--                       sum(CASE WHEN ((p_type =1 and invest_money >=5) OR (p_type = 2 and invest_money >=3000)) THEN qyje ELSE 0 END) as xqytzeFive,-->
+<!--                       sum(CASE WHEN ((p_type =1 and invest_money >=10) OR (p_type = 2 and invest_money >=10000)) THEN 1 ELSE 0 END) as xqyxmsTen,-->
+<!--                       sum(CASE WHEN ((p_type =1 and invest_money >=10) OR (p_type = 2 and invest_money >=10000)) THEN qyje ELSE 0 END) as xqytzeTen,-->
+<!--                       sum(CASE WHEN (p_type =1 and invest_money >=1) THEN 1 ELSE 0 END) as nzxqyxmsOne,-->
+<!--                       sum(CASE WHEN (p_type =1 and invest_money >=1) THEN qyje ELSE 0 END) as nzxqytzeOne,-->
+<!--                       sum(CASE WHEN (p_type = 2 and invest_money >=1000) THEN 1 ELSE 0 END) as wzxqyxmsOne,-->
+<!--                       sum(CASE WHEN (p_type = 2 and invest_money >=1000) THEN invest_money/10000 ELSE 0 END) as wzxqytzeOne-->
+<!--                from t_proj_project_signed-->
+<!--                where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--                  and signed_stat_date >=#{currStartDate} and #{currEndDate} >=signed_stat_date-->
+<!--                GROUP BY district_code-->
+<!--            ) x on x.district_code = t.district_code-->
+<!--    </select>-->
+
+<!--    <select id="countSignedProjType" resultType="com.qry.statistics.SignedCylVo">-->
+<!--        SELECT-->
+<!--        name,-->
+<!--        px,-->
+<!--        SUM(CASE WHEN district = '靖江市' THEN total_num ELSE 0 END) AS jjsNum,-->
+<!--        SUM(CASE WHEN district = '靖江市' THEN qyje ELSE 0 END) AS jjsQyje,-->
+<!--        SUM(CASE WHEN district = '泰兴市' THEN total_num ELSE 0 END) AS txsNum,-->
+<!--        SUM(CASE WHEN district = '泰兴市' THEN qyje ELSE 0 END) AS txsQyje,-->
+<!--        SUM(CASE WHEN district = '兴化市' THEN total_num ELSE 0 END) AS xhsNum,-->
+<!--        SUM(CASE WHEN district = '兴化市' THEN qyje ELSE 0 END) AS xhsQyje,-->
+<!--        SUM(CASE WHEN district = '海陵区' THEN total_num ELSE 0 END) AS hlqNum,-->
+<!--        SUM(CASE WHEN district = '海陵区' THEN qyje ELSE 0 END) AS hlqQyje,-->
+<!--        SUM(CASE WHEN district = '姜堰区' THEN total_num ELSE 0 END) AS jyqNum,-->
+<!--        SUM(CASE WHEN district = '姜堰区' THEN qyje ELSE 0 END) AS jyqQyje,-->
+<!--        SUM(CASE WHEN district = '医药高新区(高港区)' THEN total_num ELSE 0 END) AS yygxqNum,-->
+<!--        SUM(CASE WHEN district = '医药高新区(高港区)' THEN qyje ELSE 0 END) AS yygxqQyje,-->
+<!--        SUM(CASE WHEN district in ('医药高新区(高港区)','靖江市','泰兴市','兴化市','海陵区','姜堰区') THEN total_num ELSE 0 END) AS total,-->
+<!--        SUM(CASE WHEN district in ('医药高新区(高港区)','靖江市','泰兴市','兴化市','海陵区','姜堰区') THEN qyje ELSE 0 END) AS totalQyje-->
+<!--        FROM (-->
+<!--        &#45;&#45; 原查询（确保每个区域和类型都有记录，包括 0 值）-->
+<!--        SELECT-->
+<!--        pt.name,-->
+<!--        pt.px,-->
+<!--        COALESCE(SUM(a.num), 0) AS total_num,-->
+<!--        COALESCE(SUM(a.qyje), 0) AS qyje,-->
+<!--        d.district-->
+<!--        FROM-->
+<!--        (SELECT dept_code AS district_code, dept_name AS district-->
+<!--        FROM t_common_dept-->
+<!--        WHERE _code IS NOT NULL AND _code != '' AND dept_status = 1) d-->
+<!--        CROSS JOIN-->
+<!--        (SELECT name, px, code FROM ls_proj_type) pt-->
+<!--        LEFT JOIN (-->
+<!--        SELECT-->
+<!--        a.name,-->
+<!--        a.px,-->
+<!--        b.district_code,-->
+<!--        COUNT(1) AS num,-->
+<!--        sum(qyje) qyje-->
+<!--        FROM ls_proj_type a-->
+<!--        JOIN t_proj_project_signed b ON a.code LIKE CONCAT('%', b.proj_type, '%')-->
+<!--        WHERE-->
+<!--        b._status = 1 AND (b.progress > 0 OR (b.progress = 0 AND b.check_status = 1)) AND b.proj_type != 2-->
+<!--        <if test="req.currStartDate!=null">-->
+<!--            and b.signed_stat_date >= #{req.currStartDate}-->
+<!--        </if>-->
+<!--        <if test="req.currEndDate!=null">-->
+<!--            and b.signed_stat_date &lt;= #{req.currEndDate}-->
+<!--        </if>-->
+<!--        and ((b.p_type = 1 and b.invest_money >= #{req.rmb}) or (b.p_type = 2 and b.invest_money >= #{req.doller}))-->
+<!--        GROUP BY a.name, a.px, b.district_code-->
+<!--        ) a ON d.district_code = a.district_code AND pt.name = a.name-->
+<!--        GROUP BY pt.name, pt.px, d.district,a.qyje-->
+<!--        ) AS subquery-->
+<!--        &#45;&#45; 按项目和优先级分组-->
+<!--        GROUP BY name, px-->
+<!--        &#45;&#45; 按优先级排序-->
+<!--        ORDER BY px-->
+<!--    </select>-->
+<!--    <select id="countProjSigned" resultType="com.qry.statistics.ProjSignedDetailVo">-->
+<!--        select a._name as name,a.invest_money as investMoney,a.district,a.zone_name as zoneName,-->
+<!--               a.investor,a._desc as projDesc,-->
+<!--               case when (a.progress = 0 and a.check_status = 1 or a.progress = 0 and a.check_status = 2 or a.progress = 1 and a.check_status = 3) then '已签约'-->
+<!--                    when (a.progress= 1 and a.check_status = 1 or a.progress = 1 and a.check_status = 2 or a.progress = 5 and a.check_status = 3) then '已注册'-->
+<!--                    when (a.progress = 2 and a.check_status = 1 or a.progress = 2 and a.check_status = 2 or a.progress = 3 and a.check_status = 3) then '已开工'-->
+<!--                    when (a.progress = 3 and a.check_status = 1 or a.progress = 3 and a.check_status = 2) then '已竣工'-->
+<!--                    when (a.progress = 4 and a.check_status = 1 or a.progress = 4 and a.check_status = 2 or a.progress = 2 and a.check_status = 3) then '已报批'-->
+<!--                    when (a.progress = 5 and a.check_status = 1 or a.progress = 5 and a.check_status = 2 or a.progress = 4 and a.check_status = 3) then '已备案'-->
+<!--                    else null end as progressRd-->
+<!--        from t_proj_project_signed a-->
+<!--        <where>-->
+<!--            (a.progress > 0 or (a.progress = 0 and a.check_status = 1)) and a._status = 1-->
+<!--            <if test="req.currStartDate != null and req.currStartDate != ''">-->
+<!--                and a.signed_stat_date >=#{req.currStartDate}-->
+<!--            </if>-->
+<!--            <if test="req.currEndDate != null and req.currEndDate != ''">-->
+<!--                and #{req.currEndDate} >= a.signed_stat_date-->
+<!--            </if>-->
+<!--            <if test="req.projType!=null and req.projType!=''">-->
+<!--                and a.proj_type like concat(#{req.projType},'%')-->
+<!--            </if>-->
+<!--            and ((a.p_type = 1 and a.invest_money >= #{req.rmb}) or (a.p_type = 2 and a.invest_money >= #{req.doller}))-->
+<!--        </where>-->
+<!--    </select>-->
+<!--    <select id="statisticsSignedProjectInfoYq" resultType="com.qry.statistics.SignedProjectInfo">-->
+<!--        select t.district,t.district_code,m.proj_nums,n.proj_nums as last_year_proj_nums,-->
+<!--               IFNULL(ROUND(((m.proj_nums - n.proj_nums)/n.proj_nums * 100),2),"-") as proj_tb,-->
+<!--               round(m.qyje,2) as ztz,round(n.qyje,2) as last_ztz,IFNULL(ROUND(((m.qyje-n.qyje)/n.qyje * 100),2),"-") as-->
+<!--                   ztz_tb,x.nz_proj_num,round(x.nz_tz,2) as nz_tz,x.wz_proj_num,round(x.wz_tz,2) as wz_tz,h.ndmbrws,-->
+<!--               if(h.ndmbrws=0,"-",ROUND((m.proj_nums/h.ndmbrws * 100),2)) as ndmbwcl-->
+<!--        from-->
+<!--            (-->
+<!--                select dept_code as district_code,dept_name as district from t_common_dept where dept_type = '3' and dept_status = 1-->
+<!--                and dept_code like concat(#{req.deptCode},'%')-->
+<!--            ) t-->
+<!--                left join-->
+<!--            (-->
+<!--                select zone_code as district_code,count(1) as proj_nums,sum(qyje) as qyje-->
+<!--                from t_proj_project_signed-->
+<!--                where  (progress > 0 or (progress = 0 and check_status = 1))-->
+<!--                  and  ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money  >=#{dollar}))-->
+<!--                  and signed_stat_date >=#{req.currStartDate} and #{req.currEndDate} >=signed_stat_date-->
+<!--                  and _status = 1-->
+<!--                GROUP BY zone_code-->
+<!--            )m on m.district_code = t.district_code-->
+<!--                left join-->
+<!--            (-->
+<!--                select zone_code as district_code,count(1) as proj_nums,sum(qyje) as qyje-->
+<!--                from t_proj_project_signed-->
+<!--                where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--                  and  ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money >=#{dollar}))-->
+<!--                  and signed_stat_date >=#{req.lastYearStartDate} and #{req.lastYearEndDate}>=signed_stat_date-->
+<!--                GROUP BY zone_code-->
+<!--            ) n on t.district_code = n.district_code-->
+<!--                left join (-->
+<!--                select zone_code as district_code,-->
+<!--                       sum(CASE WHEN (p_type =1 and invest_money >=#{rmb}) THEN 1 ELSE 0 END) as nz_proj_num,-->
+<!--                       sum(CASE WHEN (p_type =1 and invest_money >=#{rmb}) THEN qyje ELSE 0 END) as nz_tz,-->
+<!--                       sum(CASE WHEN (p_type = 2 and invest_money >=#{dollar}) THEN 1 ELSE 0 END) as wz_proj_num,-->
+<!--                       sum(CASE WHEN (p_type = 2 and invest_money >=#{dollar}) THEN IFNULL(invest_money,0) ELSE 0 END)/10000 as wz_tz-->
+<!--                from t_proj_project_signed-->
+<!--                where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--                  and signed_stat_date >=#{req.currStartDate} and #{req.currEndDate} >=signed_stat_date-->
+<!--                GROUP BY zone_code-->
+<!--            ) x on x.district_code = t.district_code-->
+<!--                LEFT JOIN (-->
+<!--                SELECT zone_code as district_code,-->
+<!--                       case when #{rmb}=1 then sum(one_count)-->
+<!--                            when #{rmb}=5 then sum(five_count)-->
+<!--                            when #{rmb}=10 then sum(ten_count)-->
+<!--                            else 0 end as ndmbrws-->
+<!--                from t_proj_task-->
+<!--                where b_year = #{req.year} and sfqx=2-->
+<!--                GROUP BY zone_code-->
+<!--            ) h on h.district_code = t.district_code order by t.district_code asc-->
+<!--    </select>-->
+<!--    <select id="statisticProjForQxMapYq" resultType="com.qry.statistics.second.SignedProjectInfoDto">-->
+<!--        select t.district,t.district_code,m.proj_nums,m.ztz-->
+<!--        from (-->
+<!--        select dept_code as district_code,dept_name as district from t_common_dept where dept_type = '3' and dept_status = 1-->
+<!--        and dept_code like concat(#{deptCode},'%') order by dept_code asc-->
+<!--        ) t-->
+<!--        left join-->
+<!--        (select zone_code as district_code,count(_id) as proj_nums,round(sum(qyje),2) as ztz-->
+<!--        from t_proj_project_signed-->
+<!--        where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--        and ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money >=#{dollar}))-->
+<!--        and zone_code like concat(#{deptCode},'%')-->
+<!--        <if test="null neq startDate">and signed_stat_date >=#{startDate}</if>-->
+<!--        <if test="null neq endDate">and #{endDate} >=signed_stat_date</if>-->
+<!--        group by zone_code) m on m.district_code = t.district_code-->
+<!--    </select>-->
+
+<!--    <select id="statisticsOnePlusFourForQxYq" resultType="com.qry.statistics.second.SignedProjectInfoDto">-->
+<!--        select CONCAT(m.district_code,"_",n._code) as code ,count(m._id) as proj_nums,round(sum(qyje),2) as ztz-->
+<!--        from (-->
+<!--                 select _id,zone_code as district_code,proj_type,qyje-->
+<!--                 from t_proj_project_signed-->
+<!--                 where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--                   and ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money >=#{dollar}))-->
+<!--                   and signed_stat_date >=#{startDate}  and #{endDate} >=signed_stat_date-->
+<!--                   and zone_code like concat(#{deptCode},'%')-->
+<!--             ) m-->
+<!--                 join (-->
+<!--            select _code,_name from t_proj_type where _status = 1 and level = 2-->
+<!--        ) n-->
+<!--                      on m.proj_type like CONCAT(n._code,'%')-->
+<!--        GROUP BY m.district_code,n._code-->
+<!--    </select>-->
+<!--    <select id="statisticsProjectInfoListYq" resultType="com.qry.statistics.fifth.ProjectInfo">-->
+<!--        SELECT d.district_code,d.district,count(p._id) as proj_nums,round(sum(p.qyje),2) as qyje-->
+<!--        from (-->
+<!--        select dept_code as district_code,dept_name as district-->
+<!--        from t_common_dept-->
+<!--        where dept_type = '3' and dept_status = 1-->
+<!--        and dept_code like concat(#{deptCode},'%')-->
+<!--        ) d-->
+<!--        left join (-->
+<!--        select _id,qyje,zone_code as district_code,zone_name as district-->
+<!--        from t_proj_project_signed-->
+<!--        where (progress > 0 or (progress = 0 and check_status = 1)) and _status = 1-->
+<!--        and  signed_stat_date >=#{startDate} and #{endDate} >=signed_stat_date-->
+<!--        <if test="null neq rmb">-->
+<!--            and ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money >=#{dollar}))-->
+<!--        </if>-->
+<!--        ) p on d.district_code = p.district_code-->
+<!--        group by d.district_code,d.district-->
+<!--    </select>-->
+<!--    <select id="statisticsProjectStatusInfoYq" resultType="com.qry.statistics.fifth.ProjectStatusInfo">-->
+<!--        select zone_code as district_code,CONCAT(zone_code,"_",r_progress) as code ,count(_id) as proj_nums,round(sum(qyje),2) as qyje-->
+<!--        from t_proj_project_signed-->
+<!--        where r_progress in (1,2,4,5) and _status = 1-->
+<!--        and signed_stat_date >=#{startDate} and #{endDate} >=signed_stat_date-->
+<!--        and zone_code like concat(#{deptCode},'%')-->
+<!--        <if test="null neq rmb">-->
+<!--            and ((p_type =1 and invest_money >=#{rmb}) OR (p_type = 2 and invest_money >=#{dollar}))-->
+<!--        </if>-->
+<!--        GROUP BY zone_code,r_progress-->
+<!--        order by zone_code asc-->
+<!--    </select>-->
+<!--</mapper>-->

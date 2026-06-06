@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>tzdig-applications</artifactId>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>com.tzdig</groupId>
+        <artifactId>tzdig-framework</artifactId>
+        <version>${framework.version}</version>
+    </parent>
+
+    <modules>
+        <module>tzdig-app-system</module>
+        <module>tzdig-app-prime</module>
+        <module>tzdig-app-openapi</module>
+        <module>tzdig-app-zsxt</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.tzdig</groupId>
+            <artifactId>tzdig-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.tzdig</groupId>
+            <artifactId>tzdig-mybatis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.tzdig</groupId>
+            <artifactId>tzdig-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.tzdig</groupId>
+            <artifactId>tzdig-security</artifactId>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.tzdig</groupId>
+                <artifactId>tzdig-commons</artifactId>
+                <version>${framework.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

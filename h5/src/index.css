@@ -1,0 +1,84 @@
+:root {
+    /* 页面浅底（乳白偏灰），列表区等可引用 */
+    --color-gray-50: #fafafa;
+}
+
+/* 列表页：模块名单独居中（无面包屑） */
+.list-page-subtitle {
+    font-size: 0.16rem;
+    font-weight: 500;
+    color: #1f2937;
+    text-align: center;
+    line-height: 1.4;
+}
+
+/* 列表页：搜索条与三列筛选同宽、紧凑高度（统计页不用，仅列表用） */
+.list-page-search-wrap {
+    width: 100%;
+    box-sizing: border-box;
+    background: #f3f4f6;
+    border-radius: 999px;
+    padding: 0;
+}
+
+.list-page-search-wrap .list-page-search-full.rv-search {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0.04rem 0 !important;
+    box-sizing: border-box;
+    background: transparent !important;
+}
+
+.list-page-search-wrap .list-page-search-full .rv-search__content,
+.list-page-search-wrap .list-page-search-full .rv-search__content--round {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+    background: transparent !important;
+    min-height: 0 !important;
+    padding: 0.02rem 0.06rem !important;
+    align-items: center;
+}
+
+.list-page-search-wrap .list-page-search-full .rv-search__field {
+    flex: 1;
+    min-width: 0;
+    padding: 0 !important;
+    min-height: 0 !important;
+    line-height: 1.2 !important;
+    background: transparent !important;
+}
+
+.list-page-search-wrap .list-page-search-full .rv-search__field .rv-field__body,
+.list-page-search-wrap .list-page-search-full .rv-search__field .rv-field__value {
+    padding: 0 !important;
+    min-height: 0 !important;
+}
+
+.list-page-search-wrap .list-page-search-full .rv-search__field input,
+.list-page-search-wrap .list-page-search-full .rv-search__field textarea {
+    height: 0.26rem !important;
+    min-height: 0.26rem !important;
+    line-height: 0.26rem !important;
+    padding: 0 !important;
+    font-size: 0.13rem !important;
+}
+
+.list-page-search-wrap .list-page-search-full .rv-search__left-icon {
+    margin-right: 0.06rem !important;
+    display: flex;
+    align-items: center;
+}
+
+.list-page-search-wrap .list-page-search-full .rv-search__left-icon .rv-icon {
+    font-size: 0.13rem !important;
+}
+
+.list-page-search-wrap .list-page-search-full.rv-search input[type="search"],
+.list-page-search-wrap .list-page-search-full.rv-search input[type="text"] {
+    height: 0.26rem !important;
+    min-height: 0.26rem !important;
+    line-height: 0.26rem !important;
+    font-size: 0.13rem !important;
+}

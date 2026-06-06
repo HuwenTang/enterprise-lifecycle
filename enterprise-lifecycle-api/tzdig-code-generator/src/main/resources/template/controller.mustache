@@ -1,0 +1,138 @@
+package {{packageName}}
+
+{{#imports}}import {{importClass}}
+{{/imports}}
+
+@Tag(name = "{{tableComment}}管理")
+@RestController
+@RequestMapping("{{path}}")
+class {{className}}Controller {
+{{NULL}}    @Operation(summary = "查询{{tableComment}}列表")
+{{NULL}}    //@SaCheckPermission("{{path}}::query")
+{{NULL}}    @GetMapping
+{{NULL}}    @PageableQuery
+{{NULL}}    fun list{{className}}(
+{{NULL}}        qo: {{qoClassName}},
+{{NULL}}        pageable: Pageable,
+{{NULL}}    ): PageableResult<{{voClassName}}> {
+{{NULL}}        val page = paginate<{{className}}>(pageable.pageNumber, pageable.pageSize) {
+{{NULL}}            queryWrapper(qo)
+{{NULL}}        }.map(::{{voClassName}})
+{{NULL}}        return PageableResult.of(page)
+{{NULL}}    }
+
+{{NULL}}    @Operation(summary = "查询{{tableComment}}")
+{{NULL}}    //@SaCheckPermission("{{path}}::query")
+{{NULL}}    @GetMapping("{id}")
+{{NULL}}    fun get{{className}}(
+{{NULL}}        @PathVariable id: String,
+{{NULL}}    ): {{voClassName}} {
+{{NULL}}        val record = queryOneById<{{className}}>(id)
+{{NULL}}            ?: throw NotFoundException("{{tableComment}}不存在")
+{{NULL}}        return {{voClassName}}(record)
+{{NULL}}    }
+
+{{NULL}}    @Operation(summary = "创建{{tableComment}}")
+{{NULL}}    //@SaCheckPermission("{{path}}::create")
+{{NULL}}    @PostMapping
+{{NULL}}    fun create{{className}}(
+{{NULL}}        @RequestBody dto: {{dtoClassName}},
+{{NULL}}    ) {
+{{NULL}}        dto.to{{className}}().save()
+{{NULL}}    }
+
+{{NULL}}    @Operation(summary = "修改{{tableComment}}")
+{{NULL}}    //@SaCheckPermission("{{path}}::update")
+{{NULL}}    @PutMapping("{id}")
+{{NULL}}    fun update{{className}}(
+{{NULL}}        @PathVariable id: String,
+{{NULL}}        @RequestBody dto: {{dtoClassName}},
+{{NULL}}    ) {
+{{NULL}}        val record = queryOneById<{{className}}>(id)
+{{NULL}}            ?: throw NotFoundException("{{tableComment}}不存在")
+{{NULL}}        dto.into(record).updateById()
+{{NULL}}    }
+
+{{NULL}}    @Operation(summary = "删除{{tableComment}}")
+{{NULL}}    //@SaCheckPermission("{{path}}::delete")
+{{NULL}}    @DeleteMapping("{id}")
+{{NULL}}    fun delete{{className}}(
+{{NULL}}        @PathVariable id: String,
+{{NULL}}    ) {
+{{NULL}}        val result = deleteById<{{className}}>(id)
+{{NULL}}        if (result == 0) throw NotFoundException("{{tableComment}}不存在")
+{{NULL}}    }
+
+{{NULL}}    @Operation(summary = "{{tableComment}}导入模板")
+{{NULL}}    //@SaCheckPermission("{{path}}::create")
+{{NULL}}    @GetMapping("template.xlsx")
+{{NULL}}    fun get{{className}}ImportTemplate(): FileDownloadVO {
+{{NULL}}        val file = ExcelWriteUtils({{excelRowClassName}}::class)
+{{NULL}}            .writeTemplate(createNewTempFile("xlsx"), emptyMap(/*TODO*/))
+{{NULL}}        return file.downloadVO("{{tableComment}}导入模板.xlsx")
+{{NULL}}    }
+
+{{NULL}}    @Operation(summary = "批量导入{{tableComment}}")
+{{NULL}}    //@SaCheckPermission("{{path}}::create")
+{{NULL}}    @PostMapping("import.xlsx", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+{{NULL}}    fun import{{className}}(
+{{NULL}}        @RequestPart file: MultipartFile,
+{{NULL}}    ): ExcelImportResultVO {
+{{NULL}}        val tempFile = file.tempFile(".xlsx")
+{{NULL}}        try {
+{{NULL}}            val flux1: Flux<{{excelRowClassName}}> =
+{{NULL}}                ExcelReadUtils.readFlux(tempFile, {{excelRowClassName}}::class)
+{{NULL}}            val totalCount = flux1.count().block() ?: 0
+{{NULL}}            val flux2: Flux<{{excelRowClassName}}> = flux1.mapNotNull {
+{{NULL}}                try {
+{{NULL}}                    it.verify()
+{{NULL}}                    it.to{{className}}().save()
+{{NULL}}                    null
+{{NULL}}                } catch (e: IllegalArgumentException) {
+{{NULL}}                    it.failReason = e.message
+{{NULL}}                    it
+{{NULL}}                }
+{{NULL}}            }
+{{NULL}}            val failCount = flux2.count().block() ?: 0
+{{NULL}}            val file = if (failCount == 0L) null else {
+{{NULL}}                ExcelWriteUtils({{excelRowClassName}}::class)
+{{NULL}}                    .writeWith(createNewTempFile("xlsx")) { flux2 }
+{{NULL}}            }
+{{NULL}}            return ExcelImportResultVO(
+{{NULL}}                totalCount = totalCount,
+{{NULL}}                successCount = totalCount - failCount,
+{{NULL}}                failCount = failCount,
+{{NULL}}                result = file?.downloadVO("导入失败记录.xlsx")
+{{NULL}}            )
+{{NULL}}        } finally {
+{{NULL}}            tempFile.delete()
+{{NULL}}        }
+{{NULL}}    }
+
+{{NULL}}    @Operation(summary = "批量导出{{tableComment}}")
+{{NULL}}    //@SaCheckPermission("{{path}}::query")
+{{NULL}}    @GetMapping("export.xlsx")
+{{NULL}}    fun export{{className}}(
+{{NULL}}        qo: {{qoClassName}},
+{{NULL}}        @RequestParam(defaultValue = "") fields: Set{{{STRING_GENERICS}}},
+{{NULL}}    ): FileDownloadVO {
+{{NULL}}        val queryWrapper = QueryScope().apply { queryWrapper(qo) }
+{{NULL}}        val file = ExcelWriteUtils({{voClassName}}::class)
+{{NULL}}            .writeWith(createNewTempFile("xlsx"), fields) {
+{{NULL}}                val mapper = mapper<{{mapperClassName}}>()
+{{NULL}}                Flux.create { emitter ->
+{{NULL}}                    Db.tx {
+{{NULL}}                        val records = mapper.selectCursorByQuery(queryWrapper)
+{{NULL}}                        for (record in records) emitter.next({{voClassName}}(record))
+{{NULL}}                        emitter.complete()
+{{NULL}}                        true
+{{NULL}}                    }
+{{NULL}}                }
+{{NULL}}            }
+{{NULL}}        return file.downloadVO("{{tableComment}}导出.xlsx")
+{{NULL}}    }
+
+{{NULL}}    private fun QueryScope.queryWrapper(qo: {{qoClassName}}) {
+{{NULL}}        // TODO
+{{NULL}}    }
+}

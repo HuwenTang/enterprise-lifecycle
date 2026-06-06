@@ -1,0 +1,383 @@
+.container {
+  padding-bottom: 1.5rem;
+  position: relative;
+  margin: 0 0.14rem;
+}
+
+.topContainer {
+  padding: 0 0.14rem;
+  width: 100%;
+  position: fixed;
+  background-color: #fff;
+  top: 0;
+  left: 0;
+  z-index: 5;
+}
+
+.topCon {
+  display: flex;
+  align-items: center;
+  padding: 0.14rem 0;
+  width: 100%;
+  overflow: auto;
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.topCon::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari and Opera */
+}
+
+.testText {
+  color: red;
+  font-size: 0.14rem;
+  line-height: 0.3rem;
+  width: 100%;
+  text-align: center;
+}
+
+.tabItem {
+  margin-right: 0.14rem;
+  padding: 0 0.3rem;
+  line-height: 0.45rem;
+  background: #f5f5f5;
+  border-radius: 0.4rem;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.16rem;
+  color: #333333;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.tabItem:last-child {
+  margin-right: 0;
+}
+
+.tabActiveItem {
+  margin-right: 0.14rem;
+  padding: 0 0.3rem;
+  line-height: 0.45rem;
+  background: #1a237e;
+  border-radius: 0.4rem;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.16rem;
+  color: #ffffff;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.mainCon {
+  background: #fff;
+  /* margin: 0.14rem; */
+  margin-top: 0.15rem;
+  /* margin-top: 0.86rem; */
+  /* margin-top: 1.16rem; */
+  box-shadow: 0 0.02rem 0.1rem 0 #99999933;
+  border-radius: 0.16rem;
+  overflow: hidden;
+  padding: 0.14rem;
+}
+
+.titleCon {
+  padding-bottom: 0.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.titleLeftCon {
+  display: flex;
+  align-items: center;
+}
+
+.titleImg {
+  width: 0.36rem;
+  height: 0.36rem;
+  font-size: 0.24rem;
+}
+
+.titleText {
+  line-height: 0.28rem;
+  font-weight: 600;
+  font-size: 0.22rem;
+  color: #000000;
+  letter-spacing: 0;
+  margin-left: 0.08rem;
+}
+
+.titleRightCon {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.span {
+  color: #1a237e;
+  font-size: 0.16rem;
+  font-weight: 400;
+  line-height: 0;
+  letter-spacing: 0;
+  margin: 0 0.1rem;
+}
+
+.span1 {
+  color: #1a237e;
+  font-size: 0.16rem;
+  font-weight: 400;
+  line-height: 0;
+  letter-spacing: 0;
+}
+
+.spanActive1 {
+  color: #e9861f;
+  font-size: 0.16rem;
+  font-weight: 400;
+  line-height: 0;
+  letter-spacing: 0;
+}
+
+.itemTopCon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0.2rem 0;
+  position: relative;
+}
+
+.itemTopCon::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-image: url('/img/tutorial/banner.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  z-index: 0;
+}
+
+.conImg {
+  width: 0.9rem;
+  transform: scaleX(-1);
+}
+
+.itemTopConText {
+  height: 0.25rem;
+  font-weight: 400;
+  font-size: 0.18rem;
+  color: #333333;
+  letter-spacing: 0;
+  text-align: center;
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+
+.subtitleText {
+  margin-top: 0.08rem;
+  font-weight: 400;
+  font-size: 0.14rem;
+  color: #666666;
+  letter-spacing: 0;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.itemCon {
+  padding: 0 0.1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(1.8rem, 1fr));
+  gap: 0.14rem;
+  line-height: 0.25rem;
+}
+
+.item {
+  background: #f2f4f8;
+  border-radius: 0.12rem;
+  display: flex;
+  flex-direction: column;
+  padding: 0.06rem 0;
+}
+
+.item:not(.itemNoNavigate) {
+  cursor: pointer;
+}
+
+.itemNoNavigate {
+  cursor: default;
+}
+
+/* 响应式布局 - 根据屏幕宽度调整列数 */
+@media (min-width: 480px) {
+  .itemCon {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 640px) {
+  .itemCon {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 479px) {
+  .itemCon {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.itemTextCon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.itemTitle {
+  font-weight: 500;
+  font-size: 0.16rem;
+  color: #333333;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.text1 {
+  font-weight: 500;
+  font-size: 0.14rem;
+  color: #E9861F;
+  letter-spacing: 0;
+}
+
+.text2 {
+  color: #333333;
+  font-weight: 500;
+  font-size: 0.16rem;
+  margin: 0 0.04rem;
+}
+
+.text3 {
+  color: #333333;
+  font-weight: 500;
+  font-size: 0.14rem;
+  color: #1A237E;
+}
+
+/* 筛选区域 */
+.filterContainer {
+  padding: 16px 15px;
+  background-color: white;
+  position: relative;
+}
+
+.filterRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filterButton {
+  min-width: 90px;
+  height: 32px;
+  border: none;
+  background-color: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: unset;
+}
+
+.filterButton:hover {
+  color: #1a237e;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.cumulativeModal {
+  width: 100%;
+  max-width: 100vw;
+  background-color: white;
+  border-radius: 16px 16px 0 0;
+  animation: slideUp 0.3s ease-out;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 1001;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.modalContent {
+  padding: 20px;
+}
+
+.monthContent {
+  margin-bottom: 16px;
+}
+
+.monthCon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.monthText {
+  color: rgba(51, 51, 51, 1);
+  font-size: 14px;
+}
+
+.monthSpan {
+  color: rgba(38, 120, 255, 1);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.modalActions {
+  display: flex;
+  gap: 16px;
+}
+
+.resetButton {
+  flex: 1;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+  background-color: white;
+  color: #666;
+}
+
+.confirmButton {
+  flex: 1;
+  height: 44px;
+  border-radius: 8px;
+  background-color: #1a237e !important;
+  border-color: #1a237e !important;
+}

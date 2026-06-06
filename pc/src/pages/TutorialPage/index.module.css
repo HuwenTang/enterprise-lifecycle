@@ -1,0 +1,541 @@
+/* 企业全生命周期管理系统样式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+.homePage {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+  color: #333;
+  line-height: 1.6;
+  min-height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 头部样式 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 0;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logoIcon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #1a237e, #534bae);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.logoIcon::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+}
+
+.logoIcon::after {
+  content: '';
+  width: 28px;
+  height: 28px;
+  background: white;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2L2 7v10c0 5.55 3.84 9.64 9 11 5.16-1.36 9-5.45 9-11V7l-10-5z'/%3E%3C/svg%3E") no-repeat center;
+  mask-size: contain;
+  z-index: 1;
+}
+
+.logoText h1 {
+  font-size: 32px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #1a237e, #534bae);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 5px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.logoText p {
+  font-size: 14px;
+  color: #666;
+  letter-spacing: 1px;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 12px 24px;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.notification {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.notification::before {
+  content: '';
+  width: 18px;
+  height: 18px;
+  background: white;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z'/%3E%3C/svg%3E") no-repeat center;
+  mask-size: contain;
+}
+
+.notification:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.notificationBadge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff4757;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(255, 71, 87, 0.4);
+}
+
+/* 仪表板样式 */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin-bottom: 80px;
+  position: relative;
+  z-index: 5;
+}
+
+.departmentCard {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  min-height: 280px;
+}
+
+
+
+.departmentCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #00b0ff, #ff4081);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.departmentCard::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.1;
+  transition: opacity 0.4s ease;
+}
+
+.departmentCard:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.departmentCard:hover::before {
+  transform: scaleX(1);
+}
+
+.departmentCard:hover::after {
+  opacity: 1;
+}
+
+/* 部门卡片颜色主题 */
+.bgCommerce {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.2), rgba(44, 128, 255, 0.15));
+}
+
+.bgDevelopment {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(39, 174, 96, 0.15));
+}
+
+.bgData {
+  background: linear-gradient(135deg, rgba(155, 89, 182, 0.2), rgba(142, 68, 173, 0.15));
+}
+
+.bgIndustry {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.2), rgba(192, 57, 43, 0.15));
+}
+
+/* 科创项目特殊背景色 */
+.bgScience {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.15));
+}
+
+/* .bgCommerce::before {
+  background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.bgDevelopment::before {
+  background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.bgData::before {
+  background: linear-gradient(90deg, #fa709a 0%, #fee140 100%);
+}
+
+.bgIndustry::before {
+  background: linear-gradient(90deg, #a8edea 0%, #fed6e3 100%);
+} */
+
+.departmentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.departmentIcon {
+  width: 60px;
+  height: 60px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.departmentCard:hover .departmentIcon {
+  transform: rotate(5deg) scale(1.05);
+}
+
+/* 部门图标背景和图标 */
+.bgCommerce .departmentIcon {
+  background: linear-gradient(135deg, #3498db, #2c80ff);
+}
+
+.bgCommerce .departmentIcon::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  background: white;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M18 6h-2c0-2.21-1.79-4-4-4S8 3.79 8 6H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-8 0c0-1.1.9-2 2-2s2 .9 2 2h-4z'/%3E%3C/svg%3E") no-repeat center;
+  mask-size: contain;
+}
+
+.bgDevelopment .departmentIcon {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.bgDevelopment .departmentIcon::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  background: white;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z'/%3E%3C/svg%3E") no-repeat center;
+  mask-size: contain;
+}
+
+.bgData .departmentIcon {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+.bgData .departmentIcon::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  background: white;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z'/%3E%3C/svg%3E") no-repeat center;
+  mask-size: contain;
+}
+
+.bgIndustry .departmentIcon {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.bgIndustry .departmentIcon::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  background: white;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/%3E%3C/svg%3E") no-repeat center;
+  mask-size: contain;
+}
+
+.bgScience .departmentIcon {
+  background: linear-gradient(135deg, #ffc107, #ff9800);
+}
+
+.bgScience .departmentIcon::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  background: white;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z'/%3E%3C/svg%3E") no-repeat center;
+  mask-size: contain;
+}
+
+.departmentCard h3 {
+  font-size: 24px;
+  color: #2c3e50;
+  margin: 0 0 15px 0;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.departmentCard p {
+  color: #7f8c8d;
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+  font-size: 14px;
+}
+
+.departmentStages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stageTag {
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0a0f2d;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
+}
+
+.stageTag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 页脚样式 */
+.footer {
+  text-align: center;
+  padding: 30px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  margin-top: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.footer p {
+  color: #666;
+  margin: 0;
+  font-size: 14px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+    padding: 15px;
+  }
+
+  .dashboard {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .departmentCard {
+    padding: 20px;
+  }
+
+  .logoText h1 {
+    font-size: 24px;
+  }
+
+  .logoIcon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .departmentIcon {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homePage {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  .header {
+    margin-bottom: 20px;
+    padding: 10px;
+  }
+
+  .dashboard {
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .departmentCard {
+    padding: 15px;
+  }
+
+  .logoText h1 {
+    font-size: 20px;
+  }
+
+  .departmentCard h3 {
+    font-size: 20px;
+  }
+}
+
+/* 动画效果 */
+/* @keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} */
+
+.departmentCard {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.departmentCard:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.departmentCard:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.departmentCard:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.departmentCard:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+/* 高级视觉效果 */
+.departmentCard::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.departmentCard:hover::after {
+  opacity: 1;
+}
+
+
+/* 返回按钮 */
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  padding: 22px 24px;
+  background: #ffffff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  color: #263238;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.backBtn:hover {
+  background: #1a237e !important;
+  color: white !important;
+  border-color: #1a237e !important;
+  transform: translateX(-5px);
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tzdig.framework.mybatis.mapper.zsxt.TBizInvestMapper">
+
+    <select id="selectPageWithZone" resultType="com.tzdig.framework.mybatis.entity.zsxt.TBizInvest">
+        SELECT a.* FROM t_biz_invest a  JOIN t_biz_zone b ON a.zone_code = b._code
+        <where>
+            <if test="companyName != null and companyName != ''">
+                AND a.company_name LIKE CONCAT('%', #{companyName}, '%')
+            </if>
+            <if test="zoneCode != null and zoneCode != ''">
+                AND b.dept_code = #{zoneCode}
+            </if>
+            <if test="industryCode != null and industryCode != ''">
+                AND a.industry_code = #{industryCode}
+            </if>
+            <if test="status != null">
+                AND a.status = #{status}
+            </if>
+        </where>
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <select id="countWithZone" resultType="long">
+        SELECT COUNT(1) FROM t_biz_invest a  JOIN t_biz_zone b ON a.zone_code = b._code
+        <where>
+            <if test="companyName != null and companyName != ''">
+                AND a.company_name LIKE CONCAT('%', #{companyName}, '%')
+            </if>
+            <if test="zoneCode != null and zoneCode != ''">
+                AND b.dept_code = #{zoneCode}
+            </if>
+            <if test="industryCode != null and industryCode != ''">
+                AND a.industry_code = #{industryCode}
+            </if>
+            <if test="status != null">
+                AND a.status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="countNotFeedback" resultType="long">
+        SELECT COUNT(1) FROM t_biz_invest a JOIN t_biz_zone b ON a.zone_code = b._code
+        WHERE a.feeback_is = 0 AND b.dept_code LIKE CONCAT(#{deptCode}, '%')
+    </select>
+</mapper>

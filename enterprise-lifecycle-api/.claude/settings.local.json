@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn compile:*)",
+      "Bash(find D:Javaprojectenterprise-lifecycle-apitzdig-mybatis -name *.java -type f)",
+      "Bash(find D:Javaprojectenterprise-lifecycle-api -name *.xml -path */mapper/*)",
+      "mcp__ide__getDiagnostics"
+    ]
+  }
+}

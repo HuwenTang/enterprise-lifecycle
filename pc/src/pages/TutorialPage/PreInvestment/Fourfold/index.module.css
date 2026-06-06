@@ -1,0 +1,307 @@
+/* 企业全生命周期管理系统样式 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+.homePage {
+  color: #1a237e;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding: 25px 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 头部样式 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  margin-bottom: 30px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logoIcon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  color: white;
+  font-size: 24px;
+}
+
+.logoText h1 {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #1a237e, #534bae);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+
+.logoText p {
+  font-size: 14px;
+  color: #546e7a;
+}
+
+/* 返回按钮 */
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  padding: 20px 24px;
+  background: #ffffff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  color: #263238;
+  font-weight: 600;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.backBtn:hover {
+  color: #4096ff !important;
+  transform: translateX(-5px);
+}
+
+/* 确保箭头图标也变成白色 */
+.backBtn:hover .anticon {
+  color: #4096ff !important;
+}
+
+.mb15 {
+  margin-bottom: 15px;
+}
+
+.topCon {
+  display: flex;
+  align-items: center;
+  /* margin-top: 80px; */
+  margin-bottom: 30px;
+  justify-content: space-between;
+}
+
+/* 页面标题 */
+.pageTitle {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: #1a237e;
+}
+
+.pageSubtitle {
+  font-size: 16px;
+  color: #546e7a;
+  margin-bottom: 40px;
+}
+
+/* 表格样式 */
+.projectsTable {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 40px;
+}
+
+.tableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.tableTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a237e;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #1a237e;
+  text-align: center !important;
+}
+
+.table td {
+  color: #263238;
+}
+
+.headerMain {
+  font-size: 14px;
+  font-weight: 700;
+  min-width: 120px;
+  text-align: center;
+}
+
+.headerGroup {
+  font-size: 13px;
+  min-width: 100px;
+  /* 确保分组标题有足够宽度 */
+}
+
+.headerCount,
+.headerAmount {
+  font-size: 12px;
+}
+
+.chainName {
+  font-weight: 600;
+  text-align: left !important;
+  padding-left: 16px !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 1400px) {
+  .container {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+    padding: 15px;
+  }
+
+  .pageTitle {
+    font-size: 24px;
+  }
+
+  .logoText h1 {
+    font-size: 24px;
+  }
+
+  .logoIcon {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.projectsTable {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* 图表卡片样式 */
+.chartCard {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  height: 400px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  padding: 20px;
+}
+
+.chartCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.chartCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.chartCardTitle {
+  color: #1a237e;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* Breadcrumb 大字体样式 */
+.breadcrumbLarge {
+  font-size: 20px !important;
+  margin-right: 5px;
+}
+.filterControls {
+  display: flex;
+  gap: 5px;
+}
+
+.chartBtn {
+  background: white;
+  border: 1px solid #e0e0e0;
+  color: var(--subpage-text);
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.chartBtn.active {
+  background: #1a237e;
+  color: white;
+  border-color: #1a237e;
+}
+
+.chartBtn:hover:not(.active) {
+  border-color: #1a237e;
+  color: #1a237e;
+}

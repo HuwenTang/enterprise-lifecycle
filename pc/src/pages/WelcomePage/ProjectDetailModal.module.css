@@ -1,0 +1,524 @@
+/* 项目详情弹窗样式 */
+.projectDetailModal:global(.ant-modal) {
+  width: 1600px !important;
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 200px);
+}
+
+.projectDetailModal :global(.ant-modal-content) {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.projectDetailModal :global(.ant-modal-header) {
+  display: none;
+}
+
+.projectDetailModal :global(.ant-modal-body) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+}
+
+.modalHeaderTop {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: #d5e1ff;
+}
+
+.modalTitle {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: baseline;
+  justify-content: flex-start;
+}
+
+.modalTitleText {
+  height: 24px;
+  color: #2563eb;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.modalTitleSub {
+  color: #6b7280;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 100%;
+}
+
+.modalClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: #374151;
+  font-size: 16px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.modalStats {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  height: 72px;
+  border-bottom: 1px solid #e0eaf4;
+}
+
+.modalStatItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 210px;
+  height: 48px;
+  border-right: 1px solid #e0eaf4;
+}
+.modalStatItem:last-child {
+  border-right: none;
+}
+
+.modalStatValue {
+  height: 24px;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.modalStatLabel {
+  height: 12px;
+  color: #6b7280;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.modalTabs {
+  padding: 16px 24px;
+  background: #fff;
+}
+.modalTabs :global(.ant-tabs-nav) {
+  width: auto;
+  height: 53px;
+  margin: 0 auto;
+  padding: 6px;
+  background: #f3f4f6;
+  border-radius: 14px;
+  opacity: 1;
+}
+.modalTabs :global(.ant-tabs-nav::before) {
+  display: none;
+}
+
+.modalTabs :global(.ant-tabs-tab) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 41px;
+  padding: 8px 20px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 21px;
+  text-align: center;
+}
+
+.modalTabs :global(.ant-tabs-tab-active) {
+  color: #4a72f8;
+  background: #fff;
+  border-bottom: none;
+  border-radius: 10px;
+}
+
+.modalTabs :global(.ant-tabs-ink-bar) {
+  display: none;
+}
+
+.modalContent {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 22px;
+  overflow-y: auto;
+  background: #fff;
+}
+
+.modalSearch {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.modalSearch :global(.ant-select) {
+  width: 200px;
+}
+
+.modalSearchInput {
+  flex: 1;
+  max-width: 300px;
+}
+
+.modalTable {
+  overflow: hidden;
+  background: #fff;
+  border-radius: 12px;
+}
+
+.modalTable :global(.ant-table-thead > tr > th) {
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 13px;
+  background: #d5e1ff;
+}
+
+.modalTable :global(.ant-table-tbody > tr) {
+  transition: background 0.2s ease;
+}
+
+.modalTable :global(.ant-table-tbody > tr:hover) {
+  background: #f3f4f6;
+}
+
+.modalTable :global(.ant-table td),
+.modalTable :global(.ant-table th) {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.activityGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-content: start;
+  column-gap: 40px;
+  row-gap: 26px;
+}
+
+.activityCard {
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-left: 3px solid #d1d5db;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.activityCard_1 {
+  border-left-color: #16a34a;
+}
+
+.activityCard_2 {
+  border-left-color: #dc2626;
+}
+
+.activityCard_0 {
+  border-left-color: #9ca3af;
+}
+
+.activityCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.activityTime {
+  color: #6b7280;
+  font-size: 12px;
+  width: 180px;
+}
+
+.activityTags {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.activityIndustryTag {
+  padding: 2px 8px;
+  color: #4338ca;
+  font-size: 11px;
+  background: #e0e7ff;
+  border-radius: 4px;
+  min-width: 0;
+  max-width: calc(100% - 70px);
+  overflow: hidden;
+}
+
+.activityAuditTag {
+  padding: 2px 2px;
+  font-size: 11px;
+  border-radius: 4px;
+  width: 70px;
+  text-align: center;
+}
+
+.audit_1 {
+  color: #16a34a;
+  background: #dcfce7;
+}
+
+.audit_2 {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+.audit_0 {
+  color: #9ca3af;
+  background: #EBEBEB;
+}
+
+.activityCardBody {
+  margin-bottom: 10px;
+}
+
+.activityContent {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: #374151;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.activityCardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.activityLeader {
+  color: #ea580c;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.activityLocationText {
+  color: #9ca3af;
+  font-size: 11px;
+}
+
+.activityPagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 16px;
+  padding: 16px 0;
+  border-top: 1px solid #f3f4f6;
+}
+
+.activityTotal {
+  color: #6b7280;
+  font-size: 12px;
+}
+.activityPaginationRight {
+  display: flex;
+  align-items: center;
+}
+
+.activityPaginationRight :global(.ant-pagination-item) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+}
+
+.activityPaginationRight :global(.ant-pagination-item-active) {
+  background: #4a72f8;
+  border-color: #4a72f8;
+}
+
+.activityPaginationRight :global(.ant-pagination-item-active a) {
+  color: #fff;
+}
+
+/* 招商人员视图切换 */
+.personViewToggle {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.personTotal {
+  margin-right: 8px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.viewBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: #6b7280;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.viewBtn:hover {
+  background: #f3f4f6;
+}
+
+.viewActive {
+  color: #fff;
+  background: #4a72f8;
+  border-color: #4a72f8;
+}
+
+/* 招商人员卡片网格 */
+.personCardGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px 64px;
+}
+
+/* 招商人员卡片 */
+.personCard {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0a.1) 0px 1px 3px 0px;
+}
+
+.personCardHeader {
+  padding: 16px;
+  background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+}
+
+.personName {
+  display: block;
+  margin-bottom: 4px;
+  color: #1d4ed8;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.personRegion {
+  color: #4b5563;
+  font-size: 13px;
+}
+
+.personCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: flex-start;
+  padding: 16px 20px;
+}
+
+.personInfoFlex {
+  display: flex;
+  align-self: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+.personInfoFlex .personInfoRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 145px;
+}
+
+.personInfoRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.personIcon {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  color: #6b7280;
+}
+
+.personLabel {
+  min-width: 45px;
+  color: #6b7280;
+}
+
+.personValue {
+  flex: 1;
+  color: #374151;
+}
+
+.personCardFooter {
+  padding: 0 16px 16px;
+}
+
+.personDivider {
+  height: 1px;
+  margin-bottom: 12px;
+  background: #e5e7eb;
+}
+
+.personRemark {
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+/* 招商人员卡片分页 */
+.personCardPagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 16px;
+  padding: 16px 0;
+  border-top: 1px solid #f3f4f6;
+}
+
+.personCardTotal {
+  color: #6b7280;
+  font-size: 12px;
+}
+.personCardPaginationRight {
+  display: flex;
+  align-items: center;
+}
+
+.personCardPaginationRight :global(.ant-pagination-item) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+}
+
+.personCardPaginationRight :global(.ant-pagination-item-active) {
+  background: #4a72f8;
+  border-color: #4a72f8;
+}
+
+.personCardPaginationRight :global(.ant-pagination-item-active a) {
+  color: #fff;
+}

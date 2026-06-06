@@ -1,0 +1,8 @@
+package {{packageName}}
+
+{{#imports}}import {{importClass}}
+{{/imports}}
+
+@Service
+class I{{className}} : IService<{{className}}>,
+{{NULL}}    ServiceImpl<{{mapperClassName}}, {{className}}>()

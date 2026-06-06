@@ -1,0 +1,64 @@
+{
+  "pageName": "ProjectManage11",
+  "pageTitle": "新项目管理",
+  "apiModule": "primeApi",
+  "listApiFunc": "listProjectDigitalInvestmentAttracting",
+  "listRequestType": "ListProjectDigitalInvestmentAttractingRequest",
+  "exportApiFunc": "exportProjectInfo",
+  "exportFileName": "新项目管理.xlsx",
+
+  "searchFields": [
+    { "name": "projectName",    "label": "项目名称", "type": "input" },
+    { "name": "projectContent", "label": "项目内容", "type": "input" },
+    {
+      "name": "investmentFlag",
+      "label": "项目类别",
+      "type": "select",
+      "options": [
+        { "value": "1", "label": "内资" },
+        { "value": "2", "label": "外资" }
+      ]
+    },
+    {
+      "name": "industryOrService",
+      "label": "所属产业",
+      "type": "select",
+      "options": [
+        { "value": "工业",  "label": "工业" },
+        { "value": "服务业","label": "服务业" }
+      ]
+    },
+    { "name": "district", "label": "所属市（区）", "type": "district" },
+    { "name": "park",     "label": "所属板块",     "type": "park" }
+  ],
+
+  "moreSearchFields": [
+    { "name": "investor",      "label": "投资方名称", "type": "input" },
+    { "name": "attractorUnit", "label": "招引单位",   "type": "input" },
+    {
+      "name": "projectSource",
+      "label": "项目来源",
+      "type": "select",
+      "options": [
+        { "value": "市级机关推荐", "label": "市级机关推荐" },
+        { "value": "自行接洽",    "label": "自行接洽" }
+      ]
+    },
+    {
+      "name": "isListedProject",
+      "label": "是否列统项目",
+      "type": "boolSelect"
+    },
+    { "name": "signingDateRange", "label": "签约时间", "type": "dateRange" }
+  ],
+
+  "tableColumns": [
+    { "title": "序号",     "dataIndex": "index",       "width": 60,  "fixed": "left" },
+    { "title": "项目名称", "dataIndex": "projectName", "width": 200, "ellipsis": true },
+    { "title": "投资方",   "dataIndex": "investor",    "width": 150 },
+    { "title": "所属市",   "dataIndex": "district",    "width": 100 },
+    { "title": "项目类别", "dataIndex": "investmentFlag", "width": 100 },
+    { "title": "签约时间", "dataIndex": "actualSigningTime", "width": 120 },
+    { "title": "项目状态", "dataIndex": "currentProjectProgress", "width": 120 }
+  ]
+}

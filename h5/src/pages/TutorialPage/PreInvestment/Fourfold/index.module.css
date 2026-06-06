@@ -1,0 +1,734 @@
+.container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  font-size: 14px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 标签切换区域 */
+.tabContainer {
+  display: flex;
+  /* justify-content: center; */
+  padding: 0.2rem 0.2rem 0.15rem 0.2rem;
+  background-color: white;
+  border-bottom: 1px solid rgba(241, 241, 241, 0.05);
+}
+
+.backCon {
+  display: flex;
+  align-items: center;
+  margin-right: 0.25rem;
+}
+
+.backImg {
+  width: 0.22rem;
+}
+
+.backText {
+  font-weight: 400;
+  font-size: 0.14rem;
+  color: #333333;
+  margin-left: 0.06rem;
+}
+
+.tabButtons {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.tabButton {
+  border-radius: 0.2rem;
+  padding: 18px 0.24rem;
+  border: none;
+  font-weight: 500;
+  min-width: 1.65rem;
+  background-color: #f5f5f5;
+}
+
+.activeTab {
+  background-color: #1a237e !important;
+  color: #fff !important;
+}
+
+.parkTab {
+  color: #1a237e !important;
+  font-weight: 600;
+  font-size: 0.16rem;
+}
+
+/* 分隔线 */
+.divider {
+  height: 1px;
+  background-color: #e8e8e8;
+}
+
+.shuxian {
+  width: 1px;
+  height: 24px;
+  background-color: #d9d9d9;
+}
+
+/* 筛选条件区域 */
+.filterContainer {
+  padding: 16px 15px;
+  background-color: white;
+  position: relative;
+}
+
+.filterRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.radioGroup {
+  display: flex;
+  gap: 0px;
+  width: 50%;
+}
+
+.radioGroup :global(.ant-radio-wrapper) {
+  font-size: 14px;
+  color: #333;
+}
+
+.radioGroup :global(.ant-radio-wrapper .ant-radio-checked .ant-radio-inner) {
+  background-color: #1a237e;
+  border-color: #1a237e;
+}
+
+.radioGroup :global(.ant-radio-wrapper .ant-radio-label) {
+  padding-inline-end: 0px !important;
+}
+
+.radioGroup :global(.ant-radio-wrapper .ant-radio-inner) {
+  width: 16px;
+  height: 16px;
+}
+
+
+
+.filterButton {
+  min-width: 80px;
+  height: 32px;
+  border: none;
+  background-color: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: unset;
+  padding: 5px;
+}
+
+.filterButton:hover {
+  color: #1a237e;
+}
+
+
+.modalOverlay {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 8;
+  backdrop-filter: blur(2px);
+  min-height: 100vh;
+}
+
+.cumulativeModal {
+  width: 100%;
+  max-width: 100vw;
+  background-color: white;
+  border-radius: 0 0 16px 16px;
+  animation: slideDown 0.3s ease-out;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 10000;
+  margin-top: 0;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modalContent {
+  padding: 20px;
+}
+
+.investmentOptions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.investmentOption {
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+}
+
+.investmentOption.selected {
+  background-color: #e6f7ff;
+  color: #1a237e;
+  position: relative;
+}
+
+
+.filterResult {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #666;
+}
+
+.resultCount {
+  color: #ff4d4f;
+  font-weight: bold;
+}
+
+.moneyCon {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.2rem;
+}
+
+.modalActions {
+  display: flex;
+  gap: 16px;
+}
+
+.middleText {
+  margin: 0 0.1rem;
+  line-height: 0.3rem;
+}
+
+.resetButton {
+  flex: 1;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+  background-color: white;
+  color: #666;
+}
+
+.confirmButton {
+  flex: 1;
+  height: 44px;
+  border-radius: 8px;
+  background-color: #1a237e !important;
+  border-color: #1a237e !important;
+}
+
+
+.select {
+  min-width: 90px;
+  height: 32px;
+}
+
+.select :global(.ant-select-selector) {
+  height: 32px !important;
+  border-radius: 4px;
+  border: none !important;
+  background-color: transparent;
+  box-shadow: none !important;
+  padding-right: 10px !important;
+}
+
+.select :global(.ant-select-selection-item) {
+  line-height: 30px !important;
+  font-size: 14px;
+  color: #333;
+  padding-right: 0 !important;
+}
+
+.select :global(.ant-select-arrow) {
+  color: #666;
+  font-size: 12px;
+  right: 8px !important;
+}
+
+.select :global(.ant-select-focused .ant-select-selector) {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* 累计新增筛选弹窗 */
+.cumulativeFilterModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  z-index: 1000;
+}
+
+.cumulativeOptions {
+  background-color: white;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cumulativeOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  min-height: 60px;
+}
+
+.cumulativeOption.selected {
+  background-color: #1a237e;
+  color: white;
+}
+
+.cumulativeOption.selected::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 12px solid white;
+  transform: rotate(45deg);
+}
+
+/* 投资额筛选弹窗 */
+.investmentFilterModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
+.investmentOptions {
+  background-color: white;
+}
+
+
+
+.editIcon {
+  font-size: 16px;
+}
+
+.filterResult {
+  background-color: white;
+  text-align: center;
+  color: #666;
+}
+
+.resultCount {
+  color: #ff4d4f;
+  font-weight: bold;
+}
+
+.filterActions {
+  background-color: white;
+  padding: 20px;
+  display: flex;
+  gap: 15px;
+}
+
+.resetButton {
+  flex: 1;
+  height: 44px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  background-color: white;
+  color: #666;
+}
+
+.confirmButton {
+  flex: 1;
+  height: 44px;
+  border-radius: 6px;
+  background-color: #1a237e;
+  border: none;
+}
+
+/* 图表区域 */
+.chartSection {
+  margin-top: 14px;
+  padding: 20px 15px 20px;
+  background-color: white;
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* padding: 0 0 14px 0; */
+  padding: 0 10px 15px 10px;
+}
+
+.chartLeft {
+  display: flex;
+  align-items: center;
+}
+
+.chartTitle {
+  margin-left: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a237e;
+}
+
+.areaSelectCon {
+  border: 1px solid #cccccc;
+  border-radius: 0.28rem;
+  padding: 0.04rem 0.14rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 0.14rem;
+}
+
+.areaSelectImg {
+  width: 0.14rem;
+}
+
+.areaSelectText {
+  margin: 0 0.05rem;
+  font-size: 0.14rem;
+  color: #E9861F;
+}
+
+/* 地区选择弹窗样式 */
+.areaModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+}
+
+.areaModal {
+  width: 100%;
+  background: white;
+  border-radius: 0.2rem 0.2rem 0 0;
+  padding: 0.2rem;
+  animation: slideUp 0.3s ease-out;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+
+.areaModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 0.2rem;
+}
+
+.areaItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.1rem;
+  border-radius: 0.08rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.areaItem:hover {
+  background-color: #f5f5f5;
+}
+
+.areaItemSelected {
+  background-color: #e6f7ff !important;
+}
+
+.areaItemText {
+  font-size: 0.12rem;
+  color: #999;
+  margin-bottom: 0.05rem;
+}
+
+.areaItemName {
+  font-size: 0.16rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.areaItemSelected .areaItemName {
+  color: #1a237e;
+  font-weight: 600;
+}
+
+.areaCancelBtn,
+.areaConfirmBtn {
+  padding: 0.08rem 0.16rem;
+  border-radius: 0.06rem;
+  font-size: 0.14rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 0.6rem;
+}
+
+.areaCancelBtn {
+  background-color: transparent;
+  color: #666;
+}
+
+.areaCancelBtn:hover {
+  background-color: #f5f5f5;
+}
+
+.areaConfirmBtn {
+  background-color: transparent;
+  color: #1a237e;
+  font-weight: 500;
+}
+
+.areaConfirmBtn:hover {
+  background-color: #f0f7ff;
+}
+
+.chartToggle {
+  display: flex;
+  gap: 0;
+  /* border: 1px solid #e8e8e8; */
+  border-radius: 28px;
+  overflow: hidden;
+  background-color: #f5f5f5;
+}
+
+.chartToggle :global(.ant-btn) {
+  border: none !important;
+  border-radius: 24px !important;
+  font-size: 14px !important;
+  height: 26px !important;
+  padding: 0 14px !important;
+  background-color: transparent !important;
+  color: #1a1a1a !important;
+  box-shadow: none !important;
+  transition: all .2s ease !important;
+}
+
+.chartToggle :global(.ant-btn-primary) {
+  background-color: #1a237e !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  border-radius: 24px !important;
+}
+
+.chartToggle :global(.ant-btn:first-child) {
+  border-radius: 24px !important;
+  margin: 3px 0px 3px 3px;
+}
+
+.chartToggle :global(.ant-btn:last-child) {
+  border-radius: 24px !important;
+  margin: 3px 3px 3px 0px;
+}
+
+.chartContainer {
+  background-color: white;
+}
+
+.chartLegend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #666;
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.legendLine {
+  width: 16px;
+  height: 2px;
+  background-color: #ff9500;
+  position: relative;
+}
+
+.legendLine::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: -2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #ff9500;
+}
+
+/* 表格样式 */
+.tableContainer {
+  padding: 16px 0;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.dataTable th {
+  background-color: #f5f5f5;
+  padding: 12px 8px;
+  text-align: center;
+  font-weight: 500;
+  color: #333;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.dataTable td {
+  padding: 12px 8px;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+  color: #666;
+}
+
+.dataTable tr:hover {
+  background-color: #f8f9fa;
+}
+
+.highlightRow {
+  background-color: #e6f7ff !important;
+}
+
+.highlightRow td {
+  color: #1a237e;
+  font-weight: 500;
+}
+
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .filterContainer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .parkStats {
+    justify-content: space-around;
+    padding-bottom: 30px;
+  }
+}
+
+
+/* 手风琴 */
+.collapseContainer{
+
+}
+.collapseItem{
+  margin-bottom: 20px;
+} 
+.collapseTitleCon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 245, 245, 1);
+}
+.collapseTitle{
+  color: rgba(22, 21, 26, 1);
+  font-size: 16px;
+  font-weight: 400;
+  text-align: center;
+  line-height: 44px;
+}
+.activeItem{
+  box-shadow: 0px 7px 10px 0px rgba(218, 222, 234, 1);
+}
+
+.activeCon{
+  background: rgba(230, 247, 255, 1);
+}
+.expandIcon{
+  margin-left: 20px;
+  color: rgba(22, 21, 26, 1)
+}
+.activeCon .collapseTitle{
+  color:  rgba(26, 35, 126, 1)!important;
+  font-weight: 500!important;
+}
+.activeCon .expandIcon{
+  color:  rgba(26, 35, 126, 1)!important;
+  font-weight: 500!important;
+}
+
+.miniTableContainer{
+  box-sizing: border-box;
+  border-top: 1px solid rgba(218, 222, 234, 1);
+  background: rgba(255, 255, 255, 1);
+}
+.miniTableCon{
+  width: 100%;
+  padding: 10px 0;
+}
+.miniTableCon th{
+color: rgba(154, 159, 181, 1);
+font-size: 14px;
+font-weight: 400;
+text-align: center;
+}
+.miniTableCon td{
+  text-align: center;
+  line-height: 30px;
+  color: rgba(22, 21, 26, 1);
+  font-weight: 400;
+}

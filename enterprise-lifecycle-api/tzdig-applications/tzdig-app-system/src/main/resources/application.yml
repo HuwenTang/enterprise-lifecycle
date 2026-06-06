@@ -1,0 +1,59 @@
+server:
+  port: 9091
+  servlet:
+    context-path: /system-api
+
+spring:
+  application:
+    name: system-application
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 1GB
+      max-request-size: 1GB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 100
+  data:
+    redis:
+      lettuce:
+        pool:
+          min-idle: 5
+          max-active: 20
+
+mybatis-flex:
+  default-datasource-key: default
+  datasource:
+    default:
+      url: ${spring.datasource.url}
+      username: ${spring.datasource.username}
+      password: ${spring.datasource.password}
+
+sa-token:
+  token-name: Authorization
+  token-style: tik
+  is-concurrent: false
+  is-read-body: false
+  is-write-header: true
+
+sms:
+  username: 'sjj_qyqsm'
+  password: 'BuinbtIA'
+
+taizhengtong:
+  appid: 1572864-14778368
+  secret: 3333D61E091580AB4F6A59AB8689F675
+  staff-tag-for-app: 1572864-vAuV9TDmz8VPHdx6O9FzB2EXfB13tLzBbHlA
+
+springdoc:
+  api-docs:
+    enabled: false
+    version: openapi_3_1
+
+logging:
+  level:
+    root: info
+    org.springframework: warn

@@ -1,0 +1,17 @@
+package {{packageName}}
+
+{{#imports}}import {{importClass}}
+{{/imports}}
+
+data class {{voClassName}}(
+{{#fields}}
+    @get:Schema(description = "{{comment}}")
+    @ExcelProperty("{{comment}}")
+    val {{fieldName}}: {{fieldType}}?,
+{{/fields}}
+) {
+{{NULL}}    constructor(record: {{className}}) : this(
+{{#fields}}        {{fieldName}} = record.{{fieldName}},
+{{/fields}}
+{{NULL}}    )
+}

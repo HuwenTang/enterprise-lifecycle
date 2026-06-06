@@ -1,0 +1,55 @@
+.step-item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+.step-dot-out{
+    margin-right: 10px;
+    display: flex;
+    /*flex-direction: column;*/
+    /*align-items: center;*/
+    /*justify-content: center;*/
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid  #3c9cff;
+}
+
+.step-dot {
+    margin: auto;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #3c9cff;
+    /*margin-right: 10px;*/
+    /*flex-shrink: 0; !* 防止圆点挤压内容 *!*/
+    /*align-self: flex-start; !* 将圆点对齐到左上角 *!*/
+}
+
+.step-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.step-title {
+    font-weight: bold;
+    font-size: 18px;
+}
+.step-desc {
+    font-size: 16px;
+    padding-top: 4px;
+    color: #999;
+}
+
+.step-line {
+    position: absolute;
+    top: 13px; /* 根据圆点的尺寸调整 */
+    left: 5px; /* 将竖线居中对齐 */
+    bottom: -5px; /* 调整竖线的长度 */
+    width: 1px;
+    background-color: #E6E6E6;
+}
+.step-item:last-child .step-line{
+    display: none;
+}

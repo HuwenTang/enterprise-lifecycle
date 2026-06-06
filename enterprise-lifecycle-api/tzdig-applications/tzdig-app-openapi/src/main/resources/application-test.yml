@@ -1,0 +1,42 @@
+server:
+  prefer-ip-prefix: '192.177.35.'
+  pc-host: http://172.22.71.215
+  h5-host: http://172.22.71.215:5173
+
+spring:
+  datasource:
+    url: jdbc:mysql://192.177.35.97:3306/test
+    username: test
+    password: test
+  data:
+    redis:
+      host: 192.177.35.97
+      password: enterprise-lifecycle
+      database: 1
+
+springdoc:
+  api-docs:
+    enabled: true
+
+mybatis-flex:
+  datasource:
+    gong-gai:
+      url: jdbc:mysql://192.177.35.97:3306/gonggai
+      username: enterprise_lifecycle
+      password: enterprise_lifecycle
+      #read-only: true
+    invest-online:
+      url: jdbc:mysql://192.177.35.97:3306/invest_online
+      username: enterprise_lifecycle
+      password: enterprise_lifecycle
+      # url: jdbc:mysql://172.22.26.71:54930/invest_online
+      # username: zs_test
+      # password: Dj3wGnmur5SV
+      read-only: true
+
+s3:
+  provider: obs
+  endpoint: obsv3.tz-telecom-zww.tztelecom.com
+  bucket: qyqsmzq
+  access-key: 'WEROGAUDXFYPQDCKLG8I'
+  secret-key: 'mBoSSdid8hRsL3iOlfPwK8gV5zRmRR0vAKIEEKCP'

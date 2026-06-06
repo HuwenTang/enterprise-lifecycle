@@ -1,0 +1,8 @@
+mysql:
+  host: '192.168.192.2'
+  username: 'enterprise_lifecycle'
+  password: 'enterprise_lifecycle'
+  schema: 'enterprise_lifecycle'
+
+module: prime
+subPackage: prime

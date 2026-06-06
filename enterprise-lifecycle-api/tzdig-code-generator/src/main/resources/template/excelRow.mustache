@@ -1,0 +1,24 @@
+package {{packageName}}
+
+{{#imports}}import {{importClass}}
+{{/imports}}
+
+@HeadRowHeight(20)
+@HeadFontStyle(fontHeightInPoints = 11)
+data class {{excelRowClassName}}(
+{{#fields}}
+    @field:ExcelProperty("{{comment}}")
+    var {{fieldName}}: {{fieldType}}? = null,
+{{/fields}}
+) : ExcelRow<{{excelRowClassName}}>() {
+{{NULL}}    fun to{{className}}(): {{className}} =
+{{NULL}}        {{className}} {
+{{NULL}}            into(this)
+{{NULL}}        }
+
+{{NULL}}    fun into(record: {{className}}): {{className}} {
+{{#fields}}        record.{{fieldName}} = {{fieldName}}
+{{/fields}}
+{{NULL}}        return record
+{{NULL}}    }
+}

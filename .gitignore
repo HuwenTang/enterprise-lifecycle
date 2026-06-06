@@ -1,0 +1,17 @@
+node_modules/
+dist/
+build/
+target/
+coverage/
+
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+*.log
+*.pid
+
+.DS_Store
+__MACOSX/

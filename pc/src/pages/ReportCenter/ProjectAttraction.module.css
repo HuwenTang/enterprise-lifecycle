@@ -1,0 +1,117 @@
+.wrap {
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.tableUnit {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.table :global(.ant-table) {
+  font-size: 12px;
+}
+
+.table :global(.ant-table-thead > tr > th) {
+  text-align: center !important;
+  font-weight: 700;
+  padding: 8px 6px !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+.table :global(.ant-table-tbody > tr > td) {
+  text-align: center;
+  padding: 8px 6px !important;
+}
+
+.hBase {
+  background: #f5f7fb !important;
+  color: #1f2a37 !important;
+}
+
+.cBase {
+  background: #fff !important;
+}
+
+/* 黄 */
+.hYellow {
+  background: #f6c43b !important;
+  color: #1f2a37 !important;
+}
+.hYellowSub {
+  background: #fde7a1 !important;
+  color: #1f2a37 !important;
+}
+.cYellow {
+  background: #fff7d6 !important;
+}
+
+/* 绿 */
+.hGreen {
+  background: #7fc55b !important;
+  color: #102a13 !important;
+}
+.hGreenSub {
+  background: #ccebc1 !important;
+  color: #102a13 !important;
+}
+.cGreen {
+  background: #eef8ea !important;
+}
+
+/* 橙 */
+.hOrange {
+  background: #f2a35a !important;
+  color: #3b1f0b !important;
+}
+.hOrangeSub {
+  background: #f9d2ad !important;
+  color: #3b1f0b !important;
+}
+.cOrange {
+  background: #fff1e6 !important;
+}
+
+/* 蓝 */
+.hBlue {
+  background: #6aa9e8 !important;
+  color: #0b1f33 !important;
+}
+.hBlueSub {
+  background: #cfe5fb !important;
+  color: #0b1f33 !important;
+}
+.cBlue {
+  background: #eef6ff !important;
+}
+
+/* 红 */
+.hRed {
+  background: #df6a6a !important;
+  color: #2c0b0b !important;
+}
+.hRedSub {
+  background: #f2c1c1 !important;
+  color: #2c0b0b !important;
+}
+.cRed {
+  background: #ffefef !important;
+}
+
+/* 灰 */
+.hGray {
+  background: #b6c0c9 !important;
+  color: #111827 !important;
+}
+.hGraySub {
+  background: #e7edf3 !important;
+  color: #111827 !important;
+}
+.cGray {
+  background: #f6f8fb !important;
+}
+

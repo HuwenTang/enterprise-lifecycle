@@ -1,0 +1,25 @@
+.benchtable{
+  :global(.ant-table-thead> tr >th){
+    color:royalblue;
+    text-align:center
+  }
+}
+
+/* 增资扩产入库审核弹框：Descriptions 双列各占 50% */
+.warehouseReviewModalDesc :global(.ant-descriptions-view > table) {
+  table-layout: fixed;
+  width: 100%;
+}
+.warehouseReviewModalDesc :global(.ant-descriptions-bordered tbody > tr > th) {
+  width: 25%;
+}
+.warehouseReviewModalDesc :global(.ant-descriptions-bordered tbody > tr > td) {
+  width: 25%;
+}
+.warehouseReviewModalDesc :global(.ant-descriptions-bordered tbody > tr > td[colspan='3']) {
+  width: 75%;
+}
+.warehouseReviewModalDesc :global(.ant-descriptions-bordered tbody > tr > th),
+.warehouseReviewModalDesc :global(.ant-descriptions-bordered tbody > tr > td) {
+  word-break: break-word;
+}

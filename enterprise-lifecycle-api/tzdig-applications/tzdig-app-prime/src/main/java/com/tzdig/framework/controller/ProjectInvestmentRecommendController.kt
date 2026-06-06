@@ -1,0 +1,170 @@
+package com.tzdig.framework.controller
+
+import com.mybatisflex.core.query.QueryWrapper
+import com.mybatisflex.core.row.Db
+import com.mybatisflex.kotlin.extensions.db.deleteById
+import com.mybatisflex.kotlin.extensions.db.mapper
+import com.mybatisflex.kotlin.extensions.db.paginate
+import com.mybatisflex.kotlin.extensions.db.queryOneById
+import com.mybatisflex.kotlin.extensions.kproperty.eq
+import com.tzdig.framework.file.model.vo.ExcelImportResultVO
+import com.tzdig.framework.file.model.vo.FileDownloadVO
+import com.tzdig.framework.file.model.vo.FileDownloadVO.Companion.downloadVO
+import com.tzdig.framework.file.util.createNewTempFile
+import com.tzdig.framework.file.util.tempFile
+import com.tzdig.framework.model.dto.ProjectInvestmentRecommendDTO
+import com.tzdig.framework.model.dto.ProjectInvestmentRecommendExcelRow
+import com.tzdig.framework.model.vo.ProjectInvestmentRecommendVO
+import com.tzdig.framework.mybatis.entity.prime.ProjectInvestmentRecommend
+import com.tzdig.framework.mybatis.mapper.prime.ProjectInvestmentRecommendMapper
+import com.tzdig.framework.mybatis.pageable.Pageable
+import com.tzdig.framework.mybatis.pageable.PageableQuery
+import com.tzdig.framework.mybatis.pageable.PageableResult
+import com.tzdig.framework.security.extension.userAccount
+import com.tzdig.framework.web.exception.NotFoundException
+import com.tzdig.framework.web.util.ExcelReadUtils
+import com.tzdig.framework.web.util.ExcelWriteUtils
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.MediaType
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
+import reactor.core.publisher.Flux
+
+@Tag(name = "招商活动项目推荐管理")
+@RestController
+@RequestMapping("project-investment-recommend")
+class ProjectInvestmentRecommendController {
+    @Operation(summary = "查询招商活动项目推荐列表")
+    //@SaCheckPermission("project-investment-recommend::query")
+    @GetMapping
+    @PageableQuery
+    fun listProjectInvestmentRecommend(
+        @Schema(description = "招商id")
+        @RequestParam(defaultValue = "") id: String,
+        @Schema(description = "园区")
+        @RequestParam(defaultValue = "") park: String,
+        pageable: Pageable
+    ): PageableResult<ProjectInvestmentRecommendVO> {
+        val page = paginate<ProjectInvestmentRecommend>(pageable.pageNumber, pageable.pageSize) {
+            if (id.isNotEmpty()) {
+                and(ProjectInvestmentRecommend::digitalInvestmentId eq id)
+            }
+            if (park.isNotEmpty()) {
+                and(ProjectInvestmentRecommend::park eq park)
+            }
+        }.map(::ProjectInvestmentRecommendVO)
+        return PageableResult.of(page)
+    }
+
+    @Operation(summary = "查询招商活动项目推荐")
+    //@SaCheckPermission("project-investment-recommend::query")
+    @GetMapping("{id}")
+    fun getProjectInvestmentRecommend(
+        @PathVariable id: String,
+    ): ProjectInvestmentRecommendVO {
+        val record = queryOneById<ProjectInvestmentRecommend>(id)
+            ?: throw NotFoundException("招商活动项目推荐不存在")
+        return ProjectInvestmentRecommendVO(record)
+    }
+
+    @Operation(summary = "创建招商活动项目推荐")
+    //@SaCheckPermission("project-investment-recommend::create")
+    @PostMapping
+    fun createProjectInvestmentRecommend(
+        @RequestBody dto: ProjectInvestmentRecommendDTO,
+    ) {
+        dto.createBy = userAccount.mobile
+        dto.toProjectInvestmentRecommend().save()
+    }
+
+    @Operation(summary = "修改招商活动项目推荐")
+    //@SaCheckPermission("project-investment-recommend::update")
+    @PutMapping("{id}")
+    fun updateProjectInvestmentRecommend(
+        @PathVariable id: String,
+        @RequestBody dto: ProjectInvestmentRecommendDTO,
+    ) {
+        val record = queryOneById<ProjectInvestmentRecommend>(id)
+            ?: throw NotFoundException("招商活动项目推荐不存在")
+        dto.into(record).updateById()
+    }
+
+    @Operation(summary = "删除招商活动项目推荐")
+    //@SaCheckPermission("project-investment-recommend::delete")
+    @DeleteMapping("{id}")
+    fun deleteProjectInvestmentRecommend(
+        @PathVariable id: String,
+    ) {
+        val result = deleteById<ProjectInvestmentRecommend>(id)
+        if (result == 0) throw NotFoundException("招商活动项目推荐不存在")
+    }
+
+    @Operation(summary = "招商活动项目推荐导入模板")
+    //@SaCheckPermission("project-investment-recommend::create")
+    @GetMapping("template.xlsx")
+    fun getProjectInvestmentRecommendImportTemplate(): FileDownloadVO {
+        val file = ExcelWriteUtils(ProjectInvestmentRecommendExcelRow::class)
+            .writeTemplate(createNewTempFile("xlsx"), emptyMap(/*TODO*/))
+        return file.downloadVO("招商活动项目推荐导入模板.xlsx")
+    }
+
+    @Operation(summary = "批量导入招商活动项目推荐")
+    //@SaCheckPermission("project-investment-recommend::create")
+    @PostMapping("import.xlsx", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun importProjectInvestmentRecommend(
+        @RequestPart file: MultipartFile,
+    ): ExcelImportResultVO {
+        val tempFile = file.tempFile(".xlsx")
+        try {
+            val flux1: Flux<ProjectInvestmentRecommendExcelRow> =
+                ExcelReadUtils.readFlux(tempFile, ProjectInvestmentRecommendExcelRow::class)
+            val totalCount = flux1.count().block() ?: 0
+            val flux2: Flux<ProjectInvestmentRecommendExcelRow> = flux1.mapNotNull {
+                try {
+                    it.verify()
+                    it.toProjectInvestmentRecommend().save()
+                    null
+                } catch (e: IllegalArgumentException) {
+                    it.failReason = e.message
+                    it
+                }
+            }
+            val failCount = flux2.count().block() ?: 0
+            val file = if (failCount == 0L) null else {
+                ExcelWriteUtils(ProjectInvestmentRecommendExcelRow::class)
+                    .writeWith(createNewTempFile("xlsx")) { flux2 }
+            }
+            return ExcelImportResultVO(
+                totalCount = totalCount,
+                successCount = totalCount - failCount,
+                failCount = failCount,
+                result = file?.downloadVO("导入失败记录.xlsx")
+            )
+        } finally {
+            tempFile.delete()
+        }
+    }
+
+    @Operation(summary = "批量导出招商活动项目推荐")
+    //@SaCheckPermission("project-investment-recommend::query")
+    @GetMapping("export.xlsx")
+    fun exportProjectInvestmentRecommend(
+        @RequestParam(defaultValue = "") fields: Set<String>,
+    ): FileDownloadVO {
+        val file = ExcelWriteUtils(ProjectInvestmentRecommendVO::class)
+            .writeWith(createNewTempFile("xlsx"), fields) {
+                val mapper = mapper<ProjectInvestmentRecommendMapper>()
+                Flux.create { emitter ->
+                    Db.tx {
+                        val records = mapper.selectCursorByQuery(QueryWrapper())
+                        for (record in records) emitter.next(ProjectInvestmentRecommendVO(record))
+                        emitter.complete()
+                        true
+                    }
+                }
+            }
+        return file.downloadVO("招商活动项目推荐导出.xlsx")
+    }
+}

@@ -1,0 +1,11 @@
+package {{packageName}}
+
+{{#imports}}import {{importClass}}
+{{/imports}}
+
+data class {{qoClassName}}(
+{{#fields}}
+    @param:Schema(description = "{{comment}}")
+    val {{fieldName}}: {{fieldType}}? = null,
+{{/fields}}
+)

@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>项目各阶段情况</title>
+    <!-- ECharts & Font Awesome -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #f5f7fc;
+            font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+            padding-bottom: 70px;
+            color: #1e293b;
+        }
+
+        /* 返回按钮 */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 18px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.1rem;
+            z-index: 10;
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        .back-btn:active {
+            transform: scale(0.95);
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 50px;
+        }
+
+        /* 主容器 */
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #f5f7fc;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            min-height: 100vh;
+        }
+
+        /* 头部 */
+        .header {
+            background: linear-gradient(135deg, #0f2b3d 0%, #1b4a6e 100%);
+            color: white;
+            padding: 20px 18px 18px;
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+        }
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .header h1 i {
+            font-size: 1.5rem;
+            background: rgba(255,255,255,0.2);
+            padding: 6px;
+            border-radius: 50%;
+        }
+        .sub {
+            font-size: 0.75rem;
+            opacity: 0.85;
+            margin-top: 6px;
+            display: flex;
+            justify-content: right;
+            align-items: center;
+        }
+        .data-note {
+            background: rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+        }
+
+        /* 底部导航栏 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 12px 16px;
+            border-top: 1px solid #e2e8f0;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.04);
+            z-index: 20;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            color: #5b6e8c;
+            transition: all 0.2s;
+            cursor: pointer;
+            flex: 1;
+            padding: 6px 0 4px;
+            border-radius: 30px;
+        }
+        .nav-item i {
+            font-size: 1.35rem;
+        }
+        .nav-item.active {
+            color: #1e6f3f;
+            background: #e9f4ef;
+            font-weight: 500;
+        }
+        /* 内容区 */
+        .page-content {
+            padding: 18px 16px 20px;
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .page-content.active-page {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /*内容区筛选按钮*/
+        .filter-btn {
+            padding: 2px 12px;
+            border: 1px solid #4e73df;
+            background: #fff;
+            color: #4e73df;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: #f8f9fc;
+        }
+
+        .filter-btn.active {
+            background: #4e73df;
+            color: #fff;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 16px 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #eef2f8;
+        }
+        .card-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            /*justify-content: space-between;*/
+            justify-content: space-between;
+            gap: 8px;
+            border-left: 4px solid #1e6f3f;
+            padding-left: 12px;
+            color: #0f2b3d;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+        }
+        .card-title:hover {
+            opacity: 0.9;
+        }
+        .card-title i.toggle-icon {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            color: #5b6e8c;
+        }
+        .card-title.collapsed i.toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .card-title a {
+            font-weight: 600;
+            font-size: 0.8rem;
+            align-items: flex-end;
+            margin-left: auto;
+        }
+
+        .collapse-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            max-height: 500px;
+            opacity: 1;
+        }
+        .collapse-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+        .stat-badge {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 12px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 1.7rem;
+            font-weight: 800;
+            /*color: #1e6f3f;*/
+            line-height: 1.2;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: #5b6e8c;
+            margin-top: 4px;
+        }
+        .rank-list {
+            margin-top: 8px;
+        }
+        .rank-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .rank-name {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .rank-num {
+            font-weight: 700;
+            color: #1f4f3a;
+        }
+        .medal {
+            width: 24px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .progress-bar {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .progress-fill {
+            background: #1e6f3f;
+            height: 100%;
+            border-radius: 4px;
+            width: 0%;
+        }
+        .chart-container {
+            height: 280px;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .insight-text {
+            font-size: 0.7rem;
+            color: #6c86a3;
+            background: #f1f5f9;
+            padding: 10px 12px;
+            border-radius: 18px;
+            margin-top: 12px;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .value-highlight {
+            font-weight: 700;
+            color: #1f4f3a;
+        }
+        hr {
+            margin: 12px 0;
+            border-color: #eef2f8;
+        }
+        .tag-sm {
+            background: #eef2ff;
+            color: #1e6f3f;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            /*绝对定位*/
+            /*position: absolute;*/
+            /*right: 50px;*/
+            margin-left: auto;
+        }
+        i.icon-mr {
+            margin-right: 6px;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.6rem;
+            color: #7c8ea0;
+            margin-top: 10px;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='dragonIndex.html'" title="返回首页">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <h1>各阶段项目情况</h1>
+        <div class="sub">
+            <span>2026 年 1-3 月</span>
+            <span class="data-note"><i class="far fa-calendar-alt"></i> 数据截至 3.20</span>
+        </div>
+    </div>
+
+    <!-- 页面内容容器 -->
+    <div id="homePage" class="page-content active-page">
+        <!-- 汇总卡片 -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-chart-pie"></i> 全市关键指标
+                <a><i style="color: #d46b08">当月新增</i><i>/</i><i style="color: #1e6f3f">累计</i></a>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-badge" data-page-card="sign"><div class="stat-number" id="totalSign"><a style="color: #d46b08">223</a>/<a style="color: #1e6f3f">266</a></div><div class="stat-label">签约项目数</div></div>
+                <div class="stat-badge" data-page-card="record"><div class="stat-number" id="totalRecord"><a style="color: #d46b08">140</a>/<a style="color: #1e6f3f">415</a></div><div class="stat-label">备案项目数</div></div>
+                <div class="stat-badge" data-page-card="start"><div class="stat-number" id="totalStart"><a style="color: #d46b08">210</a>/<a style="color: #1e6f3f">345</a></div><div class="stat-label">开工项目数</div></div>
+                <div class="stat-badge" data-page-card="complete"><div class="stat-number" id="totalComplete"><a style="color: #d46b08">142</a>/<a style="color: #1e6f3f">209</a></div><div class="stat-label">竣工项目数</div></div>
+<!--                <div class="stat-badge"><div class="stat-number" id="fixedRate">10.95%</div><div class="stat-label">固投完成率</div></div>-->
+<!--                <div class="stat-badge"><div class="stat-number" id="fourNew">234</div><div class="stat-label">“四上”新增数</div></div>-->
+            </div>
+        </div>
+
+        <!-- 排名聚合卡片：签约/开工/固投完成率 TOP3 -->
+        <div class="card">
+<!--            榜单1-->
+            <div class="card-title" onclick="toggleCollapse('signRankList', this)">
+                <span><i class="fas fa-handshake"></i> 签约项目总数</span>
+                <span class="tag-sm">龙头引领</span>
+                <i class="fas fa-chevron-up toggle-icon"></i>
+            </div>
+            <div id="signRankList" class="rank-list collapse-content"></div>
+
+            <!--            榜单2-->
+            <div class="card-title" onclick="toggleCollapse('recordRankList', this)" style="margin-top: 16px;">
+                <span><i class="fas fa-handshake"></i> 备案项目总数</span>
+                <span class="tag-sm">龙头引领</span>
+                <i class="fas fa-chevron-up toggle-icon"></i>
+            </div>
+            <div id="recordRankList" class="rank-list collapse-content collapsed" style="margin-top: 8px;"></div>
+
+<!--            榜单3-->
+            <div class="card-title collapsed" onclick="toggleCollapse('startRankList', this)" style="margin-top: 16px;">
+                <span><i class="fas fa-hard-hat"></i> 开工项目总数</span>
+                <span class="tag-sm">建设热度</span>
+                <i class="fas fa-chevron-up toggle-icon"></i>
+            </div>
+            <div id="startRankList" class="rank-list collapse-content collapsed" style="margin-top: 8px;"></div>
+
+<!--            榜单3-->
+<!--            <div class="card-title collapsed" onclick="toggleCollapse('fixedRankList', this)" style="margin-top: 16px;">-->
+<!--                <span><i class="fas fa-chart-simple"></i> 固投完成率排名</span>-->
+<!--                <span class="tag-sm">目标进度</span>-->
+<!--                <i class="fas fa-chevron-up toggle-icon"></i>-->
+<!--            </div>-->
+<!--            <div id="fixedRankList" class="rank-list collapse-content collapsed" style="margin-top: 8px;"></div>-->
+
+
+            <!--            榜单4-->
+            <div class="card-title collapsed" onclick="toggleCollapse('completeRankList', this)" style="margin-top: 16px;">
+                <span><i class="fas fa-holly-berry"></i> 竣工项目总数</span>
+                <span class="tag-sm">目标进度</span>
+                <i class="fas fa-chevron-up toggle-icon"></i>
+            </div>
+            <div id="completeRankList" class="rank-list collapse-content collapsed" style="margin-top: 8px;"></div>
+        </div>
+
+
+
+        <!-- 投资速览 -->
+<!--        <div class="card">-->
+<!--            <div class="card-title"><i class="fas fa-coins"></i> 开工项目投资完成率(1亿+)</div>-->
+<!--            <div id="investRateChart" style="height: 220px;"></div>-->
+<!--            <div class="insight-text">*开工投资数据为1-2月列统，医药高新区完成率11.58%居首，全市整体进度有待加速。</div>-->
+<!--        </div>-->
+    </div>
+
+    <!-- 签约子页面 -->
+    <div id="signPage" class="page-content">
+        <!--金额筛选-->
+        <div class="justify-content" style="gap: 10px; margin: 15px 0;">
+            <div style="display: flex; align-items: flex-start; gap: 10px; width: 100%;">
+                <span style="font-size: 13px; color: #666; min-width: 70px;">金额范围：</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; flex: 1;">
+                    <button class="filter-btn active" data-amount-sign="all">全部</button>
+                    <button class="filter-btn" data-amount-sign="below">亿元以下</button>
+                    <button class="filter-btn" data-amount-sign="above">亿元以上</button>
+                    <button class="filter-btn" data-amount-sign="five_above">五亿元以上</button>
+                    <button class="filter-btn" data-amount-sign="year_one_above">年度投资亿元以上</button>
+                </div>
+            </div>
+        </div>
+        <!-- 数据类型筛选 -->
+        <div class="justify-content" style="gap: 10px; margin: 15px 0;">
+            <div style="display: flex; align-items: flex-start; gap: 10px; width: 100%;">
+                <span style="font-size: 13px; color: #666; min-width: 70px;">统计口径：</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; flex: 1;">
+                    <button class="filter-btn active" data-type-sign="total">累计</button>
+                    <button class="filter-btn" data-type-sign="add_month">当月新增</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title" style="justify-content: left"><i class="fas fa-file-signature"></i>签约项目全景</div>
+<!--            签约子页面柱状图-->
+<!--            <div id="signChart" class="chart-container"></div>-->
+            <div class="flex-between"><span>🏆 各市（区）签约项目数量排名</span></div>
+            <div id="signDetailList" class="rank-list"></div>
+            <div class="insight-text">备注：数据日期为2026年1月1日-3月20日；数据由市商务局提供。</div>
+        </div>
+    </div>
+
+    <!-- 备案子页面 -->
+    <div id="recordPage" class="page-content">
+        <!--金额筛选-->
+        <div class="justify-content" style="gap: 10px; margin: 15px 0;">
+            <div style="display: flex; align-items: flex-start; gap: 10px; width: 100%;">
+                <span style="font-size: 13px; color: #666; min-width: 70px;">金额范围：</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; flex: 1;">
+                    <button id="record_amount_btn" class="filter-btn active" data-amount-record="all">全部</button>
+                    <button class="filter-btn" data-amount-record="below">亿元以下</button>
+                    <button class="filter-btn" data-amount-record="above">亿元以上</button>
+                    <button class="filter-btn" data-amount-record="five_above">五亿元以上</button>
+                </div>
+            </div>
+        </div>
+        <!-- 数据类型筛选 -->
+        <div class="justify-content" style="gap: 10px; margin: 15px 0;">
+            <div style="display: flex; align-items: flex-start; gap: 10px; width: 100%;">
+                <span style="font-size: 13px; color: #666; min-width: 70px;">统计口径：</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; flex: 1;">
+                    <button id="record_type_btn" class="filter-btn active" data-type-record="total">累计</button>
+                    <button class="filter-btn" data-type-record="add_month">当月新增</button>
+                </div>
+            </div>
+        </div>
+        <!-- 投资类型筛选 -->
+        <div class="justify-content" style="gap: 10px; margin: 15px 0;">
+            <div style="display: flex; align-items: flex-start; gap: 10px; width: 100%;">
+                <span style="font-size: 13px; color: #666; min-width: 70px;">投资类型：</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; flex: 1;">
+                    <button class="filter-btn" data-type-invest="expand">增资扩产</button>
+                    <button class="filter-btn" data-type-invest="reinvest">外资利润再投资</button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title" style="justify-content: left"><i class="fas fa-archive"></i> 备案项目情况</div>
+<!--            <div id="recordChart" class="chart-container"></div>-->
+            <div class="flex-between"><span>📋 各市（区）备案项目数量排名</span></div>
+            <div id="recordDetailList" class="rank-list"></div>
+            <div class="insight-text">备注：备案项目情况指2026年1月1日-3月20日期间新备案产业项目；数据由各市（区）自报。</div>
+        </div>
+    </div>
+
+    <!-- 开工子页面 -->
+    <div id="startPage" class="page-content">
+        <!--金额筛选-->
+        <div class="justify-content" style="gap: 10px; margin: 15px 0;">
+            <div style="display: flex; align-items: flex-start; gap: 10px; width: 100%;">
+                <span style="font-size: 13px; color: #666; min-width: 70px;">金额范围：</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; flex: 1;">
+                    <button id="start_amount_btn" class="filter-btn active" data-amount-start="all">全部</button>
+                    <button class="filter-btn" data-amount-start="below">亿元以下</button>
+                    <button class="filter-btn" data-amount-start="above">亿元以上</button>
+                    <button class="filter-btn" data-amount-start="five_above">五亿元以上</button>
+                </div>
+            </div>
+        </div>
+        <!-- 数据类型筛选 -->
+        <div class="justify-content" style="gap: 10px; margin: 15px 0;">
+            <div style="display: flex; align-items: flex-start; gap: 10px; width: 100%;">
+                <span style="font-size: 13px; color: #666; min-width: 70px;">统计口径：</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; flex: 1;">
+                    <button id="start_type_btn" class="filter-btn active" data-type-start="total">累计</button>
+                    <button class="filter-btn" data-type-start="add_month">当月新增</button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title" style="justify-content: left"><i class="fas fa-play-circle"></i> 开工项目情况</div>
+<!--            <div id="startChart" class="chart-container"></div>-->
+            <div class="flex-between"><span>⚙️ 各市（区）开工项目数量排名</span></div>
+            <div id="startDetailList" class="rank-list"></div>
+            <div class="insight-text">备注：开工项目情况指2026年1月1日-3月20日期间新开工产业项目；数据由各市（区）自报。</div>
+        </div>
+        <div id="investCompleteChartDiv" class="card">
+            <div class="card-title" style="justify-content: left"><i class="fas fa-play-circle"></i> 累计完成投资</div>
+            <div id="investCompleteChart" class="chart-container">这是一个饼图1</div>
+            <div class="insight-text">备注：开工项目投资情况指2026年1月1日-3月20日期间新开工项目列统投资情况；已完成投资数据时间为1-2月；计划总投资、年度计划投资数据由各市（区）自报； 已完成投资数据由市统计局提供。</div>
+        </div>
+        <div id="investCompletionRateChartDiv" class="card">
+            <div class="card-title" style="justify-content: left"><i class="fas fa-play-circle"></i> 年度计划投资完成率</div>
+            <div id="investCompletionRateChart" class="chart-container">这是一个柱状图</div>
+            <div class="insight-text">备注：开工项目投资情况指2026年1月1日-3月20日期间新开工项目列统投资情况；已完成投资数据时间为1-2月；计划总投资、年度计划投资数据由各市（区）自报； 已完成投资数据由市统计局提供。</div>
+        </div>
+    </div>
+
+    <!-- 竣工子页面 -->
+    <div id="completePage" class="page-content">
+        <!--金额筛选-->
+        <div class="justify-content" style="gap: 10px; margin: 15px 0;">
+            <div style="display: flex; align-items: flex-start; gap: 10px; width: 100%;">
+                <span style="font-size: 13px; color: #666; min-width: 70px;">金额范围：</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; flex: 1;">
+                    <button class="filter-btn active" data-amount-complete="all">全部</button>
+                    <button class="filter-btn" data-amount-complete="below">亿元以下</button>
+                    <button class="filter-btn" data-amount-complete="above">亿元以上</button>
+                </div>
+            </div>
+        </div>
+        <!-- 数据类型筛选 -->
+        <div class="justify-content" style="gap: 10px; margin: 15px 0;">
+            <div style="display: flex; align-items: flex-start; gap: 10px; width: 100%;">
+                <span style="font-size: 13px; color: #666; min-width: 70px;">统计口径：</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; flex: 1;">
+                    <button class="filter-btn active" data-type-complete="total">累计</button>
+                    <button class="filter-btn" data-type-complete="add_month">当月新增</button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title" style="justify-content: left"><i class="fas fa-check-double"></i> 竣工项目成果</div>
+<!--            <div id="completeChart" class="chart-container"></div>-->
+            <div class="flex-between"><span>🏁 各市（区）竣工项目数量排名</span>
+<!--                <span class="tag-sm">500万-1亿竣工数</span>-->
+            </div>
+            <div id="completeDetailList" class="rank-list"></div>
+            <div class="insight-text">备注：竣工项目情况指2026年1月1日-3月20日期间新竣工产业项目情况；数据由各市（区）自报。</div>
+        </div>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="bottom-nav">
+        <div class="nav-item active" data-page="home"><i class="fas fa-chart-simple"></i><span>总览</span></div>
+        <div class="nav-item" data-page="sign"><i class="fas fa-file-signature"></i><span>签约</span></div>
+        <div class="nav-item" data-page="record"><i class="fas fa-archive"></i><span>备案</span></div>
+        <div class="nav-item" data-page="start"><i class="fas fa-play"></i><span>开工</span></div>
+        <div class="nav-item" data-page="complete"><i class="fas fa-check-circle"></i><span>竣工</span></div>
+<!--        <div class="nav-item" data-page="fixed"><i class="fas fa-chart-line"></i><span>固投</span></div>-->
+    </div>
+</div>
+
+
+<script>
+    // ---------- 全部基于原始表格整理的区县数据 (核心指标) ----------
+    const all_districts = [
+        { name: "靖江市", sign_1e: 62, sign_addMonth: 60, record_1e: 90, record_addMonth: 37, start_1e: 67, start_addMonth: 40, complete_1e: 33, complete_addMonth: 26},
+        { name: "泰兴市", sign_1e: 62, sign_addMonth: 32, record_1e: 69, record_addMonth: 20, start_1e: 65, start_addMonth: 37, complete_1e: 41, complete_addMonth: 28},
+        { name: "兴化市", sign_1e: 39, sign_addMonth: 39, record_1e: 62, record_addMonth: 13, start_1e: 36, start_addMonth: 23, complete_1e: 10, complete_addMonth: 5},
+        { name: "海陵区", sign_1e: 36, sign_addMonth: 35, record_1e: 54, record_addMonth: 23, start_1e: 48, start_addMonth: 38, complete_1e: 27, complete_addMonth: 24},
+        { name: "姜堰区", sign_1e: 34, sign_addMonth: 34, record_1e: 73, record_addMonth: 20, start_1e: 59, start_addMonth: 28, complete_1e: 41, complete_addMonth: 21},
+        { name: "医药高新区（高港区）", sign_1e: 33, sign_addMonth: 23, record_1e: 67, record_addMonth: 27, start_1e: 70, start_addMonth: 44, complete_1e: 57, complete_addMonth: 38}
+    ];
+    const all_cityTotal = {
+        sign_1e: 266, sign_addMonth: 223, record_1e: 415, record_addMonth: 140, start_1e: 345, start_addMonth: 210, complete_1e: 209, complete_addMonth: 142
+    };
+
+
+    // ---------- 亿元以上基于原始表格整理的区县数据 (核心指标) ----------
+    const above_districts = [
+        { name: "靖江市", sign_1e: 44, sign_addMonth: 42, record_1e: 45, record_addMonth: 20, start_1e: 29, start_addMonth: 21, complete_1e: 23, complete_addMonth: 17},
+        { name: "泰兴市", sign_1e: 43, sign_addMonth: 13, record_1e: 20, record_addMonth: 6, start_1e: 15, start_addMonth: 10, complete_1e: 12, complete_addMonth: 8},
+        { name: "兴化市", sign_1e: 34, sign_addMonth: 34, record_1e: 16, record_addMonth: 5, start_1e: 28, start_addMonth: 17, complete_1e: 6, complete_addMonth: 2,},
+        { name: "海陵区", sign_1e: 19, sign_addMonth: 18, record_1e: 18, record_addMonth: 6, start_1e: 24, start_addMonth: 14, complete_1e: 11, complete_addMonth: 8},
+        { name: "姜堰区", sign_1e: 27, sign_addMonth: 27, record_1e: 20, record_addMonth: 7, start_1e: 34, start_addMonth: 16, complete_1e: 16, complete_addMonth: 9},
+        { name: "医药高新区（高港区）", sign_1e: 21, sign_addMonth: 13, record_1e: 25, record_addMonth: 11, start_1e: 25, start_addMonth: 16, complete_1e: 26, complete_addMonth: 16}
+    ];
+
+
+    // 亿元以上全市合计 (用于总览)
+    const above_cityTotal = {
+        sign_1e: 188, sign_addMonth: 147, record_1e: 144, record_addMonth: 55, start_1e: 155, start_addMonth: 94, complete_1e: 94, complete_addMonth: 60
+    };
+
+    // ---------- 亿元以下基于原始表格整理的区县数据 (核心指标) ----------
+    const below_districts = [
+        { name: "靖江市", sign_1e: 18, sign_addMonth: 18, record_1e: 45, record_addMonth: 17, start_1e: 38, start_addMonth: 19, complete_1e: 10, complete_addMonth: 9},
+        { name: "泰兴市", sign_1e: 19, sign_addMonth: 19, record_1e: 49, record_addMonth: 14,  start_1e:50, start_addMonth: 27, complete_1e: 29, complete_addMonth: 20},
+        { name: "兴化市", sign_1e: 5, sign_addMonth:  5 , record_1e:  46, record_addMonth:8,  start_1e: 8, start_addMonth:  6, complete_1e:  4,  complete_addMonth: 3},
+        { name: "海陵区", sign_1e: 17, sign_addMonth: 17, record_1e: 36, record_addMonth: 17,  start_1e:24, start_addMonth: 24, complete_1e: 16, complete_addMonth: 16},
+        { name: "姜堰区", sign_1e: 7, sign_addMonth:  7 , record_1e:  53, record_addMonth:13,  start_1e:25, start_addMonth: 12, complete_1e: 25, complete_addMonth: 12},
+        { name: "医药高新区（高港区）", sign_1e: 12, sign_addMonth: 10, record_1e: 42, record_addMonth: 16, start_1e: 45, start_addMonth: 28, complete_1e: 31, complete_addMonth: 22}
+    ];
+    const below_cityTotal = {
+        sign_1e: 78, sign_addMonth: 76, record_1e: 271, record_addMonth: 85, start_1e: 190, start_addMonth: 116, complete_1e: 115, complete_addMonth: 82
+    };
+
+    // 5亿元以上
+    const five_above_districts = [
+        { name: "靖江市", sign_1e: 11, sign_addMonth: 11, record_1e: 9, record_addMonth: 3, start_1e: 11, start_addMonth: 9, complete_1e: 23, complete_addMonth: 17},
+        { name: "泰兴市", sign_1e: 14, sign_addMonth: 12, record_1e: 4, record_addMonth: 0,  start_1e:8, start_addMonth:  4, complete_1e: 12, complete_addMonth: 8},
+        { name: "兴化市", sign_1e: 7, sign_addMonth:  7, record_1e:  3, record_addMonth: 1,  start_1e:8, start_addMonth:  6, complete_1e: 6,  complete_addMonth: 2},
+        { name: "海陵区", sign_1e: 1, sign_addMonth:  1, record_1e:  6, record_addMonth: 0,  start_1e:10, start_addMonth: 4, complete_1e: 11, complete_addMonth: 8},
+        { name: "姜堰区", sign_1e: 8, sign_addMonth:  8, record_1e:  14, record_addMonth:4,  start_1e:21, start_addMonth: 9, complete_1e: 16, complete_addMonth: 9},
+        { name: "医药高新区（高港区）", sign_1e: 1, sign_addMonth: 1, record_1e: 9, record_addMonth: 3, start_1e: 9, start_addMonth: 4, complete_1e: 26, complete_addMonth: 16}
+    ];
+    const five_above_cityTotal = {
+        sign_1e: 78, sign_addMonth: 76, record_1e: 271, record_addMonth: 85, start_1e: 190, start_addMonth: 116, complete_1e: 115, complete_addMonth: 82
+    };
+
+    //年度投资1亿元以上项目
+    const year_one_above_districts = [
+        { name: "靖江市", sign_1e: 18, sign_addMonth: 18},
+        { name: "泰兴市", sign_1e: 2, sign_addMonth: 0},
+        { name: "兴化市", sign_1e: 10, sign_addMonth:  9},
+        { name: "海陵区", sign_1e: 16, sign_addMonth:  15},
+        { name: "姜堰区", sign_1e: 13, sign_addMonth:  13},
+        { name: "医药高新区（高港区）", sign_1e: 7, sign_addMonth: 7}
+    ];
+    const year_one_above_cityTotal = {
+        sign_1e: 66, sign_addMonth: 62
+    };
+
+    //增资扩产
+    const record_expand_districts = [
+        { name: "靖江市", record_expand_1e: 53, record_expand_addMonth: 23},
+        { name: "泰兴市", record_expand_1e: 60, record_expand_addMonth: 13},
+        { name: "兴化市", record_expand_1e: 35, record_expand_addMonth: 7},
+        { name: "海陵区", record_expand_1e: 18, record_expand_addMonth: 10},
+        { name: "姜堰区", record_expand_1e: 34, record_expand_addMonth: 11},
+        { name: "医药高新区（高港区）", record_expand_1e: 70, record_expand_addMonth: 20}
+    ]
+    const record_expand_cityTotal = {
+        record_expand_1e: 270, record_expand_addMonth: 84
+    };
+
+    //外资利润再投资
+    const reinvest_districts = [
+        { name: "靖江市", reinvest_1e: 3, reinvest_addMonth: 3},
+        { name: "泰兴市", reinvest_1e: 1, reinvest_addMonth: 1},
+        { name: "兴化市", reinvest_1e: 0, reinvest_addMonth: 0},
+        { name: "海陵区", reinvest_1e: 1, reinvest_addMonth: 0},
+        { name: "姜堰区", reinvest_1e: 3, reinvest_addMonth: 1},
+        { name: "医药高新区（高港区）", reinvest_1e: 1, reinvest_addMonth: 0}
+    ]
+    const reinvest_cityTotal = {
+        reinvest_1e: 9, reinvest_addMonth: 5
+    };
+
+    //亿元以下投资情况
+    const below_invest_districts = [
+        { name: "靖江市", plan_invest_1e: 10.19 , plan_invest_year: 9.31 , finished_invest_1e: 0.12 , finished_invest_addMonth: 0.12 , completion_rate: "1.28%"},
+        { name: "泰兴市", plan_invest_1e: 17.30 , plan_invest_year: 7.00 , finished_invest_1e: 0.39 , finished_invest_addMonth: 0.39 , completion_rate: "5.62%"},
+        { name: "兴化市", plan_invest_1e: 3.78 , plan_invest_year:  3.18 , finished_invest_1e: 0.90 , finished_invest_addMonth: 0.90 , completion_rate: "28.16%"},
+        { name: "海陵区", plan_invest_1e: 9.66 , plan_invest_year:  5.98 , finished_invest_1e: 0.13 , finished_invest_addMonth: 0.13 , completion_rate: "2.18%"},
+        { name: "姜堰区", plan_invest_1e: 6.55 , plan_invest_year:  5.35 , finished_invest_1e: 0.33 , finished_invest_addMonth: 0.33 , completion_rate: "6.25%"},
+        { name: "医药高新区（高港区）", plan_invest_1e: 8.28, plan_invest_year: 7.66, finished_invest_1e: 0.53, finished_invest_addMonth: 3, completion_rate: "6.87%"}
+    ]
+    const below_invest_cityTotal = {
+        plan_invest_1e: 40.18, plan_invest_year: 38.48, finished_invest_1e: 2.40, finished_invest_addMonth: 2.40, completion_rate: "6.24%"
+    };
+
+    //亿元以上投资情况
+    const above_invest_districts = [
+        { name: "靖江市", plan_invest_1e: 88.85 , plan_invest_year:  34.43 , finished_invest_1e: 0.29 , finished_invest_addMonth: 0.29 , completion_rate: "0.84%"},
+        { name: "泰兴市", plan_invest_1e: 140.10 , plan_invest_year: 18.75 , finished_invest_1e: 0.30 , finished_invest_addMonth: 0.30 , completion_rate: "1.58%"},
+        { name: "兴化市", plan_invest_1e: 83.13 , plan_invest_year:  36.78 , finished_invest_1e: 0.57 , finished_invest_addMonth: 0.57 , completion_rate: "1.54%"},
+        { name: "海陵区", plan_invest_1e: 121.80 , plan_invest_year: 31.50 , finished_invest_1e: 0 , finished_invest_addMonth:    0 , completion_rate: "0.00%"},
+        { name: "姜堰区", plan_invest_1e: 154.40 , plan_invest_year: 54.50 , finished_invest_1e: 0.96 , finished_invest_addMonth: 0.96 , completion_rate: "1.76%"},
+        { name: "医药高新区（高港区）", plan_invest_1e: 67.49, plan_invest_year: 32.79, finished_invest_1e: 3.80, finished_invest_addMonth: 3.80, completion_rate: "11.58%"}
+    ]
+    const above_invest_cityTotal = {
+        plan_invest_1e: 655.77, plan_invest_year: 208.75, finished_invest_1e: 5.91, finished_invest_addMonth: 5.91, completion_rate: "2.83%"
+    };
+
+
+
+    // 更新首页动态数据
+    function updateHomeStats() {
+        // 排名渲染
+        renderRankList('signRankList', all_districts, 'sign_1e', '个');
+        renderRankList('recordRankList', all_districts, 'record_1e', '个');
+        renderRankList('startRankList', all_districts, 'start_1e', '个');
+        renderRankList('completeRankList', all_districts, 'complete_1e', '个');
+    }
+
+    function renderRankList(containerId, data, key, suffix, isPercent = false) {
+        const sorted = [...data].sort((a,b) => b[key] - a[key]);
+        const html = sorted.map((item, idx) => {
+            let value = isPercent ? (item[key] * 100).toFixed(2) + suffix : item[key] + suffix;
+            let medal = `${idx + 1}`;
+            return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span> ${item.name}</div><div class="rank-num">${value}</div></div>`;
+        }).join('');
+        document.getElementById(containerId).innerHTML = html;
+    }
+
+    // 饼图渲染函数
+    function renderInvestPieChart(containerId, data, valueKey) {
+        const container = document.getElementById(containerId);
+        let existing = echarts.getInstanceByDom(container);
+        if (existing) existing.dispose();
+        container.innerHTML = '';
+        const pieData = data.map(d => ({ name: d.name, value: d[valueKey] }));
+        const total = data.reduce((sum, d) => sum + (d[valueKey] || 0), 0).toFixed(2);
+        const chart = echarts.init(container);
+        chart.setOption({
+            color: ['#2c7a4d','#4e9e6b','#3b82f6','#f97316','#a855f7','#ec4899'],
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                    return params.name + '<br/>完成投资：' + params.value + ' 亿元<br/>占比：' + params.percent + '%';
+                }
+            },
+            legend: {
+                orient: 'horizontal',
+                bottom: 4,
+                left: 'center',
+                textStyle: { fontSize: 10 },
+                itemWidth: 10,
+                itemHeight: 10
+            },
+            graphic: [{
+                type: 'text',
+                left: 'center',
+                top: '36%',
+                style: {
+                    text: '合计',
+                    textAlign: 'center',
+                    fill: '#5b6e8c',
+                    fontSize: 11
+                }
+            }, {
+                type: 'text',
+                left: 'center',
+                top: '43%',
+                style: {
+                    text: total + '亿',
+                    textAlign: 'center',
+                    fill: '#0f2b3d',
+                    fontSize: 15,
+                    fontWeight: 'bold'
+                }
+            }],
+            series: [{
+                type: 'pie',
+                radius: ['32%', '60%'],
+                center: ['50%', '44%'],
+                data: pieData,
+                label: {
+                    show: true,
+                    fontSize: 10,
+                    formatter: '{b}\n{c}亿'
+                },
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowColor: 'rgba(0,0,0,0.4)'
+                    }
+                }
+            }]
+        });
+        return chart;
+    }
+
+    // 图表通用函数 (柱状图)
+    function renderBarChart(elementId, xAxisData, seriesData, yName = '项目数', color = '#2c7a4d') {
+        const chart = echarts.init(document.getElementById(elementId));
+        chart.setOption({
+            grid: { top: 30, left: 45, right: 10, bottom: 25, containLabel: true },
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            xAxis: { type: 'category', data: xAxisData, axisLabel: { rotate: 30, fontSize: 10, interval: 0 } },
+            yAxis: { type: 'value', name: yName, nameStyle: { fontSize: 10 } },
+            series: [{
+                data: seriesData, type: 'bar', barWidth: '40%', itemStyle: { borderRadius: [6,6,0,0], color: color },
+                label: { show: true, position: 'top', fontSize: 10 }
+            }]
+        });
+        return chart;
+    }
+
+
+
+
+    // 初始化所有图表
+    function initAllCharts() {
+        const names = all_districts.map(d => d.name);
+        // 签约柱状图
+        // renderBarChart('signChart', names, districts.map(d => d.sign_1e), '签约项目数', '#3b82f6');
+        // renderHorizontalList('signDetailList', all_districts, 'sign_1e', null);
+
+        // 备案: 备案1亿+ 及增资扩产展示双维度 (展示备案总数柱状)
+        // renderBarChart('recordChart', names, all_districts.map(d => d.record_1e), '备案项目数(1亿+)', '#f97316');
+        // const recordHtml = [...above_districts].sort((a,b)=>b.record_1e - a.record_1e).map(d =>
+        //     `<div class="rank-item"><span>${d.name}</span><span>备案:${d.record_1e}个 / 增资扩产:${d.record_expand}个</span><span class="rank-num">${d.record_expand}个</span></div>`
+        // ).join('');
+        // document.getElementById('recordDetailList').innerHTML = recordHtml;
+
+        // 开工柱状图
+        // renderBarChart('startChart', names, all_districts.map(d => d.start_1e), '开工项目数(1亿+)', '#16a34a');
+        // const startHtml = [...all_districts].sort((a,b)=>b.start_1e - a.start_1e).map(d => {
+        //     let rate = (d.invest_rate_1e * 100).toFixed(2);
+        //     return `<div class="rank-item"><span>${d.name}</span><span>开工:${d.start_1e}个</span><span class="rank-num">投资完成率 ${rate}%</span></div>`;
+        // }).join('');
+        // document.getElementById('startDetailList').innerHTML = startHtml;
+
+        // 竣工柱状图
+        // renderBarChart('completeChart', names, all_districts.map(d => d.complete_1e), '竣工项目数(1亿+)', '#6b7280');
+        // const completeHtml = [...all_districts].sort((a,b)=>b.complete_1e - a.complete_1e).map(d =>
+        //     `<div class="rank-item"><span>${d.name}</span><span>竣工1亿+ : ${d.complete_1e}个</span><span class="tag-sm">小规模竣工:${d.complete_addMonth_small}个</span></div>`
+        // ).join('');
+        // document.getElementById('completeDetailList').innerHTML = completeHtml;
+
+        // 首页投资完成率图表(1亿+开工投资完成率)
+        // const investChart = echarts.init(document.getElementById('investRateChart'));
+        // investChart.setOption({
+        //     tooltip: { trigger: 'axis', formatter: params => `${params[0].axisValue}<br/>投资完成率: ${params[0].value}%` },
+        //     xAxis: { type: 'category', data: names, axisLabel: { rotate: 30, fontSize: 9 } },
+        //     yAxis: { type: 'value', name: '完成率 (%)' },
+        //     series: [{
+        //         data: all_districts.map(d => (d.invest_rate_1e * 100).toFixed(2)), type: 'bar', color: '#2b6e4e',
+        //         label: { show: true, position: 'top', formatter: p => p.value + '%' }
+        //     }]
+        // });
+
+        // 亿元以下投资完成额饼图
+        // createSimplePieChart('belowInvestPieChart', below_invest_districts, 'finished_invest_addMonth', '亿元以下月度新增投资');
+
+        //累计完成投资饼图
+        document.getElementById('investCompleteChart').innerHTML ='<div id="allInvestCompleteChart">这是一个饼图111111</div>'
+
+        //累计完成投资饼图
+        document.getElementById('investCompletionRateChart').innerHTML ='<div id="allInvestCompletionRateChart">这是一个柱状图22222</div>'
+    }
+
+    // 折叠/展开功能
+    function toggleCollapse(contentId, titleElement) {
+        const content = document.getElementById(contentId);
+        const isCollapsed = content.classList.contains('collapsed');
+
+        if (isCollapsed) {
+            content.classList.remove('collapsed');
+            titleElement.classList.remove('collapsed');
+        } else {
+            content.classList.add('collapsed');
+            titleElement.classList.add('collapsed');
+        }
+    }
+
+    // 筛选状态
+    let currentAmountFilter = 'all';
+    let currentTypeFilter = 'total';
+    let currentInvestTypeFilter = null;
+
+    // 签约子页面-金额筛选按钮事件处理
+    document.querySelectorAll('[data-amount-sign]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-amount-sign]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentAmountFilter = btn.getAttribute('data-amount-sign');
+            filterSignList(currentAmountFilter, currentTypeFilter);
+        });
+    });
+
+    // 签约子页面-数据类型筛选按钮事件处理
+    document.querySelectorAll('[data-type-sign]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-type-sign]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentTypeFilter = btn.getAttribute('data-type-sign');
+            filterSignList(currentAmountFilter, currentTypeFilter);
+        });
+    });
+
+    //签约子页面-根据金额筛选和数据类型筛选返回不同的列表
+    function filterSignList(amountFilter, typeFilter) {
+        const signListDiv = document.getElementById('signDetailList');
+        let detailHtml = null;
+        //全部累计
+        if (amountFilter === 'all' && typeFilter === 'total'){
+            const sortedSign = [...all_districts].sort((a,b)=>b.sign_1e - a.sign_1e);
+            detailHtml = sortedSign.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_1e}个</span></div>`
+            }).join('');
+
+        }
+        //全部当月新增
+        else if (amountFilter === 'all' && typeFilter === 'add_month'){
+            const sortedSign = [...all_districts].sort((a,b)=>b.sign_addMonth - a.sign_addMonth);
+            detailHtml = sortedSign.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_addMonth}个</span></div>`
+            }).join('');
+        }
+        //亿元以下累计
+        else if (amountFilter === 'below' && typeFilter === 'total'){
+            const sortedSign = [...below_districts].sort((a,b)=>b.sign_1e - a.sign_1e);
+            detailHtml = sortedSign.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_1e}个</span></div>`
+            }).join('');
+        }
+        //亿元以下当月新增
+        else if (amountFilter === 'below' && typeFilter === 'add_month'){
+            const sortedSign = [...below_districts].sort((a,b)=>b.sign_addMonth - a.sign_addMonth);
+            detailHtml = sortedSign.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_addMonth}个</span></div>`
+            }).join('');
+        }
+        //亿元以上累计
+        else if (amountFilter === 'above' && typeFilter === 'total'){
+            const sortedSign = [...above_districts].sort((a,b)=>b.sign_1e - a.sign_1e);
+            detailHtml = sortedSign.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_1e}个</span></div>`
+            }).join('');
+        }
+        //亿元以上当月新增
+        else if (amountFilter === 'above' && typeFilter === 'add_month'){
+            const sortedSign = [...above_districts].sort((a,b)=>b.sign_addMonth - a.sign_addMonth);
+            detailHtml = sortedSign.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_addMonth}个</span></div>`
+            }).join('');
+        }
+        //五亿元以上累计
+        else if (amountFilter === 'five_above' && typeFilter === 'total'){
+            const sortedSign = [...five_above_districts].sort((a,b)=>b.sign_1e - a.sign_1e);
+            detailHtml = sortedSign.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_1e}个</span></div>`
+            }).join('');
+        }
+        //五亿元以上当月新增
+        else if (amountFilter === 'five_above' && typeFilter === 'add_month'){
+            const sortedSign = [...five_above_districts].sort((a,b)=>b.sign_addMonth - a.sign_addMonth);
+            detailHtml = sortedSign.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_addMonth}个</span></div>`
+            }).join('');
+        }
+        //年度投资亿元以上累计
+        else if (amountFilter === 'year_one_above' && typeFilter === 'total'){
+            const sortedSign = [...year_one_above_districts].sort((a,b)=>b.sign_1e - a.sign_1e);
+            detailHtml = sortedSign.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_1e}个</span></div>`
+            }).join('');
+        }
+        //年度投资亿元以上当月新增
+        else if (amountFilter === 'year_one_above' && typeFilter === 'add_month'){
+            const sortedSign = [...year_one_above_districts].sort((a,b)=>b.sign_addMonth - a.sign_addMonth);
+            detailHtml = sortedSign.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_addMonth}个</span></div>`
+            }).join('');
+        }
+
+        signListDiv.innerHTML = detailHtml;
+    }
+
+    // 备案子页面-金额筛选按钮事件处理
+    document.querySelectorAll('[data-amount-record]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-amount-record]').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('[data-type-invest]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (currentInvestTypeFilter!==null){
+                currentInvestTypeFilter= null;
+                document.querySelector('[data-type-record="total"]').classList.add('active');
+            }
+            currentAmountFilter = btn.getAttribute('data-amount-record');
+            filterRecordList(currentAmountFilter, currentTypeFilter, currentInvestTypeFilter);
+        });
+    });
+
+    // 备案子页面-数据类型筛选按钮事件处理
+    document.querySelectorAll('[data-type-record]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-type-record]').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('[data-type-invest]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (currentInvestTypeFilter!==null){
+                currentInvestTypeFilter= null;
+                document.querySelector('[data-amount-record="all"]').classList.add('active');
+            }
+            currentTypeFilter = btn.getAttribute('data-type-record');
+            filterRecordList(currentAmountFilter, currentTypeFilter, currentInvestTypeFilter);
+        });
+    });
+
+    // 备案子页面-投资类型筛选按钮事件处理
+    document.querySelectorAll('[data-type-invest]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-type-invest]').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('[data-type-record]').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('[data-amount-record]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentInvestTypeFilter = btn.getAttribute('data-type-invest');
+            filterRecordList(currentAmountFilter, currentTypeFilter, currentInvestTypeFilter);
+        });
+    });
+
+    // 备案子页面-根据金额筛选和数据类型筛选返回不同的列表
+    function filterRecordList(amountFilter, typeFilter, investFilter) {
+        const recordListDiv = document.getElementById('recordDetailList');
+        let detailHtml = null;
+        if (investFilter === 'expand'){
+            const sortedRecord = [...record_expand_districts].sort((a,b)=>b.record_expand_1e - a.record_expand_1e);
+            detailHtml = sortedRecord.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.record_expand_1e}个</span></div>`
+            }).join('');
+        }
+        else if (investFilter === 'reinvest'){
+            const sortedRecord = [...reinvest_districts].sort((a,b)=>b.reinvest_1e - a.reinvest_1e);
+            detailHtml = sortedRecord.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.reinvest_1e}个</span></div>`
+            }).join('');
+        }
+        //全部累计
+        else if (amountFilter === 'all' && typeFilter === 'total'){
+            const sortedRecord = [...all_districts].sort((a,b)=>b.record_1e - a.record_1e);
+            detailHtml = sortedRecord.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.record_1e}个</span></div>`
+            }).join('');
+
+        }
+        //全部当月新增
+        else if (amountFilter === 'all' && typeFilter === 'add_month'){
+            const sortedRecord = [...all_districts].sort((a,b)=>b.record_addMonth - a.record_addMonth);
+            detailHtml = sortedRecord.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.record_addMonth}个</span></div>`
+            }).join('');
+        }
+        //亿元以下累计
+        else if (amountFilter === 'below' && typeFilter === 'total'){
+            const sortedRecord = [...below_districts].sort((a,b)=>b.record_1e - a.record_1e);
+            detailHtml = sortedRecord.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.record_1e}个</span></div>`
+            }).join('');
+        }
+        //亿元以下当月新增
+        else if (amountFilter === 'below' && typeFilter === 'add_month'){
+            const sortedRecord = [...below_districts].sort((a,b)=>b.record_addMonth - a.record_addMonth);
+            detailHtml = sortedRecord.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.record_addMonth}个</span></div>`
+            }).join('');
+        }
+        //亿元以上累计
+        else if (amountFilter === 'above' && typeFilter === 'total'){
+            const sortedRecord = [...above_districts].sort((a,b)=>b.record_1e - a.record_1e);
+            detailHtml = sortedRecord.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.record_1e}个</span></div>`
+            }).join('');
+        }
+        //亿元以上当月新增
+        else if (amountFilter === 'above' && typeFilter === 'add_month'){
+            const sortedRecord = [...above_districts].sort((a,b)=>b.record_addMonth - a.record_addMonth);
+            detailHtml = sortedRecord.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.record_addMonth}个</span></div>`
+            }).join('');
+        }
+        //五亿元以上累计
+        else if (amountFilter === 'five_above' && typeFilter === 'total'){
+            const sortedRecord = [...five_above_districts].sort((a,b)=>b.record_1e - a.record_1e);
+            detailHtml = sortedRecord.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.record_1e}个</span></div>`
+            }).join('');
+        }
+        //五亿元以上当月新增
+        else if (amountFilter === 'five_above' && typeFilter === 'add_month'){
+            const sortedRecord = [...five_above_districts].sort((a,b)=>b.record_addMonth - a.record_addMonth);
+            detailHtml = sortedRecord.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.record_addMonth}个</span></div>`
+            }).join('');
+        }
+        //年度投资亿元以上累计
+        else if (amountFilter === 'year_one_above' && typeFilter === 'total'){
+            const sortedRecord = [...year_one_above_districts].sort((a,b)=>b.record_1e - a.record_1e);
+            detailHtml = sortedRecord.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.record_1e}个</span></div>`
+            }).join('');
+        }
+        //年度投资亿元以上当月新增
+        else if (amountFilter === 'year_one_above' && typeFilter === 'add_month'){
+            const sortedRecord = [...year_one_above_districts].sort((a,b)=>b.record_addMonth - a.record_addMonth);
+            detailHtml = sortedRecord.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.record_addMonth}个</span></div>`
+            }).join('');
+        }
+
+        recordListDiv.innerHTML = detailHtml;
+    }
+
+    // 开工子页面-金额筛选按钮事件处理
+    document.querySelectorAll('[data-amount-start]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-amount-start]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentAmountFilter = btn.getAttribute('data-amount-start');
+            filterStartList(currentAmountFilter, currentTypeFilter);
+        });
+    });
+
+    // 开工子页面-数据类型筛选按钮事件处理
+    document.querySelectorAll('[data-type-start]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-type-start]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentTypeFilter = btn.getAttribute('data-type-start');
+            filterStartList(currentAmountFilter, currentTypeFilter);
+        });
+    });
+
+    //开工子页面-根据金额筛选和数据类型筛选返回不同的列表
+    function filterStartList(amountFilter, typeFilter) {
+        const startListDiv = document.getElementById('startDetailList');
+        let detailHtml = null;
+        //全部累计
+        if (amountFilter === 'all' && typeFilter === 'total'){
+            const sortedStart = [...all_districts].sort((a,b)=>b.start_1e - a.start_1e);
+            detailHtml = sortedStart.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.start_1e}个</span></div>`
+            }).join('');
+            document.getElementById('investCompleteChartDiv').hidden = false;
+            document.getElementById('investCompletionRateChartDiv').hidden = false;
+            //返回全部累计完成投资饼图
+            document.getElementById('investCompleteChart').innerHTML ='<div id="allInvestCompleteChart">累计完成投资饼图</div>'
+
+            //返回年度计划完成率柱状图
+            // document.getElementById('investCompletionRateChart').innerHTML ='<div id="allInvestCompletionRateChart">年度计划完成率柱状图</div>'
+
+        }
+        //全部当月新增
+        else if (amountFilter === 'all' && typeFilter === 'add_month'){
+            const sortedStart = [...all_districts].sort((a,b)=>b.start_addMonth - a.start_addMonth);
+            detailHtml = sortedStart.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.start_addMonth}个</span></div>`
+            }).join('');
+            document.getElementById('investCompleteChartDiv').hidden = false;
+            document.getElementById('investCompletionRateChartDiv').hidden = false;
+
+            //返回全部当月新增完成投资饼图
+            document.getElementById('investCompleteChart').innerHTML ='<div id="allInvestCompleteMonthChart">全部当月新增完成投资饼图</div>'
+
+        }
+        //亿元以下累计
+        else if (amountFilter === 'below' && typeFilter === 'total'){
+            const sortedStart = [...below_districts].sort((a,b)=>b.start_1e - a.start_1e);
+            detailHtml = sortedStart.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.start_1e}个</span></div>`
+            }).join('');
+            document.getElementById('investCompleteChartDiv').hidden = false;
+            document.getElementById('investCompletionRateChartDiv').hidden = false;
+
+            //渲染亿元以下累计完成投资饼图
+            renderInvestPieChart('investCompleteChart', below_invest_districts, 'finished_invest_1e');
+        }
+        //亿元以下当月新增
+        else if (amountFilter === 'below' && typeFilter === 'add_month'){
+            const sortedStart = [...below_districts].sort((a,b)=>b.start_addMonth - a.start_addMonth);
+            detailHtml = sortedStart.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.start_addMonth}个</span></div>`
+            }).join('');
+            document.getElementById('investCompleteChartDiv').hidden = false;
+            document.getElementById('investCompletionRateChartDiv').hidden = false;
+
+            //返回亿元以下当月完成投资饼图
+            document.getElementById('investCompleteChart').innerHTML ='<div id="belowInvestCompleteMonthChart">亿元以下当月完成投资饼图</div>'
+        }
+        //亿元以上累计
+        else if (amountFilter === 'above' && typeFilter === 'total'){
+            const sortedStart = [...above_districts].sort((a,b)=>b.start_1e - a.start_1e);
+            detailHtml = sortedStart.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.start_1e}个</span></div>`
+            }).join('');
+            document.getElementById('investCompleteChartDiv').hidden = false;
+            document.getElementById('investCompletionRateChartDiv').hidden = false;
+
+            //返回亿元以上累计完成投资饼图
+            document.getElementById('investCompleteChart').innerHTML ='<div id="aboveInvestCompleteChart">亿元以上累计完成投资饼图</div>'
+        }
+        //亿元以上当月新增
+        else if (amountFilter === 'above' && typeFilter === 'add_month'){
+            const sortedStart = [...above_districts].sort((a,b)=>b.start_addMonth - a.start_addMonth);
+            detailHtml = sortedStart.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.start_addMonth}个</span></div>`
+            }).join('');
+            document.getElementById('investCompleteChartDiv').hidden = false;
+            document.getElementById('investCompletionRateChartDiv').hidden = false;
+
+            //返回亿元以上当月完成投资饼图
+            document.getElementById('investCompleteChart').innerHTML ='<div id="aboveInvestCompleteMonthChart">亿元以上当月完成投资饼图</div>'
+        }
+        //五亿元以上累计
+        else if (amountFilter === 'five_above' && typeFilter === 'total'){
+            const sortedStart = [...five_above_districts].sort((a,b)=>b.start_1e - a.start_1e);
+            detailHtml = sortedStart.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.start_1e}个</span></div>`
+            }).join('');
+            document.getElementById('investCompleteChartDiv').hidden = true;
+            // document.getElementById('investCompletionRateChartDiv').hidden = true;
+        }
+        //五亿元以上当月新增
+        else if (amountFilter === 'five_above' && typeFilter === 'add_month'){
+            const sortedStart = [...five_above_districts].sort((a,b)=>b.start_addMonth - a.start_addMonth);
+            detailHtml = sortedStart.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.start_addMonth}个</span></div>`
+            }).join('');
+            document.getElementById('investCompleteChartDiv').hidden = true;
+            // document.getElementById('investCompletionRateChartDiv').hidden = true;
+        }
+
+        startListDiv.innerHTML = detailHtml;
+    }
+
+    // 竣工子页面-金额筛选按钮事件处理
+    document.querySelectorAll('[data-amount-complete]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-amount-complete]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentAmountFilter = btn.getAttribute('data-amount-complete');
+            filterCompleteList(currentAmountFilter, currentTypeFilter);
+        });
+    });
+
+    // 竣工子页面-数据类型筛选按钮事件处理
+    document.querySelectorAll('[data-type-complete]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-type-complete]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentTypeFilter = btn.getAttribute('data-type-complete');
+            filterCompleteList(currentAmountFilter, currentTypeFilter);
+        });
+    });
+
+    //竣工子页面-根据金额筛选和数据类型筛选返回不同的列表
+    function filterCompleteList(amountFilter, typeFilter) {
+        const completeListDiv = document.getElementById('completeDetailList');
+        let detailHtml = null;
+        //全部累计
+        if (amountFilter === 'all' && typeFilter === 'total'){
+            const sortedComplete = [...all_districts].sort((a,b)=>b.complete_1e - a.complete_1e);
+            detailHtml = sortedComplete.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.complete_1e}个</span></div>`
+            }).join('');
+        }
+        //全部当月新增
+        else if (amountFilter === 'all' && typeFilter === 'add_month'){
+            const sortedComplete = [...all_districts].sort((a,b)=>b.complete_addMonth - a.complete_addMonth);
+            detailHtml = sortedComplete.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.complete_addMonth}个</span></div>`
+            }).join('');
+        }
+        //亿元以下累计
+        else if (amountFilter === 'below' && typeFilter === 'total'){
+            const sortedComplete = [...below_districts].sort((a,b)=>b.complete_1e - a.complete_1e);
+            detailHtml = sortedComplete.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.complete_1e}个</span></div>`
+            }).join('');
+        }
+        //亿元以下当月新增
+        else if (amountFilter === 'below' && typeFilter === 'add_month'){
+            const sortedComplete = [...below_districts].sort((a,b)=>b.complete_addMonth - a.complete_addMonth);
+            detailHtml = sortedComplete.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.complete_addMonth}个</span></div>`
+            }).join('');
+        }
+        //亿元以上累计
+        else if (amountFilter === 'above' && typeFilter === 'total'){
+            const sortedComplete = [...above_districts].sort((a,b)=>b.complete_1e - a.complete_1e);
+            detailHtml = sortedComplete.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.complete_1e}个</span></div>`
+            }).join('');
+        }
+        //亿元以上当月新增
+        else if (amountFilter === 'above' && typeFilter === 'add_month'){
+            const sortedComplete = [...above_districts].sort((a,b)=>b.complete_addMonth - a.complete_addMonth);
+            detailHtml = sortedComplete.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.complete_addMonth}个</span></div>`
+            }).join('');
+        }
+
+        completeListDiv.innerHTML = detailHtml;
+    }
+
+
+    // 页面导航
+    function setupNavigation() {
+        const pages = {
+            home: document.getElementById('homePage'),
+            sign: document.getElementById('signPage'),
+            record: document.getElementById('recordPage'),
+            start: document.getElementById('startPage'),
+            complete: document.getElementById('completePage'),
+        };
+        const navItems = document.querySelectorAll('.nav-item');
+        const statBadges = document.querySelectorAll('.stat-badge');
+        function switchPage(pageId) {
+            Object.values(pages).forEach(p => p.classList.remove('active-page'));
+            pages[pageId].classList.add('active-page');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if(item.getAttribute('data-page') === pageId) item.classList.add('active');
+            });
+            // 触发图表resize（确保移动端显示正常）
+            setTimeout(() => {
+                ['signChart','recordChart','startChart','completeChart','fixedRateChart','fourNewChart','investRateChart'].forEach(id => {
+                    let dom = document.getElementById(id);
+                    if(dom && echarts.getInstanceByDom(dom)) echarts.getInstanceByDom(dom).resize();
+                });
+            }, 100);
+        }
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const page = item.getAttribute('data-page');
+                if(page === 'home') switchPage('home');
+                if(page === 'sign') {
+                    switchPage('sign');
+                    // 重置签约页面筛选条件
+                    currentAmountFilter = 'all';
+                    currentTypeFilter = 'total';
+                    currentInvestTypeFilter = null;
+                    // 重置按钮状态
+                    document.querySelectorAll('[data-amount-sign]').forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-amount-sign="all"]').classList.add('active');
+                    document.querySelectorAll('[data-type-sign]').forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-type-sign="total"]').classList.add('active');
+                    filterSignList('all', 'total');
+                }
+                if(page === 'record') {
+                    switchPage('record');
+                    // 重置备案页面筛选条件
+                    currentAmountFilter = 'all';
+                    currentTypeFilter = 'total';
+                    currentInvestTypeFilter = null;
+                    // 重置按钮状态
+                    document.querySelectorAll('[data-amount-sign]').forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-amount-record="all"]').classList.add('active');
+                    document.querySelectorAll('[data-type-sign]').forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-type-record="total"]').classList.add('active');
+                    document.querySelectorAll('[data-invest]').forEach(b => b.classList.remove('active'));
+                    filterRecordList('all', 'total', null);
+                    // 重新初始化备案页面图表和数据
+                    // initAllCharts();
+                }
+                if(page === 'start'){
+                    switchPage('start');
+                    // 重置备案页面筛选条件
+                    currentAmountFilter = 'all';
+                    currentTypeFilter = 'total';
+                    currentInvestTypeFilter = null;
+                    // 重置按钮状态
+                    document.querySelectorAll('[data-amount-start]').forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-amount-start="all"]').classList.add('active');
+                    document.querySelectorAll('[data-type-start]').forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-type-start="total"]').classList.add('active');
+                    filterStartList('all', 'total');
+                }
+                if(page === 'complete') switchPage('complete');
+            });
+        });
+
+        // statBadges 点击跳转功能
+        statBadges.forEach(badge => {
+            badge.addEventListener('click', () => {
+                const targetPage = badge.getAttribute('data-page-card');
+                if(targetPage === 'sign') {
+                    // 重置签约页面筛选条件
+                    currentAmountFilter = 'all';
+                    currentTypeFilter = 'total';
+                    currentInvestTypeFilter = null;
+                    document.querySelectorAll('[data-amount-sign]').forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-amount-sign="all"]').classList.add('active');
+                    document.querySelectorAll('[data-type-sign]').forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-type-sign="total"]').classList.add('active');
+                    filterSignList('all', 'total');
+                }
+                if(targetPage === 'record') {
+                    // 重置备案页面筛选条件
+                    currentAmountFilter = 'all';
+                    currentTypeFilter = 'total';
+                    currentInvestTypeFilter = null;
+                    document.querySelectorAll('[data-amount-sign]').forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-amount-record="all"]').classList.add('active');
+                    document.querySelectorAll('[data-type-sign]').forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-type-record="total"]').classList.add('active');
+                    document.querySelectorAll('[data-invest]').forEach(b => b.classList.remove('active'));
+                }
+                if(targetPage === 'sign') switchPage('sign');
+                if(targetPage === 'record') switchPage('record');
+                if(targetPage === 'start') switchPage('start');
+                if(targetPage === 'complete') switchPage('complete');
+            });
+        });
+        // 默认首页激活
+        switchPage('home');
+    }
+
+    // 补充细微数据展示
+    function enhanceDataNote() {
+        // 确保签约当月新增也展示在签约子页面详细排名中丰富信息
+        const signListDiv = document.getElementById('signDetailList');
+        const recordListDiv = document.getElementById('recordDetailList');
+        const startListDiv = document.getElementById('startDetailList');
+        const completeListDiv = document.getElementById('completeDetailList');
+        const sortedSign = [...all_districts].sort((a,b)=>b.sign_1e - a.sign_1e);
+        const sortedRecord = [...all_districts].sort((a,b)=>b.record_1e - a.record_1e);
+        const sortedStart = [...all_districts].sort((a,b)=>b.start_1e - a.start_1e);
+        const sortedComplete = [...all_districts].sort((a,b)=>b.complete_1e - a.complete_1e);
+        const detailHtmlSign = sortedSign.map((d, idx) => {
+            let medal = `${idx + 1}`;
+            return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_1e}个</span></div>`
+        }).join('');
+        const detailHtmlRecord = sortedRecord.map((d, idx) => {
+            let medal = `${idx + 1}`;
+            return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.record_1e}个</span></div>`
+        }).join('');
+        const detailHtmlStart = sortedStart.map((d, idx) => {
+            let medal = `${idx + 1}`;
+            return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.start_1e}个</span></div>`
+        }).join('');
+        const detailHtmlComplete = sortedComplete.map((d, idx) => {
+            let medal = `${idx + 1}`;
+            return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.complete_1e}个</span></div>`
+        }).join('');
+        signListDiv.innerHTML = detailHtmlSign;
+        recordListDiv.innerHTML = detailHtmlRecord;
+        startListDiv.innerHTML = detailHtmlStart;
+        completeListDiv.innerHTML = detailHtmlComplete;
+    }
+
+    // 初始化所有及 resize 适配
+    window.addEventListener('load', () => {
+        updateHomeStats();
+        initAllCharts();
+        enhanceDataNote();
+        setupNavigation();
+        window.addEventListener('resize', () => {
+            ['signChart','recordChart','startChart','completeChart','fixedRateChart','fourNewChart','investRateChart'].forEach(id => {
+                let dom = document.getElementById(id);
+                if(dom && echarts.getInstanceByDom(dom)) echarts.getInstanceByDom(dom).resize();
+            });
+        });
+    });
+</script>
+</body>
+</html>

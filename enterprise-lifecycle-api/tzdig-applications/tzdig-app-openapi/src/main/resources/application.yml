@@ -1,0 +1,49 @@
+server:
+  port: 9093
+  servlet:
+    context-path: /openapi
+
+spring:
+  application:
+    name: openapi-application
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 100
+  data:
+    redis:
+      lettuce:
+        pool:
+          min-idle: 5
+          max-active: 20
+
+mybatis-flex:
+  default-datasource-key: default
+  datasource:
+    default:
+      url: ${spring.datasource.url}
+      username: ${spring.datasource.username}
+      password: ${spring.datasource.password}
+
+sa-token:
+  token-name: Authorization
+  is-read-body: false
+  oauth2-server:
+    hide-status-field: true
+
+taizhengtong:
+  appid: 1572864-14778368
+  secret: 3333D61E091580AB4F6A59AB8689F675
+
+springdoc:
+  api-docs:
+    enabled: false
+    version: openapi_3_1
+
+logging:
+  level:
+    root: info
+    org.springframework: warn

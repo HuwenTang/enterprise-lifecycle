@@ -1,0 +1,26 @@
+@file:Suppress("unused")
+
+package {{packageName}}
+
+{{#imports}}import {{importClass}}
+{{/imports}}
+
+@Table("{{tableName}}", comment = "{{tableComment}}")
+class {{className}}() : BaseModel<{{className}}>() {
+{{NULL}}    constructor(init: {{className}}.() -> Unit) : this() {
+{{NULL}}        this.init()
+{{NULL}}    }
+{{#fields}}
+
+    {{NULL}}/**
+    {{NULL}} * {{comment}}
+    {{NULL}} */{{#primary}}
+        @Id{{/primary}}
+    @Column("{{columnName}}", comment = "{{comment}}")
+    {{#override}}override {{/override}}var {{fieldName}}: {{fieldType}}? = null
+    {{#enumerated}}    enum class {{fieldType}}(@EnumValue val value: String) {
+    {{#enumerateItems}}        {{name}}("{{value}}"),
+    {{/enumerateItems}}
+    }
+    {{/enumerated}}{{/fields}}
+}

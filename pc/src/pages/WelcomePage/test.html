@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>泰州市企业全生命周期管理服务平台</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --primary-light: #534bae;
+            --primary-dark: #000051;
+            --blue: #3a6cf4;
+            --green: #5ac88d;
+            --orange: #ff9e4a;
+            --purple: #8a6de9;
+            --light-bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #6c757d;
+            --border-radius: 12px;
+            --shadow: 0 6px 16px rgba(0,0,0,0.06);
+            --shadow-hover: 0 8px 30px rgba(0, 0, 0, .12);
+            --transition: all 0.3s ease;
+            --secondary: #00b0ff;
+            --accent: #ff4081;
+            --card-bg-hover: rgba(255, 255, 255, .9);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; }
+        body { background-color: var(--light-bg); color: var(--text-primary); line-height: 1.6; padding: 24px; }
+        .container { max-width: 1440px; margin: 0 auto; }
+
+        /* Header */
+        .header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+        .logo { width: 56px; height: 56px; background: var(--primary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: bold; }
+        .header h1 { font-size: 28px; font-weight: 700; color: var(--primary-light); }
+        .header p { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
+
+        /* Stats Section: 四库 (调整后) */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px; /* 减小间距 */
+            margin-bottom: 24px; /* 减小底部间距 */
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 16px; /* 核心：高度缩减 */
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+        .stat-icon {
+            width: 40px; height: 40px; /* 缩小图标 */
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            margin-bottom: 12px;
+        }
+        .stat-title {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .stat-value {
+            font-size: 28px; /* 缩小数值 */
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .stat-sub {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* 六率指标 (保持不变) */
+        .rates-section { background: var(--card-bg); border-radius: var(--border-radius); padding: 24px; margin-bottom: 32px; box-shadow: var(--shadow); }
+        .rates-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary); }
+        .rates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+        .rate-item { background: #f8fbff; border-radius: 8px; padding: 16px; text-align: center; }
+        .rate-label { font-size: 14px; color: var(--text-secondary); margin-bottom: 6px; }
+        .rate-value { font-size: 20px; font-weight: 700; color: var(--blue); }
+        .rate-trend { font-size: 12px; margin-top: 4px; }
+        .up { color: #28a745; }
+        .down { color: #dc3545; }
+
+
+        .dashboard___qXU8Y {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            gap: 30px;
+            margin-bottom: 80px;
+            position: relative;
+            z-index: 5
+        }
+
+        .departmentCard___PtBjw {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: all .4s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            min-height: 280px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,.5)
+        }
+
+        .departmentCard___PtBjw:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg,var(--secondary),var(--accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .3s ease
+        }
+
+        .departmentCard___PtBjw:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: .05;
+            transition: opacity .4s ease
+        }
+
+        .departmentCard___PtBjw:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-hover);
+            background: var(--card-bg-hover)
+        }
+
+        .departmentCard___PtBjw:hover:before {
+            transform: scaleX(1)
+        }
+
+        .departmentCard___PtBjw:hover:after {
+            opacity: .1
+        }
+
+        .bgCommerce___hubgV {
+            background: linear-gradient(135deg,#3498db1a,#2c80ff14)
+        }
+
+        .bgCommerce___hubgV .departmentIcon___xLtwn {
+            background: linear-gradient(135deg,#3498db,#2c80ff)
+        }
+
+        .departmentHeader___zRXa0 {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            z-index: 1
+        }
+
+        .departmentIcon___xLtwn {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #fff;
+            box-shadow: 0 8px 20px #00000026;
+            position: relative;
+            overflow: hidden
+        }
+
+        .departmentIcon___xLtwn:before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: #ffffff4d;
+            transform: rotate(45deg)
+        }
+
+        .departmentIcon___xLtwn svg {
+            z-index: 1;
+            font-size: 28px;
+            color: #fff
+        }
+
+        .stageTag____zuM1 {
+            padding: 8px 16px;
+            background: #1a237e14;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            box-shadow: 0 4px 10px #0000000d;
+            transition: all .3s ease
+        }
+
+        .stageTag____zuM1:hover {
+            background: #1a237e26;
+            transform: translateY(-2px)
+        }
+
+        .departmentStages___kpO_2 {
+            margin-top: auto;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            z-index: 1
+        }
+
+        .bgDevelopment___MpPDb {
+            background: linear-gradient(135deg,#2ecc711a,#27ae6014)
+        }
+
+        .bgDevelopment___MpPDb .departmentIcon___xLtwn {
+            background: linear-gradient(135deg,#2ecc71,#27ae60)
+        }
+
+
+        /* Footer (保持不变) */
+        .footer { text-align: center; color: var(--text-secondary); font-size: 13px; padding-top: 24px; border-top: 1px solid #eee; margin-top: 40px; }
+        .tagline { margin-top: 8px; font-style: italic; color: #777; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header { flex-direction: column; text-align: center; }
+            .modules { grid-template-columns: 1fr; }
+            .rates-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <span role="img" aria-label="build" class="anticon anticon-build">
+                <svg viewBox="64 64 896 896" focusable="false" data-icon="build" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                    <path d="M916 210H376c-17.7 0-32 14.3-32 32v236H108c-17.7 0-32 14.3-32 32v272c0 17.7 14.3 32 32 32h540c17.7 0 32-14.3 32-32V546h236c17.7 0 32-14.3 32-32V242c0-17.7-14.3-32-32-32zm-504 68h200v200H412V278zm-68 468H144V546h200v200zm268 0H412V546h200v200zm268-268H680V278h200v200z"></path>
+                </svg>
+            </span>
+        </div>
+        <div>
+            <h1>泰州市企业全生命周期管理服务平台</h1>
+            <p>Taizhou Enterprise Full Lifecycle Management Service System</p>
+        </div>
+    </div>
+
+    <!-- 四库统计 (调整后) -->
+    <div class="stats-section">
+        <div class="stat-card" style="background: #e6f0ff; border: 1px solid #cce0ff;">
+            <div class="stat-icon" style="background: var(--blue);">📝</div>
+            <div class="stat-title">签约库</div>
+            <div class="stat-value">X</div>
+            <div class="stat-sub">协议项目数</div>
+        </div>
+        <div class="stat-card" style="background: #e8f5ed; border: 1px solid #b8e6d1;">
+            <div class="stat-icon" style="background: var(--green);">✅</div>
+            <div class="stat-title">备案库</div>
+            <div class="stat-value">X</div>
+            <div class="stat-sub">已备案项目数</div>
+        </div>
+        <div class="stat-card" style="background: #fff4e6; border: 1px solid #ffd6b3;">
+            <div class="stat-icon" style="background: var(--orange);">🏗️</div>
+            <div class="stat-title">开工库</div>
+            <div class="stat-value">X</div>
+            <div class="stat-sub">已开工项目数</div>
+        </div>
+        <div class="stat-card" style="background: #f2eafc; border: 1px solid #d9c7f5;">
+            <div class="stat-icon" style="background: var(--purple);">🏭</div>
+            <div class="stat-title">投产库</div>
+            <div class="stat-value">X</div>
+            <div class="stat-sub">已投产项目数</div>
+        </div>
+    </div>
+
+    <!-- 六率指标 -->
+    <div class="rates-section">
+        <div class="rates-title">运行效率指标（六率）</div>
+        <div class="rates-grid">
+            <div class="rate-item">
+                <div class="rate-label">签约备案率</div>
+                <div class="rate-value">X%</div>
+<!--                <div class="rate-trend up">↑ 0.0%</div>-->
+            </div>
+            <div class="rate-item">
+                <div class="rate-label">备案开工率</div>
+                <div class="rate-value">X%</div>
+<!--                <div class="rate-trend up">↑ 0.0%</div>-->
+            </div>
+            <div class="rate-item">
+                <div class="rate-label">开工投资完成率</div>
+                <div class="rate-value">X%</div>
+<!--                <div class="rate-trend down">↓ 0.0%</div>-->
+            </div>
+            <div class="rate-item">
+                <div class="rate-label">开工项目投产率</div>
+                <div class="rate-value">X%</div>
+<!--                <div class="rate-trend up">↑ 0.0%</div>-->
+            </div>
+            <div class="rate-item">
+                <div class="rate-label">投产项目达效率</div>
+                <div class="rate-value">X%</div>
+<!--                <div class="rate-trend up">↑ 0.0%</div>-->
+            </div>
+            <div class="rate-item">
+                <div class="rate-label">协议履约率</div>
+                <div class="rate-value">X%</div>
+<!--                <div class="rate-trend down">↓ 0.0%</div>-->
+            </div>
+        </div>
+    </div>
+
+
+    <div class="dashboard___qXU8Y">
+        <div class="departmentCard___PtBjw bgCommerce___hubgV" style="cursor: pointer;">
+            <div class="departmentHeader___zRXa0">
+                <div class="departmentIcon___xLtwn">
+                        <span role="img" aria-label="build" class="anticon anticon-build">
+                            <svg viewBox="64 64 896 896" focusable="false" data-icon="build" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                                <path d="M916 210H376c-17.7 0-32 14.3-32 32v236H108c-17.7 0-32 14.3-32 32v272c0 17.7 14.3 32 32 32h540c17.7 0 32-14.3 32-32V546h236c17.7 0 32-14.3 32-32V242c0-17.7-14.3-32-32-32zm-504 68h200v200H412V278zm-68 468H144V546h200v200zm268 0H412V546h200v200zm268-268H680V278h200v200z"></path>
+                            </svg>
+                        </span>
+                </div>
+            </div>
+            <h3>企业管理模块</h3>
+            <p>全领域归集涉企数据，对企业进行精准画像，实现服务与管理一体化。</p>
+            <div class="departmentStages___kpO_2">
+                <div class="stageTag____zuM1">数字招商</div>
+                <div class="stageTag____zuM1">在线审批</div>
+                <div class="stageTag____zuM1">工程建设</div>
+                <div class="stageTag____zuM1">竣工达产</div>
+                <div class="stageTag____zuM1">一企一档</div>
+            </div>
+        </div>
+        <div class="departmentCard___PtBjw bgDevelopment___MpPDb" style="cursor: pointer;">
+            <div class="departmentHeader___zRXa0">
+                <div class="departmentIcon___xLtwn">
+                    <span role="img" aria-label="project" class="anticon anticon-project">
+                        <svg viewBox="64 64 896 896" focusable="false" data-icon="project" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                            <path d="M280 752h80c4.4 0 8-3.6 8-8V280c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8v464c0 4.4 3.6 8 8 8zm192-280h80c4.4 0 8-3.6 8-8V280c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8v184c0 4.4 3.6 8 8 8zm192 72h80c4.4 0 8-3.6 8-8V280c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8v256c0 4.4 3.6 8 8 8zm216-432H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V144c0-17.7-14.3-32-32-32zm-40 728H184V184h656v656z"></path>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+            <h3>项目管理模块</h3>
+            <p>聚焦“前期招商”“备案审批”“投资进度”“投产达效”4大环节，采取“一项目一代码”贯穿全流程，实时监控全市项目建设情况</p>
+            <div class="departmentStages___kpO_2">
+                <div class="stageTag____zuM1">前期招商</div>
+                <div class="stageTag____zuM1">备案审批</div>
+                <div class="stageTag____zuM1">开工竣工</div>
+                <div class="stageTag____zuM1">投产达效</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        泰州市企业全生命周期管理服务平台 | 技术支持：市数据局 市数据产业集团有限公司<br>
+        <div class="tagline">构建“四库”联动体系，提升“六率”运行效能</div>
+    </div>
+</div>
+</body>
+</html>

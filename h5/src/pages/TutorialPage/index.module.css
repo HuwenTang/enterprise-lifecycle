@@ -1,0 +1,83 @@
+.TopBarContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100vw;
+  height: 0.44rem;
+  background: #ffffff;
+  padding: 0 0.14rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 5;
+}
+
+
+.TopBarLeftIcon {
+  font-size: 0.2rem;
+}
+
+.TopBarTitle {
+  line-height: 0.4rem;
+  font-weight: 500;
+  font-size: 0.2rem;
+  color: #333333;
+  text-align: center;
+}
+
+.mainContainer {
+  padding-top: 0.01rem;
+}
+
+.tabBarContainer {
+  position: fixed;
+  bottom: 0.3rem;
+  left: 0.1rem;
+  width: calc(100vw - 0.2rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgb(252 253 255);
+  border: 1px solid #d8d8d8;
+  border-radius: 0.72rem;
+  padding: 0.13rem 0.3rem;
+  z-index: 5;
+}
+
+.tabBarItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabBarIcon {
+  width: 0.36rem;
+  height: 0.36rem;
+  color: #999999;
+}
+
+.tabBarTitle {
+  margin-top: 0.04rem;
+  line-height: 0.24rem;
+  font-weight: 400;
+  font-size: 0.14rem;
+  color: #333333;
+  letter-spacing: 0;
+}
+
+.tabBarActiveIcon {
+  color: #1a237e;
+  width: 0.36rem;
+  height: 0.36rem;
+}
+
+.tabBarActiveTitle {
+  color: #1a237e;
+  margin-top: 0.04rem;
+  line-height: 0.24rem;
+  font-weight: 400;
+  font-size: 0.14rem;
+  letter-spacing: 0;
+}

@@ -1,0 +1,9 @@
+
+html, body {
+  font-size: 100px;
+}
+
+.antd-table-head > tr >th {
+  /*background-color:#5070ed;*/
+  /*color:white;*/
+}

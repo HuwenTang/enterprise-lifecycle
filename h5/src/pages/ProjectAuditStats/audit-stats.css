@@ -1,0 +1,42 @@
+/* 审核统计页：蓝卡 / 白卡容器（与 0511-h5 稿面接近，略偏亮蓝） */
+.audit-stats__stat-card {
+    width: 100%;
+    max-width: 7rem;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    border-radius: 0.16rem;
+    overflow: hidden;
+    position: relative;
+}
+
+.audit-stats__stat-inner {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.audit-stats__flow-card {
+    width: 100%;
+    max-width: 7.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: clamp(0.12rem, 2.8vw, 0.28rem);
+    border: 0.021rem solid rgba(247, 248, 250, 1);
+    background: #fff;
+    box-sizing: border-box;
+    box-shadow: 0 0.021rem 0.042rem rgba(0, 0, 0, 0.05);
+    padding: clamp(0.06rem, 1.6vw, 0.1rem) clamp(0.08rem, 2vw, 0.12rem) clamp(0.08rem, 2vw, 0.12rem);
+    overflow: hidden;
+}
+
+.audit-stats__flow-chart {
+    width: 100%;
+    position: relative;
+    height: clamp(3.5rem, 54vmin, 6.2rem);
+    min-height: 3.4rem;
+}

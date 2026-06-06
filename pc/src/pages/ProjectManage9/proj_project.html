@@ -1,0 +1,3048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>在谈项目</title>
+    <link rel="stylesheet" href="../../assets/jstree/themes/default/style.css?v=20210902"/>
+    <link rel="stylesheet" href="../../assets/css/folder.css"/>
+    <link rel="stylesheet" href="../../assets/fonts/iconfont.css?v=20210902">
+    <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css?v=1">
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=20210902">
+    <style type="text/css">
+        .flow-default {
+            display: inline;
+        }
+
+        .flow-default li {
+            display: inline-block;
+            margin: 0 5px;
+            font-size: 14px;
+            width: 23%;
+            margin-bottom: 15px;
+            height: 120px;
+            line-height: 120px;
+            text-align: center;
+            background-color: #f1f1f1;
+            cursor: pointer;
+            position: relative;
+            border-radius: 8px;
+        }
+
+        .flow-default li > span {
+            position: absolute;
+            display: inline-block;
+            /*top:30px;*/
+            bottom: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            left: 0;
+            font-size: 12px;
+            height: 30px;
+            line-height: 30px;
+            color: #0a0a0a;
+            overflow: hidden;
+        }
+
+        .flow-default img {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        .flow-default :hover img {
+            transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.48) !important
+        }
+
+        .td-label {
+            width: 110px;
+        }
+        .p_left{
+            width: 120px;
+            display: inline-block;
+        }
+        .p_right{
+            width: calc(100% - 150px);
+            display: inline-block;
+            vertical-align: top;
+            margin-left: 20px;
+        }
+        .icon-riqi {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            margin-top: -10px;
+            cursor: pointer;
+            font-size: 25px;
+            color: #1E9FFF;
+        }
+        .indus-tag-c .switch:not([style="display: none;"]){
+            width: 100% !important;
+            z-index: 2;
+        }
+        .indus-tag-c .switch:not([style="display: none;"]) + a{
+            position: relative;
+            left: calc(-100% + 18px);
+        }
+    </style>
+</head>
+<body>
+<!--头部-->
+<div class="layui-fluid">
+    <div class="layui-card layui-form">
+        <div class="layui-card-body">
+            <table class="layui-table">
+                <tr>
+                    <td>在谈项目名称</td>
+                    <td><input id="s_name" name="searchValue" class="layui-input" type="text" placeholder=""/></td>
+                    <td>
+                        项目类别
+                    </td>
+                    <td><input name="s_p_type" type="radio" value="1" title="内资" lay-filter="radio">
+                        <input name="s_p_type" type="radio" value="2" title="外资" lay-filter="radio"></td>
+                    <td>
+                        <button id="btnSearch" q-method="search" class="layui-btn icon-btn layui-btn-normal">
+                            <i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--表格数据展示-->
+<div class="layui-fluid " style="padding-top: 0 ;">
+    <div class="layui-card">
+        <div class="layui-card-body" style="min-height: 600px;">
+            <div class="layui-row">
+                <div class="layui-col-lg12">
+                    <table id="datalist" class="layui-table" lay-filter="datalist" style="margin:0"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--编辑页面-->
+<div id="detailInfo" class="layui-form detail-dialog" style="display: none;margin: 0 auto;padding:15px"
+     lay-filter="detailInfo">
+    <input type="hidden" id="_id"/>
+    <div class="detail-content" style="padding-top: 0;">
+        <table class="layui-table">
+            <tr style="height: 50px;">
+                <td colspan="2" class="td-label ">投资方名称<span style="color: red;font-size: 18px">*</span></td>
+                <td colspan="2">
+                    <input id="investor" class="layui-input required" autocomplete="off">
+                </td>
+            </tr>
+            <tr style="height: 50px">
+                <td colspan="2" class="td-label ">项目总投资<span style="color: red;font-size: 18px">*</span></td>
+                <td colspan="2">
+                    <input id="invest_money" class="layui-input required" autocomplete="off"
+                            style="width: 250px;"
+                          />
+                    <span id="span" style="width: 50px;text-align: center"></span>
+            </tr>
+            <tr style="height: 50px">
+                <td colspan="2" class="td-label ">项目类别<span style="color: red;font-size: 18px">*</span></td>
+                <td colspan="2">
+                    <input name="p_type" type="radio" value="1" title="内资" checked lay-filter="radio">
+                    <input name="p_type" type="radio" value="2" title="外资" lay-filter="radio">
+                </td>
+            </tr>
+            <tr style="height: 50px">
+                <td colspan="2" class="td-label ">洽谈进度<span style="color: red;font-size: 18px">*</span></td>
+                <td colspan="2">
+                    <input id="progress" class="layui-input required"/>
+                </td>
+            </tr>
+            <tr style="height: 80px">
+                <td colspan="2" class="td-label  ">项目内容<span style="color: red;font-size: 18px">*</span></td>
+                <td colspan="2" class="layui-input-block">
+                        <textarea rows="5" id="_desc" class="layui-textarea required " autocomplete="off"
+                        ></textarea>
+                </td>
+            </tr>
+            <tr style="height: 50px;">
+                <td class="td-label" style="border: none;font-weight: bold">项目详细信息</td>
+            </tr>
+            <tr style="height: 50px;">
+                <td colspan="1" class="td-label ">初次对接时间</td>
+                <td colspan="1">
+                    <input id="first_time" placeholder="请选择时间" class="layui-input" autocomplete="off">
+                </td>
+                <td colspan="1" class="td-label ">市区</td>
+                <td colspan="1">
+                    <select id="district_code1" class="layui-select" lay-filter="district_code1">
+                        <option value=''>请选择</option>
+                        <option value="001001">靖江市</option>
+                        <option value="001002">泰兴市</option>
+                        <option value="001003">兴化市</option>
+                        <option value="001004">海陵区</option>
+                        <!--                            <option value="001005">高港区</option>-->
+                        <option value="001006">姜堰区</option>
+                        <option value="001007">医药高新区(高港区)</option>
+                    </select>
+                </td>
+            </tr>
+            <tr style="height: 50px;">
+                <td colspan="1" class="td-label ">园区名称</td>
+                <td colspan="1">
+                    <select id="zone_code1" class=" layui-select">
+                        <option value="">请先选择市区</option>
+                    </select>
+                </td>
+                <td colspan="1" class="td-label ">厂房类型</td>
+                <td colspan="1">
+                    <select id="building_type" class="layui-select">
+                        <option value=''>请选择</option>
+                        <option value="1">租赁</option>
+                        <option value="2">购买</option>
+                    </select>
+                </td>
+            </tr>
+            <tr style="height: 50px;">
+                <td colspan="1" class="td-label ">拟用地面积（亩）</td>
+                <td colspan="1">
+                    <input id="use_area" class="layui-input" autocomplete="off">
+                </td>
+                <td colspan="1" class="td-label ">拟租厂房面积（平方米）</td>
+                <td colspan="1">
+                    <input id="rent_area" class="layui-input" autocomplete="off">
+                </td>
+            </tr>
+            <tr style="height: 50px;">
+                <td colspan="1" class="td-label ">拟购厂房面积（平方米）</td>
+                <td colspan="1">
+                    <input id="buy_area" class="layui-input" autocomplete="off">
+                </td>
+                <td colspan="1" class="td-label ">预计年销量（万元）</td>
+                <td colspan="1">
+                    <input id="year_xl" class="layui-input" autocomplete="off">
+                </td>
+            </tr>
+            <tr style="height: 50px;">
+                <td colspan="1" class="td-label ">预计年税收（万元）</td>
+                <td colspan="1">
+                    <input id="year_ss" class="layui-input" autocomplete="off">
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <div class="text-right">
+        <div class="layui-form-item text-right" style="margin-right: 30px;">
+            <button id="btnCancel" class="layui-btn layui-btn-primary" q-method="cancel">取消</button>
+            <button id="btnSave" class="layui-btn layui-bg-blue" q-method="save">保存</button>
+        </div>
+    </div>
+</div>
+
+<!--转签约-->
+<div id="detailInfo1" class="layui-form detail-dialog" style="padding-top: 0" lay-filter="detailInfo1">
+    <input type="hidden" id="_id1"/>
+    <div class="layui-tab layui-tab-brief" lay-filter="xyDb">
+        <ul class="layui-tab-title">
+            <li class="layui-this">添加信息</li>
+            <li>项目详细信息</li>
+            <!--            <li>项目其他信息</li>-->
+        </ul>
+        <p style="color: red;padding: 5px 10px 0 10px">
+            1、金额在5亿以上的项目，需走质态评估（市级部门预警）流程；
+            金额在5亿以下的项目，无需走质态评估（市级部门预警）流程。</br>
+<!--            2、项目来源为自行接洽的，原签约审核流程不变；-->
+<!--            项目来源为市级机关推荐的，由项目专班进行审核。</br>-->
+            2、本次补录重点为亿元以上或涉及今年新签约、新开工、新竣工的项目，补录的项目无需重新生成协议。</br>
+            3、项目开工、竣工认定，由项目专班进行审核。
+        </p>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div>
+                    <p>
+                        <span class="p_left">投资方名称:</span>
+                        <span class="p_right investors"></span>
+                    </p>
+                    <p>
+                        <span class="p_left">项目类别:</span>
+                        <span class="p_right pTypes"></span>
+                    </p>
+                    <p>
+                        <span class="p_left">投资规模:</span>
+                        <span class="p_right investMoneys"></span>
+                    </p>
+                    <p>
+                        <span class="p_left">项目内容:</span>
+                        <span class="p_right descs"></span>
+                    </p>
+                    <p>
+                        <span class="p_left">洽谈进度:</span>
+                        <span class="p_right progresss"></span>
+                    </p>
+                    <div style="width: 100%;display: flex;align-items: center">
+                        <p style="width: 50%">
+                            <span class="p_left">初次对接时间:</span>
+                            <span class="p_right first_time"></span>
+                        </p>
+                        <p style="width: 50%">
+                            <span class="p_left">市区:</span>
+                            <span class="p_right district"></span>
+                        </p>
+                    </div>
+                    <div style="width: 100%;display: flex;align-items: center">
+                        <p style="width: 50%">
+                            <span class="p_left">园区名称:</span>
+                            <span class="p_right zone_name"></span>
+                        </p>
+                        <p style="width: 50%">
+                            <span class="p_left">厂房类型:</span>
+                            <span class="p_right building_type"></span>
+                        </p>
+                    </div>
+                    <div style="width: 100%;display: flex;align-items: center">
+                        <p style="width: 50%">
+                            <span class="p_left">拟用地面积（亩）:</span>
+                            <span class="p_right use_area"></span>
+                        </p>
+                        <p style="width: 50%">
+                            <span class="p_left">拟租厂房面积（平方米）:</span>
+                            <span class="p_right rent_area"></span>
+                        </p>
+                    </div>
+                    <div style="width: 100%;display: flex;align-items: center">
+                        <p style="width: 50%">
+                            <span class="p_left">拟购厂房面积（平方米）:</span>
+                            <span class="p_right buy_area"></span>
+                        </p>
+                        <p style="width: 50%">
+                            <span class="p_left">预计年销量（万元）:</span>
+                            <span class="p_right year_xl"></span>
+                        </p>
+                    </div>
+                    <div style="width: 100%;display: flex;align-items: center">
+                        <p style="width: 50%">
+                            <span class="p_left">预计年税收（万元）:</span>
+                            <span class="p_right year_ss"></span>
+                        </p>
+                    </div>
+                </div>
+                <div class="detail-content" style=" height: calc(100% - 50px);padding-top: 0;">
+                    <table class="layui-table ">
+                        <tr>
+                            <td class="td-label" style="width: 80px;">市区<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <select id="district_code" name="district_code" class="layui-select" lay-reqtext="请选择市区" lay-verify="required" lay-filter="district_code">
+                                    <option value="">请选择</option>
+                                    <option value="001001">靖江市</option>
+                                    <option value="001002">泰兴市</option>
+                                    <option value="001003">兴化市</option>
+                                    <option value="001004">海陵区</option>
+                                    <!--                            <option value="001005">高港区</option>-->
+                                    <option value="001006">姜堰区</option>
+                                    <option value="001007">医药高新区(高港区)</option>
+                                </select>
+
+                            </td>
+                            <td class="td-label" style="width: 100px;">园区<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <select id="zone_code" name="zone_code" lay-filter="zone_code" lay-reqtext="请选择园区" lay-verify="required" class=" layui-select required">
+                                    <option value="">请先选择市区</option>
+                                </select>
+
+                                <select id="town_code" name="town_code" lay-filter="town_code" class=" layui-select">
+                                    <option value="">请选择街镇</option>
+                                </select>
+
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目名称<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input id="_name" name="_name" type="text" class="layui-input required " lay-reqtext="请输入项目名称"  lay-verify="required" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">项目类别<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input name="p_type" lay-verify="radioVerify" type="radio" value="1" title="内资" checked lay-filter="p_type">
+                                <input name="p_type" lay-verify="radioVerify" type="radio" value="2" title="外资" lay-filter="p_type">
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目总投资<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input id="invest_money1" name="invest_money1" type="text" class="layui-input required" lay-reqtext="请输入项目总投资" lay-verify="required" autocomplete="off"
+                                       rule="ffs" style="width: 150px" min="0" maxlength="10"/>
+                                <span id="span1" style="width: 45px;text-align: center"></span>
+                            </td>
+                            <td class="td-label">协议利用外资<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input id="foreign_money" name="foreign_money" type="text" rule="ffs" disabled class="layui-input layui-disabled "
+                                       autocomplete="off"
+                                       style="width: 150px" min="0" maxlength="10"/> 万美元
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目类型<span style="color: red;font-size: 18px">*</span></td>
+                            <td class="indus-tag-c" style="width: 180px;">
+                                <div>
+                                    <input id="proj_type" name="proj_type" type="text" lay-reqtext="请选择项目类型" lay-verify="required" lay-filter="proj_type" style="display: none;"
+                                           readonly class="layui-input "/>
+                                </div>
+                            </td>
+                            <td class="td-label">产业大类名称<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <select id="industry_first_code" name="industry_first_code" lay-reqtext="请选择产业大类" lay-verify="required" class="layui-select required"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">行业编码<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="industry_name" name="industry_name" type="hidden" class="layui-input  "/>
+                                <div>
+                                    <input id="industry_code" name="industry_code" lay-reqtext="请选择行业编码" lay-verify="required" lay-filter="industry_code" class="layui-input"
+                                           style="display: none;" type="text" autocomplete="off"/>
+                                </div>
+                            </td>
+                            <td class="td-label">所属行业<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 220px;">
+                                <div class="layui-inline required "><input name="b_industry" type="radio" checked value="1"
+                                                                           title="服务业"
+                                                                           lay-filter="b_industry"></div>
+                                <div class="layui-inline required "><input name="b_industry" type="radio" value="2" title="工业"
+                                                                           lay-filter="b_industry"></div>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td class="td-label">投资方名称<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input id="investor1" name="investor" type="text" lay-reqtext="请输入投资方名称" lay-verify="required" class="layui-input required " autocomplete="off">
+                            </td>
+                            <td class="td-label">投资方性质<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <select id="investor_type" name="investor_type" lay-reqtext="请输入投资方性质" lay-verify="required" class="layui-select required">
+                                    <option value="">请选择</option>
+                                    <option value="10">央企</option>
+                                    <option value="20">民营巨头</option>
+                                    <option value="30">世界500强或跨国公司</option>
+                                    <option value="40">其它</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td class="td-label">投资方注册地<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <select id="investor_place" name="investor_place"  lay-reqtext="请选择投资方注册地" lay-verify="required" class="layui-select required">
+                                    <option value="">请选择</option>
+                                    <option value="10">北京</option>
+                                    <option value="20">上海</option>
+                                    <option value="30">广州</option>
+                                    <option value="40">深圳</option>
+                                    <option value="50">苏州</option>
+                                    <option value="60">长三角其他城市</option>
+                                    <option value="70">其他</option>
+                                </select>
+                            </td>
+                            <td class="td-label">是否属于上市企业<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <select id="is_listed" name="is_listed" lay-reqtext="请选择是否上市公司" lay-verify="required" class=" layui-select required">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+<!--                            <td class="td-label">投资方联系人</td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <input id="qy_linker" name="qy_linker" type="text" class="layui-input" autocomplete="off"/>-->
+<!--                            </td>-->
+                        </tr>
+<!--                        <tr>-->
+<!--                            <td class="td-label" style="width: 80px;">联系电话</td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <input id="qy_phone" name="qy_phone" type="text" class="layui-input" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">是否属于上市企业<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <select id="is_listed" name="is_listed" lay-reqtext="请选择是否上市公司" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="1">是</option>-->
+<!--                                    <option value="2">否</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <tr>
+<!--                            <td class="td-label">是否重点项目<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <div>-->
+<!--                                    <input name="is_import_proj" lay-verify="radioVerify" type="radio" disabled value="是" title="是"-->
+<!--                                           lay-filter="is_import_proj">-->
+<!--                                    <input name="is_import_proj" lay-verify="radioVerify" type="radio" disabled value="否" title="否"-->
+<!--                                           lay-filter="is_import_proj">-->
+<!--                                </div>-->
+<!--                                <div id="import_proj_div" style="display: none">-->
+<!--                                    类型-->
+<!--                                    <select id="import_proj_type" name="import_proj_type" class=" layui-select">-->
+<!--                                        <option value="">请选择</option>-->
+<!--                                        <option value="省级">省级</option>-->
+<!--                                        <option value="市级">市级</option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </td>-->
+                            <td class="td-label">是否高新技术企业<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <select id="is_gxjs" name="is_gxjs" lay-reqtext="请选择是否高新技术企业" lay-verify="required" class=" layui-select required">
+                                    <option value="">请选择</option>
+                                    <option value="是">是</option>
+                                    <option value="否">否</option>
+                                </select>
+                            </td>
+<!--                            <td class="td-label">是否科创项目<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <div>-->
+<!--                                    <input name="is_kc_proj" type="radio" disabled value="是" title="是"-->
+<!--                                           lay-filter="is_kc_proj">-->
+<!--                                    <input name="is_kc_proj" type="radio" disabled value="否" title="否"-->
+<!--                                           lay-filter="is_kc_proj">-->
+<!--                                </div>-->
+<!--                                <div id="kc_proj_div" style="display: none">-->
+<!--                                    符合科创项目认定条件-->
+<!--                                    <input id="kc_proj_tj" name="kc_proj_tj" type="text" class="layui-input" autocomplete="off"/>-->
+<!--                                </div>-->
+<!--                            </td>-->
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否有融资需求<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input name="is_rzxq" type="radio" lay-verify="radioVerify" disabled value="是" title="是"
+                                       lay-filter="is_rzxq">
+                                <input name="is_rzxq" type="radio" lay-verify="radioVerify" disabled value="否" title="否"
+                                       lay-filter="is_rzxq">
+                            </td>
+                            <td class="rz_tr" style="display: none" class="td-label">融资金额<span style="color: red;font-size: 18px">*</span></td>
+                            <td class="rz_tr" style="width: 180px;display: none">
+                                <input id="rz_money" name="rz_money" type="text" lay-reqtext="请输入融资金额" class="layui-input" autocomplete="off">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否科创项目<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <div>
+                                    <input name="is_kc_proj" type="radio" disabled value="是" title="是"
+                                           lay-filter="is_kc_proj">
+                                    <input name="is_kc_proj" type="radio" disabled value="否" title="否"
+                                           lay-filter="is_kc_proj">
+                                </div>
+                                <div id="kc_proj_div" style="display: none">
+                                    符合科创项目认定条件
+                                    <input id="kc_proj_tj" name="kc_proj_tj" lay-reqtext="请输入符合科创项目认定条件" type="text" class="layui-input" autocomplete="off"/>
+                                    <select id="kc_proj_type" name="kc_proj_type" lay-reqtext="请选择科创项目类型" lay-filter="kc_proj_type" class=" layui-select">
+                                        <option value="">请选择</option>
+                                        <option value="知识产权类">知识产权类</option>
+                                        <option value="高层次人才类">高层次人才类</option>
+                                        <option value="科技计划或大赛类">科技计划或大赛类</option>
+                                        <option value="风险投资类">风险投资类</option>
+                                        <option value="省市产研院类">省市产研院类</option>
+                                        <option value="重大创新平台类">重大创新平台类</option>
+                                    </select>
+                                    <div>
+                                        <p id="file_message" style="color: red"></p>
+                                        <!--                                        <p id="file_message" style="color: red">请上传投资企业专利证书或受理通知书等证明材料</p>-->
+                                        <!--                                        <p>请上传人才学历、职称、获奖等证明材料</p>-->
+                                        <!--                                        <p>请上传计划项目立项或大赛获奖文件等证明材料</p>-->
+                                        <!--                                        <p>请上传投资协议等证明材料</p>-->
+                                        <!--                                        <p>请上传签约协议</p>-->
+                                        <!--                                        <p>请上传合作共建协议等证明材料</p>-->
+                                        <ul id="file_project_new6">
+                                        </ul>
+                                        <button id="uploadDetail_new6" type="button" class="layui-btn"
+                                                style="text-align: center;float: right;">
+                                            <i class="layui-icon">&#xe67c;</i>上传文件
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">QFLP外资项目<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <select id="is_qflp" name="is_qflp" lay-reqtext="请选择是否QFLP外资项目" lay-verify="required" class=" layui-select required">
+                                    <option value="">请选择</option>
+                                    <option value="是">是</option>
+                                    <option value="否">否</option>
+                                </select>
+                            </td>
+                            <td style="width: 180px;" class="td-label">项目信息来源<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 220px;">
+                                <div class="layui-inline required "><input name="b_resource" type="radio" checked value="1"
+                                                                           title="自行接洽"
+                                                                           lay-filter="b_resource"></div>
+                                <div class="layui-inline required "><input name="b_resource" type="radio" value="2" title="市级机关推荐"
+                                                                           lay-filter="b_resource"></div>
+                                <div id="orgBox" style="display: none">
+                                    <input type="text" name="sjjg_name" id="sjjg_name" class="layui-input"
+                                           placeholder="请选择下方搜索结果" readOnly value="" autocomplete="off">
+                                    <div>
+                                        <input type="text" name="sjjg_name_search" id="sjjg_name_search" class="layui-input"
+                                               placeholder="搜索" style="position:absolute;z-index:2;width:80%;" value="" autocomplete="off">
+                                        <select id="orgname" class="xySelect" placeholder="请输入名称搜索" name="orgname" lay-filter="orgname" >
+                                            <option value="">请输入名称搜索</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目简介<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <input id="_desc1" name="_desc1" lay-reqtext="请输入项目简介" lay-verify="required" type="textarea" class="layui-textarea required " autocomplete="off"/>
+                                <span style="color: red">（填写包括：占地、建筑面积、设备、原料、工艺、产品、产能。
+参考格式：项目占地**亩，新建建筑面积**平方米（土建必填），计容面积**平方米，包括****，总投资***万，设备投资***万，购置***等设备多少台（套），主要原料有***，主要工艺有***，形成年产****。）</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目选址位置<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="project_address" name="project_address" type="text" lay-reqtext="请输入项目选址位置" lay-verify="required" class="layui-input required" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">预计开工时间<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="plan_start_date" name="plan_start_date" type="text" lay-reqtext="请输入预计开工时间" lay-verify="required" class="layui-input required" autocomplete="off">
+                                <!--                                <input id="plan_start" type="text" class="layui-input" autocomplete="off"/>-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">预计竣工时间<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="plan_end_date" name="plan_end_date" type="text" lay-reqtext="请输入预计竣工时间" lay-verify="required" class="layui-input required" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">注册资本（<span class="moneyText">万元</span>）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="zhuce_money" name="zhuce_money" type="text" lay-reqtext="请输入注册资本" lay-verify="required" class="layui-input required" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">签约日期<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <!--                                <div class="layui-inline">-->
+                                <input id="signed_date" name="signed_date" type="text" lay-reqtext="请输入签约日期" lay-verify="required" class="layui-input  layui-inline required "
+                                       autocomplete="off" readonly>
+                                <!--                                    <i class="icon-riqi iconfont date-input-icon layui-inline"></i>-->
+                                <!--                                </div>-->
+                            </td>
+                            <td class="td-label">签约信息统计日期<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="signed_stat_date" name="signed_stat_date" type="text" class="layui-input layui-disabled" readonly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">成效情况说明<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <textarea id="cg_remark" name="cg_remark" type="text" lay-reqtext="请输入成效情况说明" lay-verify="required" class="layui-textarea required " autocomplete="off"></textarea>
+                                <span style="color: red">（请对照成效评估办法，补充其他需要说明的情况）</span>
+                            </td>
+                        </tr>
+                        <!--                        基本信息-->
+<!--                        <tr style="height: 50px;">-->
+<!--                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;text-align: left">基本信息</td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">团队力量<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="team" name="team" lay-reqtext="请选择团队力量" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="核心管理人才">核心管理人才</option>-->
+<!--                                    <option value="核心技术人才">核心技术人才</option>-->
+<!--                                    <option value="财务、市场、运营等岗位人才">财务、市场、运营等岗位人才</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">资金来源<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <select id="zjly" name="zjly" lay-reqtext="请选择资金来源" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="单一依赖接待或短期融资">单一依赖接待或短期融资</option>-->
+<!--                                    <option value="自有资金占比高，且融资渠道多元">自有资金占比高，且融资渠道多元</option>-->
+<!--                                    <option value="政府或平台投资资金">政府或平台投资资金</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">资产负债表<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="zcfz" name="zcfz" lay-reqtext="请选择资产负债情况" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="正常">正常</option>-->
+<!--                                    <option value="异常">异常</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">利润表<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <select id="lirun" name="lirun" lay-reqtext="请选择利润情况" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="正常">正常</option>-->
+<!--                                    <option value="异常">异常</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">现金流量表<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="xjll" name="xjll" lay-reqtext="请选择现金流量情况" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="正常">正常</option>-->
+<!--                                    <option value="异常">异常</option>-->
+<!--                                </select>-->
+<!--                                <span style="color: red">（应优先排除连续两年经营现金流为负的）</span>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">固定资产与流动资产占比<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <select id="zczb" name="zczb" lay-reqtext="请选择固定资产与流动资产占比情况" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="正常">正常</option>-->
+<!--                                    <option value="异常">异常</option>-->
+<!--                                </select>-->
+<!--                                <span style="color: red">（应优先选择流动资产占比较高的）</span>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <tr>
+                            <td class="td-label">产业关联度<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <select id="cy_gl" name="cy_gl" lay-reqtext="请选择产业关联度" lay-verify="required" class=" layui-select required">
+                                    <option value="">请选择</option>
+                                    <option value="强相关">强相关</option>
+                                    <option value="一般">一般</option>
+                                    <option value="不相关">不相关</option>
+                                </select>
+                            </td>
+                            <!--                            <td class="td-label">工艺水平（生产效率）<span style="color: red;font-size: 18px">*</span></td>-->
+                            <!--                            <td style="width: 180px;">-->
+                            <!--                                <select id="gy_xl" class=" layui-select required">-->
+                            <!--                                    <option value="">请选择</option>-->
+                            <!--                                    <option value="高">高</option>-->
+                            <!--                                    <option value="中">中</option>-->
+                            <!--                                    <option value="低">低</option>-->
+                            <!--                                </select>-->
+                            <!--                            </td>-->
+                        </tr>
+                        <!--                        准入条件-->
+                        <tr style="height: 50px;">
+                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;text-align: left">准入条件</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">特殊行业<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <select id="tshy" name="tshy" lay-reqtext="请选择是否特殊行业" lay-verify="required" class=" layui-select required">
+                                    <option value="">请选择</option>
+                                    <option value="是">是</option>
+                                    <option value="否">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">准入限制<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <select id="zrxz" name="zrxz" lay-reqtext="请选择有无准入限制" lay-verify="required" class=" layui-select required">
+                                    <option value="">请选择</option>
+                                    <option value="有">有</option>
+                                    <option value="无">无</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">两高项目<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <select id="lgxm" name="lgxm" lay-reqtext="请选择是否两高项目" lay-verify="required" class=" layui-select required">
+                                    <option value="">请选择</option>
+                                    <option value="是">是</option>
+                                    <option value="否">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">重金属排放<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <select id="zjspf" name="zjspf" lay-reqtext="请选择有无重金属排放" lay-verify="required" class=" layui-select required">
+                                    <option value="">请选择</option>
+                                    <option value="有">有</option>
+                                    <option value="无">无</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">预计年耗能情况(吨标煤)<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="total_use" name="total_use" type="text" lay-reqtext="请输入预计年耗能情况" lay-verify="required" class="layui-input required" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">预计年排污情况（废水、废气等）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="is_wuran" name="is_wuran" lay-reqtext="请输入预计年排污情况" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <!--                        投资规模-->
+                        <tr style="height: 50px;">
+                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;text-align: left">投资规模</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">申请用地面积（亩）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="sq_land_area" name="sq_land_area" lay-reqtext="请输入申请用地面积" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">租赁厂房面积（平方米）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="zl_land_area" name="zl_land_area" lay-reqtext="请输入租赁厂房面积" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">折算用地（亩）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="zl_land_area_zs" name="zl_land_area_zs" lay-reqtext="请输入折算用地" disabled lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">计划总投资（<span class="moneyText">万元</span>）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="plan_total1" name="plan_total1" lay-reqtext="请输入计划总投资" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">计划投资强度（<span class="moneyText">万元</span>/亩）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="invest_level" name="invest_level" lay-reqtext="请输入计划投资强度" lay-verify="required" type="text" disabled class="layui-input required" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">固定资产投资（<span>万元</span>）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="fixed_invest" name="fixed_invest" lay-reqtext="请输入固定资产投资" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>
+                            </td>
+                            <!--                            <td class="td-label">本期投资额（<span class="moneyText">万元</span>）<span style="color: red;font-size: 18px">*</span></td>-->
+                            <!--                            <td style="width: 180px;">-->
+                            <!--                                <input id="plan_total2" name="plan_total2" type="text" lay-reqtext="请输入本期投资额" lay-verify="required" class="layui-input required" autocomplete="off"/>-->
+                            <!--                            </td>-->
+                        </tr>
+                        <!--                        <tr>-->
+                        <!--                            -->
+                        <!--&lt;!&ndash;                            <td class="td-label">设备投资（<span class="moneyText">万元</span>）<span style="color: red;font-size: 18px">*</span></td>&ndash;&gt;-->
+                        <!--&lt;!&ndash;                            <td style="width: 180px;">&ndash;&gt;-->
+                        <!--&lt;!&ndash;                                <input id="device_invest" name="device_invest" lay-reqtext="请输入设备投资" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>&ndash;&gt;-->
+                        <!--&lt;!&ndash;                            </td>&ndash;&gt;-->
+                        <!--                        </tr>-->
+                        <!--                        预期效益-->
+                        <tr style="height: 50px;">
+                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;text-align: left">预期效益</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">预期年均产值（万元）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="yq_cz1" name="yq_cz1" lay-reqtext="请输入预期年均产值" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>
+                            </td>
+                            <!--                            <td class="td-label">预期产值（第二年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+                            <!--                            <td style="width: 180px;">-->
+                            <!--                                <input id="yq_cz2" name="yq_cz2" lay-reqtext="请输入预期产值（第二年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+                            <!--                            </td>-->
+                            <td class="td-label">预期年均开票销售（万元）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="yq_kpxs1" name="yq_kpxs1" lay-reqtext="请输入预期年均开票销售" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <!--                        <tr>-->
+                        <!--                            <td class="td-label">预期产值（第三年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+                        <!--                            <td style="width: 280px;">-->
+                        <!--                                <input id="yq_cz3" name="yq_cz3" lay-reqtext="请输入预期产值（第三年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+                        <!--                            </td>-->
+                        <!--                            <td class="td-label">预期开票销售（第一年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+                        <!--                            <td style="width: 180px;">-->
+                        <!--                                <input id="yq_kpxs1" name="yq_kpxs1" lay-reqtext="请输入预期开票销售（第一年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+                        <!--                            </td>-->
+                        <!--                        </tr>-->
+                        <!--                        <tr>-->
+                        <!--                            <td class="td-label">预期开票销售（第二年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+                        <!--                            <td style="width: 280px;">-->
+                        <!--                                <input id="yq_kpxs2" name="yq_kpxs2" lay-reqtext="请输入预期开票销售（第二年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+                        <!--                            </td>-->
+                        <!--                            <td class="td-label">预期开票销售（第三年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+                        <!--                            <td style="width: 180px;">-->
+                        <!--                                <input id="yq_kpxs3" name="yq_kpxs3" lay-reqtext="请输入预期开票销售（第三年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+                        <!--                            </td>-->
+                        <!--                        </tr>-->
+                        <tr>
+                            <td class="td-label">预期年均税收（万元）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="yq_ss1" name="yq_ss1" lay-reqtext="请输入预期年均税收" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>
+                            </td>
+                            <!--                            <td class="td-label">预期税收（第二年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+                            <!--                            <td style="width: 180px;">-->
+                            <!--                                <input id="yq_ss2" name="yq_ss2" lay-reqtext="请输入预期税收（第二年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+                            <!--                            </td>-->
+                            <td class="td-label">预期年均亩均税收（万元）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="yq_mjtax1" name="yq_mjtax1" lay-reqtext="请输入预期年均亩均税收" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <!--                        <tr>-->
+                        <!--                            <td class="td-label">预期税收（第三年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+                        <!--                            <td style="width: 280px;">-->
+                        <!--                                <input id="yq_ss3" name="yq_ss3" lay-reqtext="请输入预期税收（第三年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+                        <!--                            </td>-->
+                        <!--                            <td class="td-label">预期亩均税收（第一年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+                        <!--                            <td style="width: 180px;">-->
+                        <!--                                <input id="yq_mjtax1" name="yq_mjtax1" lay-reqtext="请输入预期亩均税收（第一年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+                        <!--                            </td>-->
+                        <!--                        </tr>-->
+                        <!--                        <tr>-->
+                        <!--                            <td class="td-label">预期亩均税收（第二年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+                        <!--                            <td style="width: 280px;">-->
+                        <!--                                <input id="yq_mjtax2" name="yq_mjtax2" lay-reqtext="请输入预期亩均税收（第二年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+                        <!--                            </td>-->
+                        <!--                            <td class="td-label">预期亩均税收（第三年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+                        <!--                            <td style="width: 180px;">-->
+                        <!--                                <input id="yq_mjtax3" name="yq_mjtax3" lay-reqtext="请输入预期亩均税收（第三年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+                        <!--                            </td>-->
+                        <!--                        </tr>-->
+                        <!--                        产品前景-->
+<!--                        <tr style="height: 50px;">-->
+<!--                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;text-align: left">产品前景</td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">产品市场现状<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="cpscxz" name="cpscxz" lay-reqtext="请选择产品市场现状" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="导入期">导入期</option>-->
+<!--                                    <option value="成长期">成长期</option>-->
+<!--                                    <option value="成熟期">成熟期</option>-->
+<!--                                    <option value="衰退期">衰退期</option>-->
+<!--                                </select>-->
+<!--                                <span style="color: red">（综合行业趋势、供需关系、竞争力、潜在客户群等）</span>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">工艺水平<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="gysp" name="gysp" lay-reqtext="请选择工艺水平" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="先进">先进</option>-->
+<!--                                    <option value="良好">良好</option>-->
+<!--                                    <option value="一般">一般</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">生产效率<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="scxl" name="scxl" lay-reqtext="请选择生产效率" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="高">高</option>-->
+<!--                                    <option value="中">中</option>-->
+<!--                                    <option value="低">低</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">良品率<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="lpl" name="lpl" lay-reqtext="请选择良品率" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="高">高</option>-->
+<!--                                    <option value="中">中</option>-->
+<!--                                    <option value="低">低</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <!--                        科创属性-->
+<!--                        <tr style="height: 50px;">-->
+<!--                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;text-align: left">科创属性</td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">高新技术企业<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <input name="is_gxjs" type="radio" disabled value="是" title="是"-->
+<!--                                       lay-filter="is_gxjs">-->
+<!--                                <input name="is_gxjs" type="radio" disabled value="否" title="否"-->
+<!--                                       lay-filter="is_gxjs">-->
+<!--                            </td>-->
+<!--                            <td class="td-label">是否建立企业研发中心<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <div>-->
+<!--                                    <input name="is_build_yfzx" type="radio" disabled value="是" title="是"-->
+<!--                                           lay-filter="is_build_yfzx">-->
+<!--                                    <input name="is_build_yfzx" type="radio" disabled value="否" title="否"-->
+<!--                                           lay-filter="is_build_yfzx">-->
+<!--                                </div>-->
+<!--                                <div id="build_yfzx_div" style="display: none">-->
+<!--                                    企业研发中心-->
+<!--                                    <input id="build_yfzx" name="build_yfzx" type="text" class="layui-input" autocomplete="off"/>-->
+<!--                                </div>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">专利数</td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <input id="zl_num" name="zl_num" type="text" class="layui-input" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">是否获得省级以上科技或人才等项目支持<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <div>-->
+<!--                                    <input name="is_sj_proj" type="radio" disabled value="是" title="是"-->
+<!--                                           lay-filter="is_sj_proj">-->
+<!--                                    <input name="is_sj_proj" type="radio" disabled value="否" title="否"-->
+<!--                                           lay-filter="is_sj_proj">-->
+<!--                                </div>-->
+<!--                                <div id="sj_proj_div" style="display: none">-->
+<!--                                    省级以上科技或人才等项目-->
+<!--                                    <input id="sj_proj" name="sj_proj" type="text" class="layui-input" autocomplete="off"/>-->
+<!--                                </div>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">风险投资（<span class="moneyText">万元</span>）<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <input id="is_warning_invest" name="is_warning_invest" lay-reqtext="请输入风险投资" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">风险投资方名称<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <input id="fx_name" name="fx_name" lay-reqtext="请输入风险投资方名称" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <!--                        风险研判-->
+<!--                        <tr style="height: 50px;">-->
+<!--                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;text-align: left">风险研判</td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">纳税合规性<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="hegui" name="hegui" lay-reqtext="请选择纳税合规性" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="正常">正常</option>-->
+<!--                                    <option value="异常">异常</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">投资方风险评估<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <select id="gy_xl" name="gy_xl" lay-reqtext="请选择投资方风险评估" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="高">高</option>-->
+<!--                                    <option value="中">中</option>-->
+<!--                                    <option value="低">低</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">金融机构信用评级<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <input id="xypj" name="xypj" lay-reqtext="请输入金融机构信用评级" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">行业协会评价<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <input id="xhpj" name="xhpj" lay-reqtext="请输入行业协会评价" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <!--                        市（区）联合评审结论-->
+                        <tr style="height: 50px;">
+                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;width: 240px;text-align: left">市（区）联合评审结论</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">各市（区）联合评审结论<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <select id="zhpg" name="zhpg" lay-reqtext="请选择各市（区）联合评审结论" lay-verify="required" class=" layui-select required">
+                                    <option value="">请选择</option>
+                                    <option value="优秀">优秀</option>
+                                    <option value="良好">良好</option>
+                                    <option value="一般">一般</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目情况分析和评审结果<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+
+                                <ul id="file_project1">
+                                </ul>
+                                <button id="uploadDetail1" type="button" class="layui-btn"
+                                        style="text-align: center;float: right;">
+                                    <i class="layui-icon">&#xe67c;</i>上传文件
+                                </button>
+                            </td>
+                        </tr>
+                        <tr id="tzf_div">
+                            <td class="td-label">市级部门风险提示<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <textarea id="tzf_fx" name="tzf_fx" placeholder="自动同步，无需填写" disabled class="layui-textarea" rows="3"></textarea>
+                            </td>
+                        </tr>
+                        <tr id="zsf_div">
+                            <td class="td-label">项目签约协议招商方<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <input id="zsf" name="zsf" lay-reqtext="请输入招商方" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr id="tzfs_div">
+                            <td class="td-label">项目签约协议投资方<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <input id="tzf" name="tzf" lay-reqtext="请输入投资方" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr  id="tzdz_div">
+                        <td class="td-label">项目签约协议投资地址<span style="color: red;font-size: 18px">*</span></td>
+                        <td colspan="3">
+                            <input id="tzdz" name="tzdz" lay-reqtext="请输入投资地址" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                        </td>
+                    </tr>
+                        <tr id="xyBox">
+                            <td class="td-label">项目签约协议附则</td>
+                            <td colspan="3">
+                                <div id="fzList" style="margin-bottom: 5px">
+                                </div>
+                                <div>
+                                    <textarea id="fzValue" placeholder="请输入项目签约协议附则" class="layui-textarea" rows="3"></textarea>
+                                    <button style="margin-top: 10px;" id="addFz" type="button" class="layui-btn">
+                                        添加附则
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="zzBox">
+                            <td class="td-label">佐证材料<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+
+                                <ul id="file_project">
+                                </ul>
+                                <button id="uploadDetail" type="button" class="layui-btn"
+                                        style="text-align: center;float: right;">
+                                    <i class="layui-icon">&#xe67c;</i>上传文件
+                                </button>
+                                <button id="scxy" type="button" class="layui-btn"
+                                        style="text-align: center;float: right;margin-right: 10px" lay-submit lay-filter="scxy-submit">生成协议</button>
+
+                                <!--                    <button id="cleanDetail" type="button" class="layui-btn"-->
+                                <!--                            style="background-color: #c2c2c2">-->
+                                <!--                        清除-->
+                                <!--                    </button>-->
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="detail-content" style=" height: calc(100% - 50px);padding-top: 0;">
+                    <table class="layui-table ">
+                        <tr>
+                            <td class="td-label" style="width: 80px;">项目评级</td>
+                            <td style="width: 280px;">
+                                <input id="proj_level" name="proj_level" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                            <td class="td-label" style="width: 100px;">是否为新引进企业</td>
+                            <td style="width: 180px;">
+                                <select id="is_new" name="is_new" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否为世界500强或全球专业领域行业龙头企业</td>
+                            <td style="width: 280px;">
+                                <select id="is_world" name="is_world" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">是否为国内500强或国内行业排名前100企业</td>
+                            <td style="width: 180px;">
+                                <select id="is_china" name="is_china" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <!--                            <td class="td-label"><span style="color: red;font-size: 18px">*</span>是否属于上市企业</td>-->
+                            <!--                            <td style="width: 280px;">-->
+                            <!--                                <select id="is_listed" class=" layui-select required">-->
+                            <!--                                    <option value="">请选择</option>-->
+                            <!--                                    <option value="1">是</option>-->
+                            <!--                                    <option value="2">否</option>-->
+                            <!--                                </select>-->
+                            <!--                            </td>-->
+                            <td class="td-label">是否为瞪羚企业</td>
+                            <td style="width: 280px;">
+                                <select id="is_gazelle" name="is_gazelle" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">是否为专精特新企业</td>
+                            <td style="width: 180px;">
+                                <select id="is_specialized" name="is_specialized" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否为独角兽企业</td>
+                            <td style="width: 180px;">
+                                <select id="is_unicorn" name="is_unicorn" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                            <!--                            <td class="td-label">是否获得省级以上科技或人才等项目支持</td>-->
+                            <!--                            <td style="width: 180px;">-->
+                            <!--                                <input name="is_sj_proj" type="radio" disabled value="是" title="是"-->
+                            <!--                                       lay-filter="is_sj_proj">-->
+                            <!--                                <input name="is_sj_proj" type="radio" disabled value="否" title="否"-->
+                            <!--                                       lay-filter="is_sj_proj">-->
+                            <!--                            </td>-->
+                        </tr>
+                        <tr>
+                            <td class="td-label">已投资项目对属地政府亩均税收（万元）</td>
+                            <td style="width: 280px;">
+                                <input id="mujun_tax" name="mujun_tax" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">主要客户</td>
+                            <td style="width: 180px;">
+                                <input id="main_customer" name="main_customer" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目使用主要原、辅材料</td>
+                            <td style="width: 280px;">
+                                <input id="project_material" name="project_material" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">主要流程工艺</td>
+                            <td style="width: 180px;">
+                                <input id="main_process" name="main_process" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否为新供地项目</td>
+                            <td style="width: 280px;">
+                                <select id="is_newproject" name="is_newproject" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">行业是否属于高新技术产业分类目录</td>
+                            <td style="width: 180px;">
+                                <select id="is_gx" name="is_gx" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否为高技术项目</td>
+                            <td style="width: 280px;">
+                                <select id="is_gjs" name="is_gjs" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">是否为国家工业战略性新兴产业</td>
+                            <td style="width: 180px;">
+                                <select id="is_gyzl" name="is_gyzl" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">容积率</td>
+                            <td style="width: 280px;">
+                                <input id="far" name="far" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">预期用工人数（人）</td>
+                            <td style="width: 280px;">
+                                <input id="yq_worker" name="yq_worker" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">固定资产投资占比（%）</td>
+                            <td style="width: 180px;">
+                                <input id="fixed_percent" name="fixed_percent" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目是否含有研发团队、产学研合作及研发机构建设内容</td>
+                            <td style="width: 280px;">
+                                <select id="is_yanfa" name="is_yanfa" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">项目是否拥有相关有效发明专利</td>
+                            <td style="width: 280px;">
+                                <select id="is_zhuanli" name="is_zhuanli" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否拟列入重点活动签约项目库</td>
+                            <td style="width: 280px;">
+                                <select id="is_important" name="is_important" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否为招商会项目</td>
+                            <td style="width: 280px;">
+                                <select id="is_zsh" name="is_zsh" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">招商会名称</td>
+                            <td style="width: 280px;">
+                                <input id="zsh_name" name="zsh_name" placeholder="请输入" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">预计年销售（万元）</td>
+                            <td style="width: 280px;">
+                                <input id="yj_year" name="yj_year" placeholder="请输入" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">备注</td>
+                            <td>
+                                <textarea id="remark" name="remark" placeholder="请输入" class="layui-textarea" rows="3"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!--            <div class="layui-tab-item">-->
+            <!--                <div class="detail-content" style=" height: calc(100% - 50px);padding-top: 0;">-->
+            <!--                    <table class="layui-table ">-->
+            <!--                        -->
+            <!--                    </table>-->
+            <!--                </div>-->
+            <!--            </div>-->
+        </div>
+    </div>
+    <div class="text-right" id="issure">
+        <div style="padding-right: 30px;">
+            <!--                <button id="scxy" class="layui-btn layui-bg-blue" q-method="scxy">生成协议-->
+            <!--                </button>-->
+<!--            <button id="drafts" class="layui-btn" q-method="drafts">存入草稿箱</button>-->
+            <button id="btnCancel1" class="layui-btn layui-btn-primary" q-method="cancel">取消
+            </button>
+            <button id="btnSave1" class="layui-btn layui-bg-blue" lay-submit lay-filter="demo-submit">提交</button>
+        </div>
+    </div>
+</div>
+<div id="htmlToPdfDetail" style="display: none;margin: 0 auto;width: 800px;height: 550px;" class="layui-form"
+     lay-filter="htmlToPdfDetail">
+    <iframe id="xyIframe" src="" style="width:100%;height: 1000px" frameborder="0"></iframe>
+</div>
+<!--转签约-->
+<div id="detailInfo2" class="layui-form detail-dialog" style="display: none;margin: 0 auto;padding:15px"
+     lay-filter="detailInfo2">
+    <input type="hidden" id="_id2"/>
+    <div class="detail-content" style="padding-top: 0;">
+        <div>
+            <p>
+                <span class="p_left">投资方名称:</span>
+                <span class="p_right investors"></span>
+            </p>
+            <p>
+                <span class="p_left">项目类别:</span>
+                <span class="p_right pTypes"></span>
+            </p>
+            <p>
+                <span class="p_left">投资规模:</span>
+                <span class="p_right investMoneys"></span>
+            </p>
+            <p>
+                <span class="p_left">项目内容:</span>
+                <span class="p_right descs"></span>
+            </p>
+            <p>
+                <span class="p_left">洽谈进度:</span>
+                <span class="p_right progresss"></span>
+            </p>
+        </div>
+        <table class="layui-table">
+            <tr style="height: 80px">
+                <td colspan="1" class="td-label ">放弃原因<span style="color: red;font-size: 18px">*</span></td>
+                <td colspan="3">
+                    <textarea id="fqyy" placeholder="放弃原因" class="layui-textarea required" rows="3"></textarea>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <div class="text-right">
+        <div class="layui-form-item text-right" style="margin-right: 30px;">
+            <button id="btnCancel2" class="layui-btn layui-btn-primary" q-method="cancel">取消</button>
+            <button id="btnSave2" class="layui-btn layui-bg-blue" q-method="save2">保存</button>
+        </div>
+    </div>
+</div>
+
+<div id="zone" style="display: none;">
+    <div id="ZoneData"></div>
+    <button id="selectZoneOk" class="layui-btn" style="margin-left: 150px">确定</button>
+</div>
+<!--帖子操作通过模板-->
+<script type="text/html" id="operations">
+
+        {{#  if(d.sj_status == 0){ }}
+        <a title="查看修改" class="layui-btn layui-btn-xs layui-bg-orange" lay-event="edit"><i class="iconfont">&#xe6b7;</i></a>
+        <a title="转签约" class="layui-btn layui-btn-xs layui-bg-orange" lay-event="toSigned">转签约</a>
+        <a title="转共享" class="layui-btn layui-btn-xs layui-bg-orange" lay-event="toShare">转共享</a>
+        <a title="删除" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="iconfont">&#xe71a;</i></a>
+        {{# } }}
+        <!--    <a title="详情" class="layui-btn layui-btn-xs layui-bg-orange" lay-event="edit">详情</a>-->
+
+</script>
+
+<!--评论是否审核通过模板-->
+<script type="text/html" id="onlineStatus">
+    <input id="checkStatus" type="checkbox" lay-filter="lineStatus" value="{{d.check_status}}" lay-skin="switch"
+           lay-text="审核通过|待审核" {{d.check_status==1?'checked':''}}/>
+</script>
+<script type="text/html" id="toolbars">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add"><i class="iconfont  icon-weibiaoti--"></i>&nbsp;&nbsp;新项目
+        </button>
+    </div>
+</script>
+<script type="text/html" id="projType">
+    {{#  if(d.p_type=== 1){ }}
+    <span>内资</span>
+    {{#  } else if(d.p_type === 2) { }}
+    <span>外资</span>
+    {{#  } }}
+</script>
+<script type="text/html" id="sjStatus">
+    {{#  if(d.sj_status== 1){ }}
+    <span>流转至签约项目</span>
+    {{#  } else if(d.sj_status == 2) { }}
+    <span>流转至共享项目</span>
+    {{#  } }}
+</script>
+<script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../assets/libs/layui/layui.js?v=20"></script>
+<script type="text/javascript" src="../../assets/js/common.js?v=1"></script>
+<script type="text/javascript" src="../../assets/jstree/jstree.js"></script>
+<script type="text/javascript" src="../../assets/js/util.js?v=2"></script>
+<script type="text/javascript">
+
+    //非负数
+    VALID_RULES.ffs = {
+        "regex": /^(([1-9][0-9]*(\.)?[0-9]*)|(0(\.)([0-9]*))|(0))$/,
+        "msg": "* 请填写非负数"
+    };
+    var upload_file_path_proj = "https://invest.swj.taizhou.gov.cn:54931/images/";
+    // var upload_file_path_proj = "http://172.22.26.71:54931/images/"; // 政务网环境
+    var fileProjArr = [];
+    var dropData = []
+    var index = 0;
+    var key = ''
+    var treeSelect;
+    var investorPlaceOptions = []; // 内资投资方注册地选项
+    var foreignInvestorPlaceOptions = []; // 外资投资方注册地选项
+    var fzmb = `<div style="overflow: hidden;padding: 5px 0;">
+    <span class="xz-txt"></span>
+    <div style="float:  right" class="xz-edit-btn">
+<!--        <i style="cursor: pointer;margin-left: 5px;" class="iconfont fz-edit">&#xe6b7;</i>-->
+        <i style="cursor: pointer;margin-left: 5px;" class="iconfont fz-del">&#xe71a;</i>
+    </div>
+</div>`;
+
+    var fzList = [];
+
+    var defaultFZ = [
+        '本协议与国家法律、法规相悖的，按国家法律、法规执行。',
+        '如因履行本协议发生纠纷而引起诉讼的，由甲方所在地人民法院管辖。',
+        '本协议书一式四份，甲方执存两份，乙方执存两份，本协议自双方签字盖章之日起生效。',
+    ]
+
+    // 渲染下拉框的数据
+    function innitSelect(name,data){
+        let html=''
+        if(data&&data instanceof Array){
+            data.forEach(item=>{
+                html+="<option value="+item.name+">"+item.name+"</option>"
+            })
+        };
+        $(name).html(html)
+    }
+
+    // 获取内资投资方注册地选项
+    function fetchInvestorPlaceOptions() {
+        _UTIL.network.get("/system-api/dict/activityAddress/items", {all: true}, 15000, function(result) {
+            if (result && result instanceof Array) {
+                investorPlaceOptions = result.map(function(item) {
+                    return {
+                        label: item.name || item.label,
+                        value: item.code || item.value
+                    };
+                });
+            }
+        });
+    }
+
+    // 获取外资投资方注册地选项
+    function fetchForeignInvestorPlaceOptions() {
+        _UTIL.network.get("/system-api/dict/wzAddress/items", {all: true}, 15000, function(result) {
+            if (result && result instanceof Array) {
+                foreignInvestorPlaceOptions = result.map(function(item) {
+                    return {
+                        label: item.name || item.label,
+                        value: item.code || item.value
+                    };
+                });
+            }
+        });
+    }
+
+    // 渲染投资方注册地选项
+    function renderInvestorPlaceOptions(pType) {
+        $("#investor_place").empty();
+        $("#investor_place").append('<option value="">请选择</option>');
+        
+        var options = pType == 1 ? investorPlaceOptions : foreignInvestorPlaceOptions;
+        options.forEach(function(option) {
+            $("#investor_place").append('<option value="' + option.value + '">' + option.label + '</option>');
+        });
+    }
+
+    function fzHmtl(){
+        let length = fzList.length;
+        let temp = fzList.map((item,index)=>{
+            let tS = fzmb;
+            let t = $(tS);
+            t.find('.xz-txt').text(index + 1 +'、' + item);
+            if(length - index <= 3) {
+                t.find('.xz-edit-btn').remove();
+            }else{
+                t.find('.fz-del').attr('onclick',`fzremoveItem(${index})`);
+            }
+            return t[0].outerHTML;
+        }).join('');
+        $('#fzList').html(temp);
+    }
+
+    function fzAdditem(item){
+        if(fzList.length < 3){
+            fzList.push(item);
+        }else{
+            fzList.splice(fzList.length - 3,0,item);
+        }
+        fzHmtl();
+    }
+
+    function fzremoveItem(index){
+        fzList.splice(index,1);
+        fzHmtl();
+    }
+
+    function fzInit(){
+        fzList = [];
+        defaultFZ.forEach(item=>{
+            fzAdditem(item);
+        });
+    }
+    var biz_info = {
+        _id: null,
+        //渲染园区数据
+        renderZone: function (callback) {
+            var dcode = $("#district_code").val();
+            $("#zone_code").empty();
+            $("#town_code").empty();
+            if (dcode.length > 0) {
+                _UTIL.network.post("getDeptByPidForTreeSelect.do", {p_id: dcode}, 15000, function (result) {
+                    var label = "<option value=\"\">请选择</option>";
+                    for (var i = 0; i < result.data.datalist.length; i++) {
+                        label += " <option value=\"" + result.data.datalist[i].dept_code + "\">" + result.data.datalist[i].dept_name + "</option>";
+                    }
+                    $("#zone_code").html(label);
+                    layui.form.render('select');
+                    if (callback) {
+                        callback();
+                    }
+                });
+            }
+        },
+        renderZone1: function (callback) {
+            var dcode = $("#district_code1").val();
+            $("#zone_code1").empty();
+            if (dcode.length > 0) {
+                _UTIL.network.post("getDeptByPidForTreeSelect.do", {p_id: dcode}, 15000, function (result) {
+                    var label = "<option value=\"\">请选择</option>";
+                    for (var i = 0; i < result.data.datalist.length; i++) {
+                        label += " <option value=\"" + result.data.datalist[i].dept_code + "\">" + result.data.datalist[i].dept_name + "</option>";
+                    }
+                    $("#zone_code1").html(label);
+                    layui.form.render('select');
+                    if (callback) {
+                        callback();
+                    }
+                });
+            }
+        },
+        //渲染街镇数据
+        renderTown: function (callback) {
+            var dcode = $("#zone_code").val();
+            $("#town_code").empty();
+            if (dcode && dcode.length > 0) {
+                _UTIL.network.post("getDeptByPidForTreeSelect.do", {p_id: dcode}, 15000, function (result) {
+                    var label = "<option value=\"\">请选择</option>";
+                    for (var i = 0; i < result.data.datalist.length; i++) {
+                        label += " <option value=\"" + result.data.datalist[i].dept_code + "\">" + result.data.datalist[i].dept_name + "</option>";
+                    }
+                    $("#town_code").html(label);
+                    layui.form.render('select');
+                    if (callback) {
+                        callback();
+                    }
+                });
+            }
+        },
+        //搜索按钮
+        toSigned: function (e) {
+            key = ''
+            console.log(e, 99999)
+            // _UTIL.html.emptyContainerElements("detailInfo1");
+            $('.investors').html(e.investor)
+            $('.pTypes').html(e.p_type == 1 ? '内资' : '外资')
+            $('.investMoneys').html(e.invest_money + '亿')
+            $('.descs').html(e._desc)
+            $('.progresss').html(e.progress)
+            $('.first_time').html(e.first_time)
+            $('.building_type').html(e.building_type == 1 ? '租赁' : e.building_type == 2  ? '购买' : '')
+            $('.use_area').html(e.use_area)
+            $('.rent_area').html(e.rent_area)
+            $('.buy_area').html(e.buy_area)
+            $('.year_xl').html(e.year_xl)
+            $('.year_ss').html(e.year_ss)
+            $("#detailInfo1 input").removeAttr('disabled');
+            $("#detailInfo1 button").removeAttr('disabled');
+            $("#detailInfo1 input").removeAttr('readOnly');
+            $("#detailInfo1 button").removeAttr('readOnly');
+            $("#detailInfo1 select").removeAttr('disabled');
+            $("#detailInfo1 select").removeAttr('readOnly');
+            $("#detailInfo1 input").removeClass('layui-disabled');
+            $("#detailInfo1 button").removeClass('layui-disabled');
+            $("#detailInfo1 select").removeClass('layui-disabled');
+            $("#plan_start_date").prop('readonly', true);
+            $("#plan_end_date").prop('readonly', true);
+            $("#sixpro_code").attr("disabled", true);
+            $("#sixpro_code").addClass("layui-disabled");
+            $("#foreign_money").attr("disabled", true);
+            $("#foreign_money").addClass("layui-disabled");
+            $("#signed_stat_date").prop('readonly', true);
+            $("#signed_date").prop('readonly', true);
+            $("#sjjg_name").prop('readonly', true);
+            biz_info._id = e._id;
+            //清空表单元素
+            _UTIL.html.emptyContainerElements("detailInfo1");
+            fileProjArr = [];
+            setprivilege();
+            $("#file_project").html("");
+            _UTIL.dialog.openRightDialog("detailInfo1", '转签约', '1200px');
+            // $("#detailInfo").show().css({"width": "800px"});
+            // $("#detailInfo .title").html('添加项目信息');
+            // fileProjArr = [];
+            var time = new Date();
+            var day = ("0" + time.getDate()).slice(-2);
+            var month = ("0" + (time.getMonth() + 1)).slice(-2);
+            var today = time.getFullYear() + "-" + (month) + "-" + (day);
+            //获取用户信息
+            var user_info = _UTIL.storage.get("USER_INFO");
+            user_info = JSON.parse(user_info);
+            if (user_info.user_level == 3 || user_info.user_level == 4) {
+                var label = " <option value=\"" + user_info.zone_code + "\">" + user_info.zone_name + "</option>";
+                $("#zone_code").html(label);
+                layui.form.render('select');
+            }
+            //签约统计日期为当前的
+            $('#signed_stat_date').val(today);
+            $("#span").text("亿元");
+            $("#span1").text("亿元");
+            $("#proj_type").val("");
+            $("#industry_code").val("");
+            $("#industry_name").val("");
+            treeSelect.revokeNode('industry_code', function (d) {
+            });
+            treeSelect.revokeNode('proj_type', function (d) {
+            });
+            // treeSelect.checkNode('ra_proj_type', "");
+            // treeSelect.checkNode('industry_code', "");
+
+            if (fileProjArr.length == 0) {
+                $("#file_project").html("<li>无</li>")
+            }
+            if (e.district) {
+                $('.district').html(e.district)
+                // $('#district_code').val(e.district)
+            }
+            if (e.zone_name) {
+                $('.zone_name').html(e.zone_name)
+                // $('#zone_code').val(e.zone_name)
+            }
+            $("input[name=p_type][value=" + e.p_type + "]").prop("checked", true);
+            $('#invest_money1').val(e.invest_money)
+            if (e.p_type == 1) {
+                $("#span").text("亿元")
+                // if ( $('#invest_money1').val() && Number($('#invest_money1').val()) < 5 ) {
+                //     $('#btnSave1').text('提交')
+                //     $("#xyBox").show()
+                //     $("#zzBox").show()
+                //     $("#tzf_div").show()
+                //     $("#zsf_div").show()
+                //     $("#tzfs_div").show()
+                //     $("#tzdz_div").show()
+                //     $("#zsf").attr('lay-verify', "required")
+                //     $("#tzf").attr('lay-verify', "required")
+                //     $("#tzdz").attr('lay-verify', "required")
+                // } else {
+                //     $('#btnSave1').text('提交项目质态评估')
+                //     $("#xyBox").hide()
+                //     $("#zzBox").hide()
+                //     $("#tzf_div").hide()
+                //     $("#zsf_div").hide()
+                //     $("#tzfs_div").hide()
+                //     $("#tzdz_div").hide()
+                //     $("#zsf").removeAttr('lay-verify')
+                //     $("#tzf").removeAttr('lay-verify')
+                //     $("#tzdz").removeAttr('lay-verify')
+                // }
+            } else {
+                // if ( $('#invest_money1').val() && Number($('#invest_money1').val()) < 3000 ) {
+                //     $('#btnSave1').text('提交')
+                //     $("#xyBox").show()
+                //     $("#zzBox").show()
+                //     $("#tzf_div").show()
+                //     $("#zsf_div").show()
+                //     $("#tzfs_div").show()
+                //     $("#tzdz_div").show()
+                //     $("#zsf").attr('lay-verify', "required")
+                //     $("#tzf").attr('lay-verify', "required")
+                //     $("#tzdz").attr('lay-verify', "required")
+                // } else {
+                //     $('#btnSave1').text('提交项目质态评估')
+                //     $("#xyBox").hide()
+                //     $("#zzBox").hide()
+                //     $("#tzf_div").hide()
+                //     $("#zsf_div").hide()
+                //     $("#tzfs_div").hide()
+                //     $("#tzdz_div").hide()
+                //     $("#zsf").removeAttr('lay-verify')
+                //     $("#tzf").removeAttr('lay-verify')
+                //     $("#tzdz").removeAttr('lay-verify')
+                // }
+                $("#span").text("万美元")
+            }
+            fzInit();
+        },
+        toShare: function (e) {
+            console.log(e, 99999)
+            _UTIL.html.emptyContainerElements("detailInfo2")
+            biz_info._id = e._id;
+            console.log(biz_info)
+            $('.investors').html(e.investor)
+            $('.pTypes').html(e.p_type == 1 ? '内资' : '外资')
+            $('.investMoneys').html(e.invest_money + '亿')
+            $('.descs').html(e._desc)
+            $('.progresss').html(e.progress)
+            _UTIL.dialog.openRightDialog("detailInfo2", '转共享', '1200px');
+        },
+        search: function (page) {
+            if (!page || isNaN(page)) {
+                page = 1;
+            }
+            // console.log($('input[name="s_p_type"]:checked').val());
+            // console.log($("#s_name").val());
+            var table = layui.table;
+            table.reload('datalist', {
+                where: {
+                    // wheres: [
+                    //     {group:"1",name: "investor", op: "like",rel: "and",type: "string",value: $("#s_name").val()},
+                    //     {group:"1",name: "p_type",op: "=",   rel: "and",type: "string",value: $('input[name="s_p_type"]:checked').val()},
+                    // ]
+                    investor: $("#s_name").val(),
+                    p_type: $('input[name="s_p_type"]:checked').val()
+                }
+                , page: {curr: page}
+            });
+        },
+        //编辑
+        edit: function (info) {
+            //info代表一行数据
+            //id代表id数值
+            biz_info._id = info._id;
+            _UTIL.network.post("getProjProjectById.do", {_id: info._id}, 10000, function (result) {
+                var info = result.data.info;
+                if (info.p_type == 1) {
+                    $("#span").text("亿元")
+                } else {
+                    $("#span").text("万美元")
+                }
+                _UTIL.html.setValues(info);
+                var radio = document.getElementsByName("p_type");
+                if (info.p_type == 1) {
+                    $(radio[0]).prop("checked", true);
+                } else {
+                    $(radio[1]).prop("checked", true);
+                }
+                layui.form.render("radio");
+                _UTIL.dialog.openRightDialog("detailInfo", '修改在谈项目', '750px');
+                if (layui.data("flag").flag == "true") {
+                    var elementsByTagName = document.getElementsByTagName("label");
+                    $(elementsByTagName).each(index => {
+                        var element = elementsByTagName[index];
+                        var test = $(element);
+                        if (test.hasClass("required")) {
+                            test.append("<span style='color: red'> *</span>")
+                        }
+                    });
+                    layui.data("flag", {
+                        key: "flag",
+                        value: "false"
+                    })
+                }
+            });
+        },
+        //添加内容
+        add: function () {
+            biz_info._id = null;
+            //清空表单元素
+            _UTIL.html.emptyContainerElements("detailInfo");
+            _UTIL.dialog.openRightDialog("detailInfo", '添加在谈项目', '700px');
+            $("#span").text("亿元");
+            if (layui.data("flag").flag == "true") {
+                var elementsByTagName = document.getElementsByTagName("label");
+                $(elementsByTagName).each(index => {
+                    var element = elementsByTagName[index];
+                    var test = $(element);
+                    if (test.hasClass("required")) {
+                        test.append("<span style='color: red'> *</span>")
+                    }
+                });
+                layui.data("flag", {
+                    key: "flag",
+                    value: "false"
+                })
+            }
+        },
+        save2: function () {
+            //获取当前的_id
+            // var _id = $("#_id").val();
+            var _id = biz_info._id;
+            console.log(_id)
+            //获取全部数据
+            var data = _UTIL.html.getContainerElementsValue("detailInfo2");
+            data['fqyy'] = $("#fqyy").val()
+            data['_id'] = _id;
+            console.log(data);
+            //开始编辑保存中==
+            if (data.valid) {
+                _UTIL.biz.save("toShare.do", data, 15000, function () {
+                    //清空数组
+                    fileProjArr = [];
+                    index = 0;
+                    var table = layui.table;
+                    table.reload('datalist');
+                    // _UTIL.dialog.closeAll();
+                    biz_info.cancel();
+                    _UTIL.msg.success("操作成功");
+                });
+            }
+        },
+        save1: function () {
+            //获取当前的_id
+            // var _id = $("#_id").val();
+            var _id = biz_info._id;
+            //获取全部数据
+            var data = _UTIL.html.getContainerElementsValue("detailInfo1");
+            var investor_type = $("#investor_type ").val();
+            data['investor_type'] = investor_type;
+            data['proj_type'] = $("#proj_type").val();
+            console.log(data['proj_type'])
+            data['p_type'] = $('input[name="p_type"]:checked').val();
+            data['is_sixpro'] = $('input[name="is_sixpro"]:checked').val();
+            data['is_import_proj'] = $('input[name="is_import_proj"]:checked').val();
+            data['is_sj_proj'] = $('input[name="is_sj_proj"]:checked').val();
+            data['is_kc_proj'] = $('input[name="is_kc_proj"]:checked').val();
+            data['is_build_yfzx'] = $('input[name="is_build_yfzx"]:checked').val();
+            data['is_gxjs'] = $('input[name="is_gxjs"]:checked').val();
+            data['b_industry'] = $('input[name="b_industry"]:checked').val();
+            data['b_resource'] = $('input[name="b_resource"]:checked').val();
+            if (data.district_code && data.district_code.length > 0) {
+                data['district'] = $("#district_code option:selected").text();
+            }
+            if (data.zone_code && data.zone_code.length > 0) {
+                data['zone_name'] = $("#zone_code option:selected").text();
+            }
+            if (data.town_code && data.town_code.length > 0) {
+
+                data['town_name'] = $("#town_code option:selected").text();
+            }
+            //设置小数
+            var invest_money = $("#invest_money1").val().trim();
+            var foreign_money = $("#foreign_money").val().trim();
+            data['sixpro_code'] = $("#sixpro_code").val();
+            if (invest_money == "") {
+                data['invest_money1'] = 0;
+            }
+            if (foreign_money == "") {
+                data['foreign_money'] = 0;
+            }
+            data['invest_money'] = $("#invest_money1").val()
+            data['investor'] = $("#investor1").val()
+            data['_desc'] = $("#_desc1").val()
+            var files = $("#file_project a");
+            var times = $("#file_project .create_time");
+            if (files.length == 0 && biz_info.pg_status == 2) {
+                // _UTIL.msg.warn("请选择需要上传的文件");
+                _UTIL.msg.tip($("#file_project"), "请选择需要上传的文件")
+                return false;
+            }
+            var fileArr = [];
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                let time = times[i]
+                var ob = {};
+                ob.file_path = $(file).attr("href").replace(upload_file_path_proj, "");
+                // ob.file_path = $(file).attr("href");
+                ob.filename = $(file).text();
+                ob.create_time = $(time).text();
+                ob.cate_code = '99'
+                fileArr.push(ob);
+            }
+            data['imgArr'] = [...fileArr];
+            data['progress'] = 0;
+            //设置当前的项目_id
+            data['_id'] = _id;
+            data['cate_code'] = '0';
+            data['cate_code1'] = '99';
+            data['pg_status'] = 1;
+            //开始编辑保存中==
+            if (data.valid) {
+                _UTIL.biz.save("toSigned.do", data, 15000, function () {
+                    //清空数组
+                    fileProjArr = [];
+                    index = 0;
+                    var table = layui.table;
+                    table.reload('datalist');
+                    // _UTIL.dialog.closeAll();
+                    biz_info.cancel();
+                    _UTIL.msg.success("操作成功");
+                });
+
+            }
+        },
+        //编辑后保存
+        save: function () {
+            var data = _UTIL.html.getContainerElementsValue("detailInfo"); //这里没有用到biz_info._id , 简化操作吧,还是用隐藏元素了
+            //获取p_type的值
+            data.p_type = $('input[name="p_type"]:checked').val();
+            data.b_resource = $('input[name="b_resource"]:checked').val();
+            // var radio = document.getElementsByName("p_type");
+            // if ($(radio[0]).prop("checked")) {
+            //     data['p_type'] = 1;
+            // } else {
+            //     data['p_type'] = 2;
+            // }
+            var a = $("#invest_money").val().trim();
+            if (a == null || a == "") {
+                data['invest_money'] = 0;
+            }
+            if (data.district_code1 && data.district_code1.length > 0) {
+                data['district_code'] = data.district_code1;
+                data['district'] = $("#district_code1 option:selected").text();
+            }
+            if (data.zone_code1 && data.zone_code1.length > 0) {
+                data['zone_code'] = data.zone_code1;
+                data['zone_name'] = $("#zone_code1 option:selected").text();
+            }
+            if (!data.district_code) {
+                var user_info = _UTIL.storage.get("USER_INFO");
+                user_info = JSON.parse(user_info);
+                console.log(user_info)
+                data['district_code'] = user_info.district_code;
+                data['district'] = user_info.district_name;
+                data['zone_code'] = user_info.zone_code;
+                data['zone_name'] = user_info.zone_name;
+            }
+            if (data.valid) {
+                _UTIL.biz.save("updateOrSaveProjProj.do", data, 15000, function () {
+                    var table = layui.table;
+                    table.reload('datalist');
+                    _UTIL.dialog.closeAll();
+                    _UTIL.msg.success("操作成功")
+                });
+            }
+
+        },
+        //根据帖子id删除帖子
+        del: function (info) {
+            _UTIL.biz.delete("delProjProject.do", {_id: info._id}, (result) => {
+                var table = layui.table;
+                table.reload('datalist');
+            });
+        },
+        selectcate: function (event, data) {
+            $("#zone_code").val(data.node.id);
+            $("#zone_name").val(data.node.text);
+        },
+        cancel: function () {
+            _UTIL.dialog.closeAll();
+        },
+        cancelPart: function () {
+            _UTIL.dialog.close();
+        },
+    };
+
+    var biz_function = {
+        success1: function (result) {
+            var label = "<option value=\"\">请选择</option>";
+            for (var i = 0; i < result.data.datalist.length; i++) {
+                label += " <option value=\"" + result.data.datalist[i].dept_code + "\">" + result.data.datalist[i].dept_name + "</option>";
+            }
+            $("#zone_code").html(label);
+            layui.form.render('select');
+        }
+    }
+
+    $(document).ready(function () {
+        // 初始化加载投资方注册地选项
+        fetchInvestorPlaceOptions();
+        fetchForeignInvestorPlaceOptions();
+        
+        // $('#invest_money1').blur(function(){
+        //     if ($('input[name="p_type"]:checked').val() == 1) {
+        //         if ( $('#invest_money1').val() && Number($('#invest_money1').val()) < 5 ) {
+        //             $('#btnSave1').text('提交')
+        //             $("#xyBox").show()
+        //             $("#zzBox").show()
+        //             $("#tzf_div").show()
+        //             $("#zsf_div").show()
+        //             $("#tzfs_div").show()
+        //             $("#tzdz_div").show()
+        //             $("#zsf").attr('lay-verify', "required")
+        //             $("#tzf").attr('lay-verify', "required")
+        //             $("#tzdz").attr('lay-verify', "required")
+        //         } else {
+        //             $('#btnSave1').text('提交项目质态评估')
+        //             $("#xyBox").hide()
+        //             $("#zzBox").hide()
+        //             $("#tzf_div").hide()
+        //             $("#zsf_div").hide()
+        //             $("#tzfs_div").hide()
+        //             $("#tzdz_div").hide()
+        //             $("#zsf").removeAttr('lay-verify')
+        //             $("#tzf").removeAttr('lay-verify')
+        //             $("#tzdz").removeAttr('lay-verify')
+        //         }
+        //     } else {
+        //         if ( $('#invest_money1').val() && Number($('#invest_money1').val()) < 3000 ) {
+        //             $('#btnSave1').text('提交')
+        //             $("#xyBox").show()
+        //             $("#zzBox").show()
+        //             $("#tzf_div").show()
+        //             $("#zsf_div").show()
+        //             $("#tzfs_div").show()
+        //             $("#tzdz_div").show()
+        //             $("#zsf").attr('lay-verify', "required")
+        //             $("#tzf").attr('lay-verify', "required")
+        //             $("#tzdz").attr('lay-verify', "required")
+        //         } else {
+        //             $('#btnSave1').text('提交项目质态评估')
+        //             $("#xyBox").hide()
+        //             $("#zzBox").hide()
+        //             $("#tzf_div").hide()
+        //             $("#zsf_div").hide()
+        //             $("#tzfs_div").hide()
+        //             $("#tzdz_div").hide()
+        //             $("#zsf").removeAttr('lay-verify')
+        //             $("#tzf").removeAttr('lay-verify')
+        //             $("#tzdz").removeAttr('lay-verify')
+        //         }
+        //     }
+        //     // 当input失去焦点时执行的代码
+        // });
+        // $('#plan_total1').blur(function(){
+        //     let val1 = $('#plan_total1').val()
+        //     let val2 = $('#sq_land_area').val()
+        //     if (val1 && val2) {
+        //         let num = (((Number(val1) / Number(val2)) * 100) / 100).toFixed(2)
+        //         $('#invest_level').val(num)
+        //     }
+        //     // 当input失去焦点时执行的代码
+        // });
+        // $('#sq_land_area').blur(function(){
+        //     let val1 = $('#plan_total1').val()
+        //     let val2 = $('#sq_land_area').val()
+        //     if (val1 && val2) {
+        //         let num = (((Number(val1) / Number(val2)) * 100) / 100).toFixed(2)
+        //         $('#invest_level').val(num)
+        //     }
+        //     // 当input失去焦点时执行的代码
+        // });
+        // $('#zl_land_area').blur(function(){
+        //     let val1 = $('#zl_land_area').val()
+        //     if (val1) {
+        //         let num = (((Number(val1) / 2000) * 100) / 100).toFixed(2)
+        //         $('#zl_land_area_zs').val(num)
+        //     }
+        //     // 当input失去焦点时执行的代码
+        // });
+        $("#addFz").click(function () {
+            let temp = $("#fzValue").val().trim();
+            if (temp) {
+                fzAdditem(temp);
+                $("#fzValue").val('');
+            }else{
+                _UTIL.msg.warn("请先在输入框内填写内容，再点击添加附则。");
+            }
+        })
+        $('#fzValue').on('keydown', function(event) {
+            // 使用event.key判断是否按下了Enter键
+            // 这种方式比使用键码13更直观且兼容性更好
+            if (event.key === 'Enter') {
+                // 阻止默认行为（避免自动换行）
+                event.preventDefault();
+                $("#addFz").click();
+                // 在这里编写Enter键按下后的处理逻辑
+
+
+                // 示例：可以在这里提交表单或执行其他操作
+                // $('#myForm').submit();
+
+                // 清空文本框（根据需求决定是否添加）
+                // $(this).val('');
+            }
+        });
+        _UTIL.html
+        .autoBindAction();//自动绑定带有q-method属性的button, 执行的方法再biz_info中定义
+
+        $("#sjjg_name_search").on("keyup",async function(e){
+            // 点击enter实现搜索功能
+            if(e.which=='13'){
+                console.log("点击了enter",$(this).val())
+                // 模拟请求获取下拉菜单所需的参数
+                // dropData=await getData()
+                // console.log("下拉菜单的数据：",dropData)
+                // 将获取回来的数据渲染给下拉菜单
+                _UTIL.network.post("searchProjSourceList.do", {name: $(this).val()}, 8000, function (res) {
+                    console.log(res, 999)
+                    if (res.code == 1) {
+                        dropData = res.data.datalist
+                        innitSelect("#orgname",dropData)
+                        let form = layui.form;
+                        form.render()
+                        // 将下拉框展开
+                        $("#orgBox .layui-form-select").addClass("layui-form-selected")
+                    }
+                });
+            }
+        })
+        function renderTreeSelect(options) {
+            treeSelect.render({
+                // 选择器
+                elem: options.elem,
+                // 数据
+                data: options.data,
+                // 异步加载方式：get/post，默认get
+                type: 'post',
+                search: true,
+                // 占位符
+                placeholder: options.placeholder,
+                // 是否开启搜索功能：true/false，默认false
+                // 点击回调
+                click: function (d) {
+                    if (options.onSelected) {
+                        options.onSelected(d);
+                    }
+                },
+                // 加载完成后的回调函数
+                success: function (d) {
+                    if (options.succBack) {
+                        options.succBack(d);
+                    }
+                },
+                errback: function () {
+                    if (options.errBack) {
+                        options.errBack();
+                    }
+                }
+            });
+        }
+        function renderIndustryCode() {
+            renderTreeSelect({
+                // 选择器
+                elem: '#industry_code',
+                // 数据
+                data: 'getIndustryTreeSelect.do',
+                placeholder: '行业编码',
+                onSelected: function (d) {
+                    $("#industry_name").val(d.current.name);
+                    $("#industry_code").val(d.current.id);
+                }
+                , succBack: function (d) {
+                    // console.log(d);
+                    // treeSelect.refresh('tree');
+                },
+                errBack: function () {
+                    // _UTIL.msg.warn("数据初始化发生错误，请检查网络并刷新功能。");
+                    var pp = $("#industry_code").parent();
+                    pp.remove(".layui-treeSelect");
+                    var gxbtn = $("<button class='layui-btn layui-bg-blue'>刷新数据</button>");
+                    pp.append(gxbtn);
+                    gxbtn.click(function () {
+                        $(this).remove();
+                        renderIndustryCode();
+                    });
+                }
+            })
+        }
+
+        function renderProjType() {
+            renderTreeSelect({
+                // 选择器
+                elem: '#proj_type',
+                // 数据
+                data: 'getProjType.do',
+                placeholder: '项目类型',
+                onSelected: function (d) {
+                    $("#proj_type").val(d.current.id);
+                }
+                , succBack: function (d) {
+                    // $("#proj_type").val(d.current.id);
+                },
+                errBack: function () {
+                    // _UTIL.msg.warn("数据初始化发生错误，请检查网络并刷新功能。");
+                    var pp = $("#proj_type").parent();
+                    pp.remove(".layui-treeSelect");
+                    var gxbtn = $("<button class='layui-btn layui-bg-blue'>刷新数据</button>");
+                    pp.append(gxbtn);
+                    gxbtn.click(function () {
+                        $(this).remove();
+                        renderProjType();
+                    });
+                }
+            });
+        }
+        layui.use(['form', 'notice', 'element', 'table', 'layer', 'upload', 'flow', 'laydate', 'treeSelect'], function () {
+            var table = layui.table;
+            treeSelect = layui.treeSelect;
+            renderIndustryCode();
+            renderProjType();
+            //评论标题
+            var cols = [
+                [
+                    {title: 'ID', type: 'numbers'}
+                    , {field: 'investor', title: '投资方名称'}
+                    , {field: 'p_type', templet: '#projType', title: '项目类别'}
+                    , {field: 'invest_money', title: '投资规模'}
+                    , {field: 'progress', title: '洽谈进度'}
+                    , {field: '_desc', title: '项目内容'}
+                    , {field: 'district', title: '市区'}
+                    , {field: 'zone_name', title: '园区'}
+                    , {field: 'create_time', title: '报送日期'}
+                    , {field: 'sj_status',templet: '#sjStatus', title: '数据状态'}
+                    , {fixed: 'right', align: 'center', toolbar: '#operations', title: '操作',width:260}
+                ]
+            ];
+            //biz_info.getWhereData():携带参数
+            //帖子表格数据渲染====查询
+            var where = {};
+            _UTIL.biz.layuiTableRender("datalist", "searchProjProject.do", true, cols, "operations", where, function (res, curr, count) {
+            });
+
+            //监听选中radio时状态
+            layui.form.on('radio(radio)', function (data) {
+                if (data.value == 1) {
+                    $("#span").text("亿元")
+                    $("#span1").text("亿元");
+                } else {
+                    $("#span").text("万美元")
+                    $("#span1").text("万美元");
+                }
+            })
+            var form = layui.form;
+            setprivilege();
+            form.render("select");
+            form.render("radio");
+
+            //自定义验证
+            form.verify({
+                radioVerify: function (value, item) { //value：表单的值、item：表单的DOM对象
+                    var $ = layui.$;
+                    var verifyName = $(item).attr('name')
+                        , verifyType = $(item).attr('type')
+                        , formElem = $(item).parents('.layui-form')   //获取当前所在的form元素，如果存在的话
+                        , verifyElem = formElem.find("input[name='" + verifyName + "']")//获取需要校验的元素
+                        , isTrue = verifyElem.is(':checked')//是否命中校验
+                        , focusElem = verifyElem.next().find('i.layui-icon');//焦点元素
+                    if (!isTrue || !value) {
+                        //定位焦点
+                        focusElem.css(verifyType == 'radio' ? {"color": "#FF5722"} : {"border-color": "#FF5722"});
+                        //对非输入框设置焦点
+                        focusElem.first().attr("tabIndex", "1").css("outline", "0").blur(function () {
+                            focusElem.css(verifyType == 'radio' ? {"color": ""} : {"border-color": ""});
+                        }).focus();
+                        return '必填项不能为空!!!';
+                    }
+                }
+            })
+            // 提交事件
+            form.on('submit(demo-submit)', function(res){
+                var _id = biz_info._id;
+                var data = res.field; // 获取表单字段值
+                // 显示填写结果，仅作演示用
+                if (data.district_code && data.district_code.length > 0) {
+                    data['district'] = $("#district_code option:selected").text();
+                }
+                if (data.zone_code && data.zone_code.length > 0) {
+                    data['zone_name'] = $("#zone_code option:selected").text();
+                }
+                if (data.town_code && data.town_code.length > 0) {
+
+                    data['town_name'] = $("#town_code option:selected").text();
+                }
+                if (data.industry_first_code && data.industry_first_code.length > 0) {
+                    data['industry_first_name'] = $("#industry_first_code option:selected").text();
+                }
+                var invest_money = $("#invest_money1").val().trim();
+                var foreign_money = $("#foreign_money").val().trim();
+                data['sixpro_code'] = $("#sixpro_code").val();
+                if (invest_money == "") {
+                    data['invest_money1'] = 0;
+                }
+                if (foreign_money == "") {
+                    data['foreign_money'] = 0;
+                }
+                var files = $("#file_project a");
+                var times = $("#file_project .create_time");
+                if (files.length == 0) {
+                    // _UTIL.msg.warn("请选择需要上传的文件");
+                    _UTIL.msg.tip($("#file_project"), "请选择需要上传的文件")
+                    return false;
+                }
+                var fileArr = [];
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    let time = times[i]
+                    var ob = {};
+                    ob.file_path = $(file).attr("href").replace(upload_file_path_proj, "");
+                    // ob.file_path = $(file).attr("href");
+                    ob.filename = $(file).text();
+                    ob.create_time = $(time).text();
+                    ob.cate_code = '0'
+                    fileArr.push(ob);
+                }
+
+                var files1 = $("#file_project1 a");
+                if (files1.length == 0) {
+                    // _UTIL.msg.warn("请选择需要上传的文件");
+                    _UTIL.msg.tip($("#file_project1"), "请选择需要上传的文件")
+                    return false;
+                }
+                var fileArr1 = [];
+                for (var i = 0; i < files1.length; i++) {
+                    var file1 = files1[i];
+                    var ob = {};
+                    ob.file_path = $(file1).attr("href").replace(upload_file_path_proj, "");
+                    // ob.file_path = $(file).attr("href");
+                    ob.filename = $(file1).text();
+                    ob.cate_code = '99'
+                    fileArr1.push(ob);
+                }
+
+                var files6= $("#file_project_new6 a");
+                if ($('input[name="is_kc_proj"]:checked').val() == '是' && files6.length == 0) {
+                    // _UTIL.msg.warn("请选择需要上传的文件");
+                    _UTIL.msg.tip($("#file_project_new6"), "请选择需要上传的文件")
+                    return false;
+                }
+                var fileArr6 = [];
+                for (var i = 0; i < files6.length; i++) {
+                    var file6 = files6[i];
+                    var ob = {};
+                    ob.file_path = $(file6).attr("href").replace(upload_file_path_proj, "");
+                    // ob.file_path = $(file).attr("href");
+                    ob.filename = $(file6).text();
+                    ob.cate_code = '66'
+                    fileArr6.push(ob);
+                }
+                data['imgArr1'] = fileArr;
+                data['imgArr'] = [...fileArr, ...fileArr1, ...fileArr6];
+                data['ztpgzzcl'] = fileArr1.map(item => 'http://172.22.26.71:54934/images/' + item.file_path).join(';')
+                data['xyzzcl'] = fileArr.map(item => 'http://172.22.26.71:54934/images/' + item.file_path).join(';')
+                // console.log(data);
+                // var ob = {};
+                // ob.filename = res.data.fileName;
+                // ob.file_path = res.data.src;
+                //存放图片的数组
+                // data['imgArr'] = fileProjArr;
+                // if (fileProjArr.length == 0) {
+                //     _UTIL.msg.warn("请选择需要上传的文件");
+                //     return false;
+                // }
+                data['progress'] = 0;
+                //设置当前的项目_id
+                data['_id'] = _id;
+                //设置状态为保存未提交
+                data['check_status'] = 0;
+                data['cate_code'] = '0';
+                data['cate_code1'] = '99';
+                if (key) {
+                    data['qr_key'] = key
+                }
+                // data['pg_status'] = 1;
+                //开始编辑保存中==
+                _UTIL.biz.save("toSigned.do", data, 15000, function () {
+                    //清空数组
+                    fileProjArr = [];
+                    index = 0;
+                    var table = layui.table;
+                    table.reload('datalist');
+                    // _UTIL.dialog.closeAll();
+                    biz_info.cancel();
+                    _UTIL.msg.success("操作成功");
+                });
+                // 此处可执行 Ajax 等操作
+                // …
+                return false; // 阻止默认 form 跳转
+            });
+
+            form.on('submit(scxy-submit)', function(res){
+                var _id = biz_info._id;
+                var data = res.field; // 获取表单字段值
+                if (fzList.length) {
+                    data.fzList = fzList.map((item, index) => {
+                        return parseInt(index + 1) + '、' + item
+                    })
+                    console.log(data.fzList, 6)
+                }
+                // 显示填写结果，仅作演示用
+                if (data.district_code && data.district_code.length > 0) {
+                    data['district'] = $("#district_code option:selected").text();
+                }
+                if (data.zone_code && data.zone_code.length > 0) {
+                    data['zone_name'] = $("#zone_code option:selected").text();
+                }
+                if (data.town_code && data.town_code.length > 0) {
+
+                    data['town_name'] = $("#town_code option:selected").text();
+                }
+                var invest_money = $("#invest_money").val().trim();
+                var foreign_money = $("#foreign_money").val().trim();
+                data['sixpro_code'] = $("#sixpro_code").val();
+                if (invest_money == "") {
+                    data['invest_money'] = 0;
+                }
+                if (foreign_money == "") {
+                    data['foreign_money'] = 0;
+                }
+
+                var files = $("#file_project a");
+                var times = $("#file_project .create_time");
+                // if (files.length == 0 && biz_info.pg_status == 2) {
+                //     // _UTIL.msg.warn("请选择需要上传的文件");
+                //     _UTIL.msg.tip($("#file_project"), "请选择需要上传的文件")
+                //     return false;
+                // }
+                var fileArr = [];
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    let time = times[i]
+                    var ob = {};
+                    ob.file_path = $(file).attr("href").replace(upload_file_path_proj, "");
+                    // ob.file_path = $(file).attr("href");
+                    ob.filename = $(file).text();
+                    ob.create_time = $(time).text();
+                    ob.cate_code = '0'
+                    fileArr.push(ob);
+                }
+
+                var files1 = $("#file_project1 a");
+                // if (files1.length == 0) {
+                //     // _UTIL.msg.warn("请选择需要上传的文件");
+                //     _UTIL.msg.tip($("#file_project1"), "请选择需要上传的文件")
+                //     return false;
+                // }
+                var fileArr1 = [];
+                for (var i = 0; i < files1.length; i++) {
+                    var file1 = files1[i];
+                    var ob = {};
+                    ob.file_path = $(file1).attr("href").replace(upload_file_path_proj, "");
+                    // ob.file_path = $(file).attr("href");
+                    ob.filename = $(file1).text();
+                    ob.cate_code = '99'
+                    fileArr1.push(ob);
+                }
+                data['imgArr1'] = fileArr;
+                data['imgArr'] = [...fileArr, ...fileArr1];
+                data['ztpgzzcl'] = fileArr1.map(item => 'http://172.22.26.71:54934/images/' + item.file_path).join(';')
+                data['xyzzcl'] = fileArr.map(item => 'http://172.22.26.71:54934/images/' + item.file_path).join(';')
+                // console.log(data);
+                // var ob = {};
+                // ob.filename = res.data.fileName;
+                // ob.file_path = res.data.src;
+                //存放图片的数组
+                // data['imgArr'] = fileProjArr;
+                // if (fileProjArr.length == 0) {
+                //     _UTIL.msg.warn("请选择需要上传的文件");
+                //     return false;
+                // }
+                data['progress'] = 0;
+                //设置当前的项目_id
+                data['_id'] = _id;
+                if (biz_info.pg_status) {
+                    data['pg_status'] = biz_info.pg_status;
+                }
+                //设置状态为保存未提交
+                // if (!check_status) {  //如果传了这个值
+                //     check_status = 0;
+                // }
+                // data['check_status'] = 4;
+                data['cate_code'] = '0';
+                data['cate_code1'] = '99';
+                key = new Date().getTime()
+                data['qr_key'] = key
+                //开始编辑保存中==
+                _UTIL.network.post("exportPdf.do", data, 15000, function (res) {
+                    let url = res.data
+                    if (url) {
+                        // _UTIL.dialog.openDialog("htmlToPdfDetail", "协议预览", "800", "550")
+                        // $("#xyIframe").attr("src", url)
+                        var a = document.createElement('a');
+                        a.href = url;
+                        a.download = '项目签约协议.docx';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a)
+                    }
+                })
+                // 此处可执行 Ajax 等操作
+                // …
+                return false; // 阻止默认 form 跳转
+            });
+
+            form.on('radio(is_import_proj)', function (data) {
+                $("#import_proj_type").val('')
+                if (data.value == '是') {
+                    $("#import_proj_div").show()
+                    $("#import_proj_type").addClass('required')
+                } else {
+                    $("#import_proj_div").hide()
+                    $("#import_proj_type").removeClass('required')
+                }
+            });
+            form.on('radio(is_kc_proj)', function (data) {
+                $("#kc_proj_tj").val('')
+                $("#kc_proj_type").val('')
+                if (data.value == '是') {
+                    $("#kc_proj_div").show()
+                    $("#kc_proj_tj").attr('lay-verify', "required")
+                    $("#kc_proj_type").attr('lay-verify', "required")
+                } else {
+                    $("#kc_proj_div").hide()
+                    $("#kc_proj_tj").removeAttr('lay-verify')
+                    $("#kc_proj_type").removeAttr('lay-verify')
+                }
+            });
+            form.on('radio(is_sj_proj)', function (data) {
+                $("#sj_proj").val('')
+                if (data.value == '是') {
+                    $("#sj_proj_div").show()
+                    $("#sj_proj").addClass('required')
+                } else {
+                    $("#sj_proj_div").hide()
+                    $("#sj_proj").removeClass('required')
+                }
+            });
+            form.on('radio(is_build_yfzx)', function (data) {
+                $("#build_yfzx").val('')
+                if (data.value == '是') {
+                    $("#build_yfzx_div").show()
+                    $("#build_yfzx").addClass('required')
+                } else {
+                    $("#build_yfzx_div").hide()
+                    $("#build_yfzx").removeClass('required')
+                }
+            });
+            form.on('radio(is_rzxq)', function (data) {
+                if (data.value == '是') {
+                    $(".rz_tr").show()
+                    $('#rz_money').attr('lay-verify', "required")
+                } else {
+                    $(".rz_tr").hide()
+                    $('#rz_money').removeAttr('lay-verify')
+                }
+            });
+            form.on("select(orgname)",function(data){
+                let value=data.value
+                let selectObj=dropData.filter(item=>{
+                    return item.name==value
+                })
+                $("#sjjg_name_search").val(selectObj[0].name);
+                $("#sjjg_name").val(selectObj[0].name);
+            })
+            //监听选中建设用地radio时状态
+            form.on('radio(is_use_land)', function (data) {
+                if (data.value == 1) {
+                    $("#is_use_land1").show();
+                    $("#is_fixed_asset1").show();
+                } else {
+                    $("#is_use_land1").hide();
+                    $("#is_fixed_asset1").hide();
+                    $("#land_licence").val("");
+                    $("#licence_date").val("")
+                }
+            });
+            form.on('radio(b_resource)', function (data) {
+                $("#sjjg_name_search").val('');
+                $("#sjjg_name").val('')
+                if (data.value == 2) {
+                    // $("#sjjg_name").show()
+                    $("#orgBox").show()
+                    $("#sjjg_name").addClass('required')
+                } else {
+                    // $("#sjjg_name").hide()
+                    $("#orgBox").hide()
+                    $("#sjjg_name").removeClass('required')
+                }
+            });
+            //监听选中radio时状态
+            form.on('radio(p_type)', function (data) {
+                console.log(222)
+                if (data.value == 1) {
+                    $("#span1").text("亿元");
+                    $("#span").text("亿元");
+                    $("#foreign_money").addClass("layui-disabled");
+                    $("#foreign_money").attr("disabled", true);
+                    $("#foreign_money").removeClass("required");
+                    $("#foreign_money").val("")
+                    // 动态渲染内资投资方注册地选项
+                    renderInvestorPlaceOptions(1);
+                    // if ( $('#invest_money1').val() && Number($('#invest_money1').val()) < 5 ) {
+                    //    $('#btnSave1').text('提交')
+                    //     $("#xyBox").show()
+                    //     $("#zzBox").show()
+                    //     $("#tzf_div").show()
+                    //     $("#zsf_div").show()
+                    //     $("#tzfs_div").show()
+                    //     $("#tzdz_div").show()
+                    //     $("#zsf").attr('lay-verify', "required")
+                    //     $("#tzf").attr('lay-verify', "required")
+                    //     $("#tzdz").attr('lay-verify', "required")
+                    // } else {
+                    //     $('#btnSave1').text('提交项目质态评估')
+                    //     $("#xyBox").hide()
+                    //     $("#zzBox").hide()
+                    //     $("#tzf_div").hide()
+                    //     $("#zsf_div").hide()
+                    //     $("#tzfs_div").hide()
+                    //     $("#tzdz_div").hide()
+                    //     $("#zsf").removeAttr('lay-verify')
+                    //     $("#tzf").removeAttr('lay-verify')
+                    //     $("#tzdz").removeAttr('lay-verify')
+                    // }
+                } else {
+                    $("#span1").text("万美元")
+                    $("#span").text("万美元");
+                    $("#foreign_money").removeClass("layui-disabled");
+                    $("#foreign_money").removeAttr("disabled");
+                    $("#foreign_money").addClass("required");
+                    // 动态渲染外资投资方注册地选项
+                    renderInvestorPlaceOptions(2);
+                    // if ( $('#invest_money1').val() && Number($('#invest_money1').val()) < 3000 ) {
+                    //     $('#btnSave1').text('提交')
+                    //     $("#xyBox").show()
+                    //     $("#zzBox").show()
+                    //     $("#tzf_div").show()
+                    //     $("#zsf_div").show()
+                    //     $("#tzfs_div").show()
+                    //     $("#tzdz_div").show()
+                    //     $("#zsf").attr('lay-verify', "required")
+                    //     $("#tzf").attr('lay-verify', "required")
+                    //     $("#tzdz").attr('lay-verify', "required")
+                    // } else {
+                    //     $('#btnSave1').text('提交项目质态评估')
+                    //     $("#xyBox").hide()
+                    //     $("#zzBox").hide()
+                    //     $("#tzf_div").hide()
+                    //     $("#zsf_div").hide()
+                    //     $("#tzfs_div").hide()
+                    //     $("#tzdz_div").hide()
+                    //     $("#zsf").removeAttr('lay-verify')
+                    //     $("#tzf").removeAttr('lay-verify')
+                    //     $("#tzdz").removeAttr('lay-verify')
+                    // }
+                }
+                form.render("select")
+            });
+            form.on('radio(ra_proj_type)', function (data) {
+                console.log(data, 8888888);
+                if (data.value == 1) {
+                    $("#div_proj_type").show();
+                    // $("#rad_proj_type_zl").hide();
+                } else {
+                    $("#div_proj_type").hide();
+                    $("#ra_proj_type").val("2");
+                    // $("#rad_proj_type_zl").show();
+                }
+            });
+            //监听是否选中建设用地radio
+            form.on('radio(is_use_land)', function (data) {
+                //表示不是建设用地
+                if (data.value == 2) {
+                    $("#land_licence").attr("disabled", true);
+                    $("#licence_date").attr("disabled", true);
+                    $("#land_licence").addClass("layui-disabled");
+                    $("#licence_date").addClass("layui-disabled");
+                    $("#land_licence").removeClass("required");
+                    $("#licence_date").removeClass("required");
+                    $("#land_licence").val("");
+                    $("#licence_date").val("");
+
+                } else if (data.value == 1) {
+                    //是建设用地
+                    $("#land_licence").removeAttr("disabled", true);
+                    $("#licence_date").removeAttr("disabled", true);
+                    $("#land_licence").removeClass("layui-disabled");
+                    $("#licence_date").removeClass("layui-disabled");
+                    $("#land_licence").addClass("required");
+                    $("#licence_date").addClass("required");
+
+                }
+            })
+            form.on("select(kc_proj_type)",function(data){
+                let value=data.value
+                if (value == '知识产权类') {
+                    $("#file_message").text('请上传投资企业专利证书或受理通知书等证明材料')
+                } else if (value == '高层次人才类') {
+                    $("#file_message").text('请上传人才学历、职称、获奖等证明材料')
+                } else if (value == '科技计划或大赛类') {
+                    $("#file_message").text('请上传计划项目立项或大赛获奖文件等证明材料')
+                } else if (value == '风险投资类') {
+                    $("#file_message").text('请上传投资协议等证明材料')
+                } else if (value == '省市产研院类') {
+                    $("#file_message").text('请上传签约协议')
+                } else if (value == '重大创新平台类') {
+                    $("#file_message").text('请上传合作共建协议等证明材料')
+                } else {
+                    $("#file_message").text('')
+                }
+            })
+            form.on('select(district_code1)', function () {
+                biz_info.renderZone1();
+            });
+            form.on('select(district_code)', function () {
+                biz_info.renderZone();
+            });
+            form.on('select(zone_code)', function () {
+                biz_info.renderTown();
+            });
+            //监听是否选中六大产业
+            form.on('radio(is_sixpro)', function (data) {
+                if (data.value == 0) {
+                    $("#sixpro_code").val("")
+                    $("#sixpro_code").removeClass("required");
+                    $("#sixpro_code").attr("disabled", true);
+                    $("#sixpro_code").addClass("layui-disabled");
+                } else {
+                    $("#sixpro_code").removeAttr("disabled", true);
+                    $("#sixpro_code").removeClass("layui-disabled");
+                    $("#sixpro_code").addClass("required");
+                }
+                form.render("select")
+            })
+            //获取产业大类数据放入下拉框
+            _UTIL.network.post("getindustryfirst.do", {}, 15000, function (result) {
+                // console.log(result.data.datalist.length);
+                var label = "<option value=\"\">请选择</option>";
+                for (var i = 0; i < result.data.datalist.length; i++) {
+                    // console.log(result.data.datalist[i]._code);
+                    // console.log(result.data.datalist[i]._name);
+                    label += " <option value=\"" + result.data.datalist[i]._code + "\">" + result.data.datalist[i]._name + "</option>";
+                }
+                $("#industry_first_code").html(label);
+                layui.form.render('select');
+            })
+
+            _UTIL.network.post("searchProjSourceList.do", {}, 8000, function (res) {
+                if (res.code == 1) {
+                    dropData = res.data.datalist
+                    innitSelect("#orgname",dropData)
+                    // let form = layui.form;
+                    // form.render()
+                    // 将下拉框展开
+                    // $("#orgBox .layui-form-select").addClass("layui-form-selected")
+                }
+            });
+            //    ---------------------------
+            var upload = layui.upload;
+            //基本信息上传
+            var uploadDetail = upload.render({
+                elem: '#uploadDetail' //绑定元素
+                , url: 'uploadDetail.lupload' //上传接口
+                , accept: "file"
+                , multiple: true
+                , size: 512000
+                , number: 10
+                , done: function (res) {//上传完毕回调
+                    //对象
+                    var ob = {};
+                    var index = 0;
+                    // fileProjArr = [];
+                    ob.filename = res.data.fileName;
+                    ob.file_path = res.data.src;
+                    let currentDate = new Date();
+                    let year = currentDate.getFullYear();
+                    let month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // 使用padStart方法补足两位数
+                    let day = currentDate.getDate().toString().padStart(2, '0');
+                    let hours = currentDate.getHours().toString().padStart(2, '0');
+                    let minutes = currentDate.getMinutes().toString().padStart(2, '0');
+                    let seconds = currentDate.getSeconds().toString().padStart(2, '0');
+                    let create_time = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
+                    // fileProjArr.push(ob);
+                    //将数组中的数据在页面展示
+                    var value = $("#file_project li:first").text();
+                    if (value == '无') {
+                        $("#file_project").html("");
+                    }
+                    var label = "<li><a href='" + upload_file_path_proj + ob.file_path + "' target='_blank'>" + ob['filename'] + "</a>"+ ' / ' + "<span class='create_time'>" + create_time + "</span><span class='delBase'><i class='layui-icon'>&#x1006;</i></span></li>";
+                    $("#file_project").append(label);
+                }
+                , error: function (ee, upload) {
+                    //请求异常回调
+                    // console.log(ee);
+                    // console.log(upload);
+                    // console.log("================================");
+                }
+            });
+            //监听基本信息文件删除
+            $("#file_project").on('click', '.delBase', function (event) {
+                var element = $(this).parent().attr("id");
+                // fileProjArr.splice(element, 1);
+                $(this).parent().remove();
+            });
+            // 上传会议纪要
+            var uploadDetail1 = upload.render({
+                elem: '#uploadDetail1' //绑定元素
+                , url: 'uploadDetail.lupload' //上传接口
+                , accept: "file"
+                , multiple: true
+                , size: 512000
+                , number: 10
+                , done: function (res) {//上传完毕回调
+                    //对象
+                    var ob = {};
+                    var index = 0;
+                    // fileProjArr = [];
+                    ob.filename = res.data.fileName;
+                    ob.file_path = res.data.src;
+                    // fileProjArr.push(ob);
+                    //将数组中的数据在页面展示
+                    var value = $("#file_project1 li:first").text();
+                    if (value == '无') {
+                        $("#file_project1").html("");
+                    }
+                    var label = "<li><a href='" + upload_file_path_proj + ob.file_path + "' target='_blank'>" + ob['filename'] + "</a><span class='delBase'><i class='layui-icon'>&#x1006;</i></span></li>";
+                    $("#file_project1").append(label);
+                }
+                , error: function (ee, upload) {
+                    //请求异常回调
+                    // console.log(ee);
+                    // console.log(upload);
+                    // console.log("================================");
+                }
+            });
+            //监听基本信息文件删除
+            $("#file_project1").on('click', '.delBase', function (event) {
+                var element = $(this).parent().attr("id");
+                // fileProjArr.splice(element, 1);
+                $(this).parent().remove();
+            });
+
+            // 科创附件
+            var uploadDetail_new6 = upload.render({
+                elem: '#uploadDetail_new6' //绑定元素
+                , url: 'uploadDetail.lupload' //上传接口
+                , accept: "file"
+                , multiple: true
+                , size: 512000
+                , number: 10
+                , done: function (res) {//上传完毕回调
+                    //对象
+                    var ob = {};
+                    var index = 0;
+                    // fileProjArr = [];
+                    ob.filename = res.data.fileName;
+                    ob.file_path = res.data.src;
+                    // fileProjArr.push(ob);
+                    //将数组中的数据在页面展示
+                    var value = $("#file_project_new6 li:first").text();
+                    if (value == '无') {
+                        $("#file_project_new6").html("");
+                    }
+                    var label = "<li><a href='" + upload_file_path_proj + ob.file_path + "' target='_blank'>" + ob['filename'] + "</a><span class='delBase'><i class='layui-icon'>&#x1006;</i></span></li>";
+                    $("#file_project_new6").append(label);
+                }
+                , error: function (ee, upload) {
+                    //请求异常回调
+                    // console.log(ee);
+                    // console.log(upload);
+                    // console.log("================================");
+                }
+            });
+            //监听基本信息文件删除
+            $("#file_project_new6").on('click', '.delBase', function (event) {
+                var element = $(this).parent().attr("id");
+                // fileProjArr.splice(element, 1);
+                $(this).parent().remove();
+            });
+
+            //清除编辑文件
+            $("#cleanDetail").click(function (e) {
+                fileProjArr = [];
+                $("#file_project").html("<li>无</li>")
+            });
+            //监听编辑基本信息文件删除
+
+            $("#file_project").on('click', '.delBaseEdit', function (event) {
+                var element = $(this).parent().attr("id2");
+                // fileProjArr.splice(element, 1);
+                $(this).parent().remove();
+            });
+            //设置日期下拉框
+            var laydate = layui.laydate;
+            lay(".date").each(function () {
+                laydate.render({
+                    elem: this,
+                    range: "~",
+                    trigger: "click"
+                    // ,eventElem: '.icon-riqi'
+                });
+            });
+
+            form.render("radio");
+            laydate.render({
+                elem: "#signed_date",
+                // eventElem: '.date-input-icon',
+                trigger: "click"
+            });
+            laydate.render({
+                elem: "#first_time",
+                eventElem: '.date-input-icon',
+                trigger: "click"
+            });
+            laydate.render({
+                elem: "#reg_date",
+                trigger: "click"
+            });
+            laydate.render({
+                elem: "#check_date",
+                trigger: "click"
+            });
+            laydate.render({
+                elem: "#licence_date",
+                trigger: "click"
+            });
+            laydate.render({
+                elem: "#start_date_commit",
+                trigger: "click"
+            });
+            laydate.render({
+                elem: "#complete_date",
+                trigger: "click"
+            });
+            laydate.render({
+                elem: "#plan_start_date",
+                eventElem: '.date-input-icon',
+                trigger: "click"
+            });
+            laydate.render({
+                elem: "#plan_end_date",
+                eventElem: '.date-input-icon',
+                trigger: "click"
+            });
+        });
+        //创建子zone树根据pid
+        _UTIL.tools.createJsTree('ZoneData', 'getZoneTreeListByPid.do', biz_info.selectcate);
+    });
+
+    function selectZone() {
+        var zone = _UTIL.dialog.openDialog("zone", "园区", '400px', "500px");
+        $("#selectZoneOk").unbind();
+        $("#selectZoneOk").click(function () {
+            $("#zone").hide();
+            _UTIL.dialog.close(zone);
+        })
+    }
+    function setprivilege() {
+        var user_info = _UTIL.storage.get("USER_INFO");
+        user_info = JSON.parse(user_info);
+        if (user_info.user_level == 1) {
+            $("#district_code").prop("disabled", false);
+            $("#district_code").removeClass("layui-disabled");
+            $("#zone_code").prop("disabled", false);
+            $("#zone_code").removeClass("layui-disabled");
+            $("#town_code").prop("disabled", false);
+            $("#town_code").removeClass("layui-disabled");
+        } else if (user_info.user_level == 2) {
+            $("#district_code").val(user_info.district_code);
+            biz_info.renderZone();
+            $("#district_code").prop("disabled", true);
+            $("#district_code").addClass("layui-disabled");
+            $("#zone_code").prop("disabled", false);
+            $("#zone_code").removeClass("layui-disabled");
+            $("#town_code").prop("disabled", false);
+            $("#town_code").removeClass("layui-disabled");
+        } else if (user_info.user_level == 3) {
+            $("#district_code").val(user_info.district_code);
+            biz_info.renderZone();
+            $("#district_code").prop("disabled", true);
+            $("#district_code").addClass("layui-disabled");
+            $("#zone_code").prop("disabled", true);
+            $("#zone_code").addClass("layui-disabled");
+            _UTIL.network.post("getDeptByCode1.do", {dept_code: user_info.zone_code}, 18000, function (result) {
+                var label = " <option selected value=\"" + result.data.info.dept_code + "\">" + result.data.info.dept_name + "</option>";
+                $("#zone_code").append(label);
+                var form = layui.form;
+                form.render("select")
+                biz_info.renderTown();
+            });
+        } else if (user_info.user_level == 4) {
+            $("#district_code").val(user_info.district_code);
+            biz_info.renderZone();
+            $("#district_code").prop("disabled", true);
+            $("#district_code").addClass("layui-disabled");
+            _UTIL.network.post("getDeptByCode1.do", {dept_code: user_info.zone_code}, 18000, function (result) {
+                var label = " <option selected value=\"" + result.data.info.dept_code + "\">" + result.data.info.dept_name + "</option>";
+                $("#zone_code").append(label);
+                var form = layui.form;
+                form.render("select")
+                // biz_info.renderTown();
+            });
+            _UTIL.network.post("getDeptByCode1.do", {dept_code: user_info.dept_code}, 18000, function (result) {
+                var label = " <option selected value=\"" + result.data.info.dept_code + "\">" + result.data.info.dept_name + "</option>";
+                $("#town_code").append(label);
+                var form = layui.form;
+                form.render("select")
+            });
+            $("#town_code").prop("disabled", true);
+            $("#town_code").addClass("layui-disabled");
+            $("#zone_code").prop("disabled", true);
+            $("#zone_code").addClass("layui-disabled");
+        }
+        layui.form.render('select');
+    }
+</script>
+</body>
+</html>

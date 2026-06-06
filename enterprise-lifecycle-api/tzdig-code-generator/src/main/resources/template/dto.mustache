@@ -1,0 +1,22 @@
+package {{packageName}}
+
+{{#imports}}import {{importClass}}
+{{/imports}}
+
+data class {{dtoClassName}}(
+{{#fields}}
+    @param:Schema(description = "{{comment}}")
+    val {{fieldName}}: {{fieldType}}?,
+{{/fields}}
+) {
+{{NULL}}    fun to{{className}}(): {{className}} =
+{{NULL}}        {{className}} {
+{{NULL}}            into(this)
+{{NULL}}        }
+
+{{NULL}}    fun into(record: {{className}}): {{className}} {
+{{#fields}}        record.{{fieldName}} = {{fieldName}}
+{{/fields}}
+{{NULL}}        return record
+{{NULL}}    }
+}

@@ -1,0 +1,6 @@
+.custom-label-width .ant-descriptions-item-label {
+  width: 100px !important; /* 或者你希望的任何宽度 */
+}
+.ant-descriptions-item-label .custom-label-width{
+  width: 100px !important;
+}

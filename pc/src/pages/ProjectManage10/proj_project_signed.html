@@ -1,0 +1,3314 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>签约项目管理</title>
+    <link rel="stylesheet" href="../../assets/jstree/themes/default/style.css?v=20210902"/>
+    <link rel="stylesheet" href="../../assets/css/folder.css"/>
+    <link rel="stylesheet" href="../../assets/fonts/iconfont.css?v=1">
+    <link rel="stylesheet" href="../../assets/libs/layui/css/layui.css?v=1">
+    <link rel="stylesheet" href="../../assets/module/admin.css?v=20210902">
+    <style type="text/css">
+        .flow-default {
+            display: inline;
+        }
+
+        ul {
+            list-style: none !important;
+        }
+
+        ul li {
+            list-style: none !important;
+        }
+
+        /*#ulRegister li{*/
+        /*    margin-left: 10px;*/
+        /*}*/
+        /*ul{*/
+        /*    list-style: none;*/
+        /*}*/
+        /*div[lay-id='datalist1'] thead {*/
+        /*    display: none;*/
+        /*}*/
+
+        .flow-default li {
+            display: inline-block;
+            margin: 0 5px;
+            font-size: 14px;
+            width: 23%;
+            margin-bottom: 15px;
+            height: 120px;
+            line-height: 120px;
+            text-align: center;
+            background-color: #f1f1f1;
+            cursor: pointer;
+            position: relative;
+            border-radius: 8px;
+        }
+
+        .flow-default li > span {
+            position: absolute;
+            display: inline-block;
+            /*top:30px;*/
+            bottom: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            left: 0;
+            font-size: 12px;
+            height: 30px;
+            line-height: 30px;
+            color: #0a0a0a;
+            overflow: hidden;
+        }
+
+        .flow-default img {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        .flow-default :hover img {
+            transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.48) !important
+        }
+
+        .layui-form-label {
+            overflow: hidden;
+        }
+
+        .td-label {
+            background: #f7f7f7;
+            width: 120px;
+            text-align: right;
+        }
+
+        .search-form td {
+            padding: 3px 5px;
+            border: none;
+        }
+
+        .layui-table td {
+            padding: 8px 6px;
+        }
+
+        .icon-riqi {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            margin-top: -10px;
+            cursor: pointer;
+            font-size: 25px;
+            color: #1E9FFF;
+        }
+
+        .layui-icon-export {
+            display: none;
+
+        }
+
+        div[lay-event="LAYTABLE_EXPORT"] {
+            display: none;
+        }
+
+        .layui-btn + .layui-btn {
+            margin-left: 4px;
+        }
+
+        .xmjj-class dd:nth-child(3)::before {
+            font-family: layui-icon !important;
+            content: "\e625";
+            margin-right: .4em;
+        }
+
+        .xmjj-class dd:nth-child(4), .xmjj-class dd:nth-child(5), .xmjj-class dd:nth-child(6) {
+            padding-left: calc(1.4em + 10px);
+        }
+
+        .indus-tag-c .switch:not([style="display: none;"]) {
+            width: 100% !important;
+            z-index: 2;
+        }
+
+        .indus-tag-c .switch:not([style="display: none;"]) + a {
+            position: relative;
+            left: calc(-100% + 18px);
+        }
+
+        .leftBox {
+            width: 150px;
+            height: 40px;
+            box-sizing: border-box;
+            border-left: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .rightBox {
+            width: calc(50% - 150px);
+            height: 40px;
+            box-sizing: border-box;
+            border-left: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .rightBoxs {
+            width: calc(100% - 150px);
+            height: 40px;
+            box-sizing: border-box;
+            border-left: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #333;
+        }
+
+        #bandBtn1:hover .bandUl {
+            display: block !important;
+        }
+
+        .bandUl li:hover {
+            background: #0D8BBD !important;
+            color: #fff !important;
+        }
+
+        #bandBtn2s:hover .bandUl {
+            display: block !important;
+        }
+
+        .xmqyxy {
+            font-family: "SimSun", "宋体", serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #000;
+            padding: 30px;
+            margin: 0 auto;
+            background-color: #fff;
+            position: relative;
+            width: 794px;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .xmqyxy * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            line-height: 2;
+        }
+
+        .xmqyxy p {
+            text-indent: 2em;
+        }
+
+        .xmqyxy .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 100px;
+            color: rgba(0, 0, 0, 0.05);
+            z-index: -1;
+            white-space: nowrap;
+            font-weight: bold;
+        }
+
+        .xmqyxy .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .xmqyxy .header h1 {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 20px 0;
+            letter-spacing: 3px;
+        }
+
+        .xmqyxy .parties {
+            margin: 15px 0;
+        }
+
+        .xmqyxy .parties p {
+            margin: 8px 0;
+        }
+
+        .xmqyxy .underline {
+            text-decoration: underline;
+            display: inline-block;
+            text-align: center;
+            text-indent: 0;
+        }
+
+        .xmqyxy .agreement-text {
+            margin: 15px 0;
+            /*text-indent: 2em;*/
+        }
+
+        .xmqyxy .section-title {
+            font-weight: bold;
+            margin: 15px 0 8px;
+            font-size: 15px;
+        }
+
+        .xmqyxy .section-content {
+        }
+
+        .xmqyxy ol {
+            margin-left: 2em;
+        }
+
+        .xmqyxy .signature-area {
+            margin-top: 40px;
+        }
+
+        .xmqyxy .signature-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            margin-left: 2em;
+        }
+
+        .xmqyxy .signature-item {
+            width: 50%;
+        }
+
+        .xmqyxy .signature-line {
+            display: inline-block;
+            width: 250px;
+            border-bottom: 1px solid #000;
+            margin: 0 10px;
+            height: 18px;
+        }
+
+        .xmqyxy .signature-date {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .xmqyxy .sd-i {
+            margin-left: 3em;
+        }
+
+        .xmqyxy .sd-i:first-child {
+            margin-left: 5em;
+        }
+
+        .xmqyxy .page-border {
+            border: 1px solid #000;
+            padding: 30px;
+            position: relative;
+            min-height: 1200px;
+        }
+
+        .xmqyxy .footer-note {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            padding: 0 30px;
+        }
+
+        .xyPg li {
+            display: flex;
+        }
+
+        .xyPg span {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            width: 49%;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+
+<!--头部-->
+<div class="layui-fluid layui-form search-form">
+    <div class="layui-card">
+        <div class="layui-card-body" id="searchBody">
+            <table class="layui-table ">
+                <tr>
+                    <td class="td-label" style="width: 100px;">项目名称</td>
+                    <td style="width: 200px;">
+                        <input id="s_name" class="layui-input " type="text" placeholder=""/>
+                    </td>
+
+                    <td class="td-label" style="width: 100px;">项目类别</td>
+                    <td style="width: 120px;">
+                        <select id="s_p_type" class="layui-selectv">
+                            <option value="">请选择</option>
+                            <option value="1">内资</option>
+                            <option value="2">外资</option>
+                        </select>
+                    </td>
+                    <td class="td-label" style="width: 120px;">当前进度</td>
+                    <td class="xmjj-class" style="width: 120px;">
+                        <select id="s_progress" class="layui-select">
+                            <option value="">请选择</option>
+                            <option value="0">已签约</option>
+                            <option value="10">在批</option>
+                            <option value="1">已注册</option>
+                            <option value="5">已备案</option>
+                            <option value="4">完成报批</option>
+                            <option value="2">在建（已开工）</option>
+                            <option value="3">已竣工</option>
+                        </select>
+                    </td>
+                    <td class="td-label" style="width: 120px;">历史进度</td>
+                    <td class="xmjj-class" style="width: 120px;">
+                        <select id="h_progress" class="layui-select">
+                            <option value="">请选择</option>
+                            <option value="0">已签约</option>
+                            <option value="10">在批</option>
+                            <option value="1">已注册</option>
+                            <option value="5">已备案</option>
+                            <option value="4">完成报批</option>
+                            <option value="2">在建（已开工）</option>
+                            <option value="3">已竣工</option>
+                        </select>
+                    </td>
+                </tr>
+                <!--                    下面隐藏-->
+            </table>
+            <table id="more_where" class="layui-table" style="display: none;">
+                <tr>
+                    <td class="td-label" style="width: 100px;">投资额</td>
+                    <td style="width: 140px;">
+                        <select id="s_invest_money" class="layui-select">
+                            <option value="">全部</option>
+                            <option value="0">1亿(1000万美元)以上</option>
+                            <option value="1">5亿(3000万美元)以上</option>
+                            <option value="2">10亿(1亿美元)以上</option>
+                        </select>
+                    </td>
+                    <td class="td-label" style="width: 100px;">市区</td>
+                    <td style="width: 120px;">
+                        <select id="s_district_code" class="layui-select" lay-filter="s_district_code">
+                            <option value=""></option>
+                            <option value="001001">靖江市</option>
+                            <option value="001002">泰兴市</option>
+                            <option value="001003">兴化市</option>
+                            <option value="001004">海陵区</option>
+                            <!--                            <option value="001005">高港区</option>-->
+                            <option value="001006">姜堰区</option>
+                            <option value="001007">医药高新区(高港区)</option>
+                        </select>
+                    </td>
+
+                    <td class="td-label" style="width: 120px;">园区名称</td>
+                    <td style="width: 120px;">
+                        <select id="s_zone_code" lay-filter="s_zone_code">
+                            <option value="">请先选择市区</option>
+                        </select>
+                    </td>
+                    </td>
+                    <td class="td-label" style="width: 120px;">街镇</td>
+                    <td style="width: 120px;">
+                        <select id="s_town_code" lay-filter="s_town_code">
+                            <option value="">请先选择园区</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-label">项目类型</td>
+                    <td>
+                        <input id="s_proj_code" type="hidden" readonly/>
+                        <div><input id="s_s_proj_type" type="text" lay-filter="s_proj_type" readonly
+                                    style="display: none;" class="layui-input"/></div>
+                    </td>
+                    <td class="td-label ">项目编码</td>
+                    <td>
+                        <input id="s_code" class="layui-input " type="text" placeholder=""
+                               required/>
+                    </td>
+                    <td class="td-label">投资方名称</td>
+                    <td>
+                        <input id="s_investor" type="text" class="layui-input" autocomplete="off">
+                    </td>
+
+                    <td class="td-label">投资类型</td>
+                    <td>
+                        <select id="s_investor_type">
+                            <option value="">请选择</option>
+                            <option value="10">央企</option>
+                            <option value="20">民营巨头</option>
+                            <option value="30">世界500强或跨国公司</option>
+                            <option value="40">其它</option>
+                        </select>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-label">签约认定日期</td>
+                    <td>
+                        <input id="s_signed_stat_date" type="text" class="layui-input date"
+                               autocomplete="off" readonly/>
+
+                    </td>
+                    <td class="td-label">注册统计日期</td>
+                    <td>
+                        <input id="s_reg_stat_date" type="text" class="layui-input date"
+                               autocomplete="off" readonly/>
+
+                    </td>
+
+                    <td class="td-label">备案统计日期</td>
+                    <td>
+                        <input id="s_check_stat_date" type="text" class="layui-input date"
+                               autocomplete="off" readonly/>
+
+                    </td>
+                    <td class="td-label">行业编码</td>
+                    <td>
+                        <input id="s_industry_name" type="hidden" class="layui-input"/>
+                        <input id="s_industry_code" lay-filter="s_industry_code" class="layui-input"
+                               style="display: none;" type="text"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-label">完成报批统计日期</td>
+                    <td>
+                        <input id="s_finish_check_date" type="text" class="layui-input date "
+                               autocomplete="off" readonly/>
+
+                    <td class="td-label">开工日期</td>
+                    <td>
+                        <input id="s_startdate" type="text" class="layui-input date "
+                               autocomplete="off" readonly/>
+
+
+                    </td>
+                    <td class="td-label">竣工日期</td>
+                    <td>
+                        <input id="s_enddate" type="text" class="layui-input date"
+                               autocomplete="off" readonly/>
+
+                    </td>
+                    <td class="td-label">所属行业</td>
+                    <td>
+                        <select id="s_b_industry" class="layui-select">
+                            <option value="">请选择</option>
+                            <option value="1">服务业</option>
+                            <option value="2">工业</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td-label" permission="saveRemarks">备注信息查询</td>
+                    <td permission="saveRemarks">
+                        <input type="text" id="s_remark" class="layui-input" autocomplete="off">
+                    </td>
+                    <td class="td-label">审核状态</td>
+                    <td>
+                        <select id="s_check_status">
+                            <option value="">请选择</option>
+                            <option value="0">待审核</option>
+                            <option value="1">市级审核通过</option>
+                            <option value="2">市区审核通过</option>
+                            <option value="3">审核不通过</option>
+                            <option value="4">保存未提交</option>
+                        </select>
+                    </td>
+                    <td class="td-label" style="width: 120px;">认定进度</td>
+                    <td class="xmjj-class" style="width: 120px;">
+                        <select id="s_r_progress" class="layui-select">
+                            <option value="">请选择</option>
+                            <option value="0">已签约</option>
+                            <option value="10">在批</option>
+                            <option value="1">已注册</option>
+                            <option value="5">已备案</option>
+                            <option value="4">完成报批</option>
+                            <option value="2">在建（已开工）</option>
+                            <option value="3">已竣工</option>
+                        </select>
+                    </td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="layui-row">
+    <div class="layui-col-md12" style="text-align: right; padding-right: 30px;padding-bottom: 10px;">
+        <button id="btnSearch" q-method="search" class="layui-btn icon-btn layui-btn-normal">
+            <i class="layui-icon">&#xe615;</i>搜索
+        </button>
+        <button id="searchMany" q-method="searchMany"
+                class="layui-btn icon-btn layui-btn-normal">
+            <!--                            向下箭头-->
+            <i class="layui-icon">&#xe61a;</i>更多查询
+        </button>
+        <button q-method="resetSearchForm"
+                class="layui-btn icon-btn layui-bg-cyan">
+            <!--                            向下箭头-->
+            <i class="iconfont icon-refresh" style="font-size:18px;"></i>重置
+        </button>
+    </div>
+</div>
+
+<!--列表数据展示-->
+<div class="layui-fluid " style="padding-top: 0 ;">
+    <div class="layui-card">
+        <div class="layui-card-body" style="min-height: 600px;">
+            <div class="layui-row">
+                <div class="layui-col-lg12">
+                    <table id="datalist" class="layui-table" lay-filter="datalist" style="margin:0"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--绑定-->
+<div id="bandBox" style="display: none;margin: 0 auto;padding:15px" class="layui-form"
+     lay-filter="bandBox">
+    <div class="layui-fluid layui-form search-form">
+        <div class="layui-card">
+            <div class="layui-card-body" id="searchBody1">
+                <table class="layui-table ">
+                    <tr>
+                        <td class="td-label" style="width: 100px;">项目编码</td>
+                        <td style="width: 200px;">
+                            <input id="code1" class="layui-input " type="text" placeholder=""/>
+                        </td>
+                        <td class="td-label" style="width: 100px;">项目名称</td>
+                        <td style="width: 200px;">
+                            <input id="name1" class="layui-input " type="text" placeholder=""/>
+                        </td>
+                        <td class="td-label" style="width: 100px;">总投资</td>
+                        <td style="width: 200px;">
+                            <input id="money1" class="layui-input " type="text" placeholder=""/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" style="width: 100px;">申报单位联系人</td>
+                        <td style="width: 200px;">
+                            <input id="linker1" class="layui-input " type="text" placeholder=""/>
+                        </td>
+                        <td class="td-label" style="width: 100px;">联系人手机号</td>
+                        <td style="width: 200px;">
+                            <input id="phone1" class="layui-input " type="text" placeholder=""/>
+                        </td>
+                        <td class="td-label" style="width: 100px;"></td>
+                        <td style="width: 200px;">
+                            <button id="btnSearch1" q-method="search1" class="layui-btn icon-btn layui-btn-normal">
+                                <i class="layui-icon">&#xe615;</i>搜索
+                            </button>
+                            <button q-method="resetSearchForm1"
+                                    class="layui-btn icon-btn layui-bg-cyan">
+                                <!--                            向下箭头-->
+                                <i class="iconfont icon-refresh" style="font-size:18px;"></i>重置
+                            </button>
+                        </td>
+                    </tr>
+                    <!--                    下面隐藏-->
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="detail-content">
+        <p>查询无结果，可 <a href="javascript:;" q-method="bandError"
+                            style="color: #0D8BBD;cursor: pointer;text-decoration: underline">点击此处</a>进行异常绑定
+            <!--            <button class="layui-btn" q-method="bandSavePl">批量绑定</button>-->
+        </p>
+        <table id="datalist1" class="layui-table" lay-filter="datalist1" style="margin:0"></table>
+    </div>
+</div>
+<!--工改绑定列表-->
+<div id="bandBox2" style="display: none;margin: 0 auto;padding:15px" class="layui-form"
+     lay-filter="bandBox">
+    <div class="layui-fluid layui-form search-form">
+        <div class="layui-card">
+            <div class="layui-card-body" id="searchBody2">
+                <table class="layui-table ">
+                    <tr>
+                        <td class="td-label" style="width: 100px;">项目编码</td>
+                        <td style="width: 200px;">
+                            <input id="code2" class="layui-input " type="text" placeholder=""/>
+                        </td>
+                        <td class="td-label" style="width: 100px;">项目名称</td>
+                        <td style="width: 200px;">
+                            <input id="name2" class="layui-input " type="text" placeholder=""/>
+                        </td>
+                        <td class="td-label" style="width: 100px;">总投资</td>
+                        <td style="width: 200px;">
+                            <input id="money2" class="layui-input " type="text" placeholder=""/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="td-label" style="width: 100px;"></td>
+                        <td style="width: 200px;">
+                            <button id="btnSearch2" q-method="search2" class="layui-btn icon-btn layui-btn-normal">
+                                <i class="layui-icon">&#xe615;</i>搜索
+                            </button>
+                            <button q-method="resetSearchForm2"
+                                    class="layui-btn icon-btn layui-bg-cyan">
+                                <!--                            向下箭头-->
+                                <i class="iconfont icon-refresh" style="font-size:18px;"></i>重置
+                            </button>
+                        </td>
+                    </tr>
+                    <!--                    下面隐藏-->
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="detail-content">
+        <p>查询无结果，可 <a href="javascript:;" q-method="bandError2"
+                            style="color: #0D8BBD;cursor: pointer;text-decoration: underline">点击此处</a>进行异常绑定
+        </p>
+        <table id="datalist2" class="layui-table" lay-filter="datalist2" style="margin:0"></table>
+    </div>
+</div>
+<!--异常绑定-->
+<div id="error_bandBox" style="display: none;margin: 0 auto;padding:15px" class="layui-form"
+     lay-filter="error_bandBox">
+    <div class="detail-content" style="border-top: 1px solid #eee;border-right: 1px solid #eee;box-sizing: border-box">
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                绑定状态
+            </div>
+            <div class="rightBoxs">
+                异常绑定
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                申报单位联系人
+            </div>
+            <div class="rightBox">
+                <input id="application_company_contact_name1" class="layui-input" type="text" placeholder=""/>
+            </div>
+            <div class="leftBox">
+                手机号码
+            </div>
+            <div class="rightBox">
+                <input id="application_company_contact_phone1" class="layui-input" type="text" placeholder=""/>
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                项目代码
+            </div>
+            <div class="rightBox">
+                <input id="project_code1" class="layui-input" type="text" placeholder=""/>
+            </div>
+            <div class="leftBox">
+                项目名称
+            </div>
+            <div class="rightBox">
+                <input id="project_name1" class="layui-input" type="text" placeholder=""/>
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                总投资（万元）
+            </div>
+            <div class="rightBox">
+                <input id="total_investment1" class="layui-input" type="text" placeholder=""/>
+            </div>
+            <div class="leftBox">
+                申报时间
+            </div>
+            <div class="rightBox">
+                <input id="application_time1" class="layui-input" type="text" placeholder="" readonly/>
+            </div>
+        </div>
+    </div>
+    <div style="width: 100%;text-align: right">
+        <button class="xyClose1 layui-btn">关闭</button>
+        <button class="xyBand1 layui-btn" q-method="bandSave1">绑定</button>
+        <!--        <button class="xyBands1 layui-btn" style="display: none" q-method="bandSaves1">改绑</button>-->
+    </div>
+</div>
+<!--在线审批项目详情-->
+<div id="check_bandBox" style="display: none;margin: 0 auto;padding:15px" class="layui-form"
+     lay-filter="check_bandBox">
+    <div class="detail-content" style="border-top: 1px solid #eee;border-right: 1px solid #eee;box-sizing: border-box">
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                项目审批类型
+            </div>
+            <div class="rightBox" id="approval_type_label">
+
+            </div>
+            <div class="leftBox">
+                项目名称
+            </div>
+            <div class="rightBox" id="project_name">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                备案目录
+            </div>
+            <div class="rightBox" id="filing_catalog">
+
+            </div>
+            <div class="leftBox">
+                是否补办项目
+            </div>
+            <div class="rightBox" id="is_supplementary_project">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                主项目名称
+            </div>
+            <div class="rightBox">
+
+            </div>
+            <div class="leftBox">
+                申报时间
+            </div>
+            <div class="rightBox" id="application_time">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                项目代码
+            </div>
+            <div class="rightBox" id="project_code">
+
+            </div>
+            <div class="leftBox">
+                备案目录分类
+            </div>
+            <div class="rightBox" id="filing_catalog_category">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                项目类型
+            </div>
+            <div class="rightBox" id="project_type_label">
+
+            </div>
+            <div class="leftBox">
+                拟开工时间（年）
+            </div>
+            <div class="rightBox" id="planned_start_year">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                项目属性
+            </div>
+            <div class="rightBox" id="project_attributes">
+
+            </div>
+            <div class="leftBox">
+                国标行业
+            </div>
+            <div class="rightBox" id="national_industry_standard">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                拟建成时间（年）
+            </div>
+            <div class="rightBox" id="planned_end_year">
+
+            </div>
+            <div class="leftBox">
+                管理行业
+            </div>
+            <div class="rightBox" id="management_industry">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                国标行业代码
+            </div>
+            <div class="rightBoxs" id="national_industry_code">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox" style="height: 100px">
+                建设地点
+            </div>
+            <div class="rightBoxs" style="height: 100px" id="construction_location">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox" style="height: 100px">
+                建设规模及内容
+            </div>
+            <div class="rightBoxs" style="height: 100px" id="construction_scale_and_content">
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                总投资（万元）
+            </div>
+            <div class="rightBox" id="total_investment">
+
+            </div>
+            <div class="leftBox">
+                总投资说明
+            </div>
+            <div class="rightBox">
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                用地面积（公顷）
+            </div>
+            <div class="rightBox" id="land_area">
+
+            </div>
+            <div class="leftBox">
+                新增用地面积（公顷）
+            </div>
+            <div class="rightBox" id="new_land_area">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                农用地面积（公顷）
+            </div>
+            <div class="rightBox" id="agricultural_land_area">
+
+            </div>
+            <div class="leftBox">
+                项目资本金（万元）
+            </div>
+            <div class="rightBox" id="project_capital">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                资金来源
+            </div>
+            <div class="rightBox" id="funding_source">
+
+            </div>
+            <div class="leftBox">
+                财政资金来源
+            </div>
+            <div class="rightBox">
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                是否技改项目
+            </div>
+            <div class="rightBox" id="is_technical_reform_project">
+
+            </div>
+            <div class="leftBox">
+                产业政策类型
+            </div>
+            <div class="rightBox" id="industrial_policy_type">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                产业结构调整指导目录
+            </div>
+            <div class="rightBox" id="industry_adjustment_guidance_catalog">
+
+            </div>
+            <div class="leftBox">
+                是否属于房屋市政工程
+            </div>
+            <div class="rightBox" id="is_infrastructure_engineering">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                是否同意投资平台为项目单位提供融资对接服务
+            </div>
+            <div class="rightBox" id="agree_to_provide_financing_services">
+            </div>
+            <div class="leftBox">
+                项目（法人）单位
+            </div>
+            <div class="rightBox" id="legal_company">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                项目单位登记注册类型
+            </div>
+            <div class="rightBox" id="legal_company_registration_type">
+
+            </div>
+            <div class="leftBox">
+                项目单位控股情况
+            </div>
+            <div class="rightBox" id="legal_company_holding_situation">
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                是否为该项目的控股单位
+            </div>
+            <div class="rightBox" id="is_legal_company_controlling_for_project">
+
+            </div>
+            <div class="leftBox">
+                项目法人证照类型
+            </div>
+            <div class="rightBox" id="legal_company_document_type">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                项目法人证照号码
+            </div>
+            <div class="rightBox" id="legal_company_document_number">
+
+            </div>
+            <div class="leftBox">
+                法人代表姓名
+            </div>
+            <div class="rightBox" id="legal_company_legal_representative">
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                法人单位联系人
+            </div>
+            <div class="rightBox" id="legal_company_contact_name">
+
+            </div>
+            <div class="leftBox">
+                手机号码
+            </div>
+            <div class="rightBox" id="legal_company_contact_phone">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                电子邮箱
+            </div>
+            <div class="rightBox" id="legal_company_contact_email">
+
+            </div>
+            <div class="leftBox">
+                项目（申报）单位
+            </div>
+            <div class="rightBox" id="application_company">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                项目单位登记注册类型
+            </div>
+            <div class="rightBox" id="application_company_registration_type">
+
+            </div>
+            <div class="leftBox">
+                项目单位控股情况
+            </div>
+            <div class="rightBox" id="application_company_holding_situation">
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                项目证照类型
+            </div>
+            <div class="rightBox" id="application_company_document_type">
+
+            </div>
+            <div class="leftBox">
+                项目证照号码
+            </div>
+            <div class="rightBox" id="application_company_document_number">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                申报单位联系人
+            </div>
+            <div class="rightBox" id="application_company_contact_name">
+
+            </div>
+            <div class="leftBox">
+                手机号码
+            </div>
+            <div class="rightBox" id="application_company_contact_phone">
+
+            </div>
+        </div>
+    </div>
+    <div style="width: 100%;text-align: right">
+        <button class="xyClose layui-btn">关闭</button>
+<!--        <button class="xyBand layui-btn" style="display: none" q-method="bandSave">绑定</button>-->
+<!--        <button class="xyBands layui-btn" style="display: none" q-method="bandSaves">改绑</button>-->
+    </div>
+</div>
+<!--工改审批-->
+<div id="check_bandBox2" style="display: none;margin: 0 auto;padding:15px" class="layui-form"
+     lay-filter="check_bandBox">
+    <div class="detail-content" style="border-top: 1px solid #eee;border-right: 1px solid #eee;box-sizing: border-box">
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                项目代码
+            </div>
+            <div class="rightBox" id="project_code2">
+
+            </div>
+            <div class="leftBox">
+                项目名称
+            </div>
+            <div class="rightBox" id="project_name2">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                项目地址-行政区划
+            </div>
+            <div class="rightBox" id="administrative_division2">
+
+            </div>
+            <div class="leftBox">
+                项目详细地址
+            </div>
+            <div class="rightBox" id="detailed_address2">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                工程代码
+            </div>
+            <div class="rightBox" id="engineering_code2">
+
+            </div>
+            <div class="leftBox">
+                立项部门
+            </div>
+            <div class="rightBox" id="approval_department2">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                行业类别（国标行业）
+            </div>
+            <div class="rightBox" id="industry_category_label2">
+
+            </div>
+            <div class="leftBox">
+                项目类型
+            </div>
+            <div class="rightBox" id="project_type_label2">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                项目投资来源
+            </div>
+            <div class="rightBox" id="investment_source_label2">
+
+            </div>
+            <div class="leftBox">
+                立项类型
+            </div>
+            <div class="rightBox" id="approval_type_label2">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                项目资金属性
+            </div>
+            <div class="rightBox" id="fund_attribute_label2">
+
+            </div>
+            <div class="leftBox">
+                总投资额（万元）
+            </div>
+            <div class="rightBox" id="total_investment2">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                项目资本金（万元）
+            </div>
+            <div class="rightBox" id="project_capital2">
+
+            </div>
+            <div class="leftBox">
+                是否是亿元以上产业项目
+            </div>
+            <div class="rightBox" id="is_over_one_billion_industrial_project2">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                是否是集中建设项目
+            </div>
+            <div class="rightBoxs" id="is_concentrated_building_project2">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox" style="height: 100px">
+                集中建设单位名称
+            </div>
+            <div class="rightBoxs" style="height: 100px" id="concentrated_builder_name2">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox" style="height: 100px">
+                集中建设单位统一社会信用代码
+            </div>
+            <div class="rightBoxs" style="height: 100px" id="concentrated_builder_uscc2">
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                集中建设单位法定代表人姓名
+            </div>
+            <div class="rightBox" id="concentrated_builder_legal_representative2">
+
+            </div>
+            <div class="leftBox">
+                单位类型
+            </div>
+            <div class="rightBox" id="company_type_label2">
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                企业名称
+            </div>
+            <div class="rightBox" id="company_name2">
+
+            </div>
+            <div class="leftBox">
+                统一社会信用代码
+            </div>
+            <div class="rightBox" id="uscc">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                法定代表人姓名
+            </div>
+            <div class="rightBox" id="legal_representative2">
+
+            </div>
+            <div class="leftBox">
+                联系电话
+            </div>
+            <div class="rightBox" id="contact_phone2">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                土地是否带设计方案
+            </div>
+            <div class="rightBox" id="has_design_plan2">
+
+            </div>
+            <div class="leftBox">
+                是否完成区域评估
+            </div>
+            <div class="rightBox" id="regional_assessment_completed2">
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                用地面积（㎡）
+            </div>
+            <div class="rightBox" id="land_area_sqm2">
+
+            </div>
+            <div class="leftBox">
+                新增用地面积（㎡）
+            </div>
+            <div class="rightBox" id="new_land_area_sqm2">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                土地获取方式
+            </div>
+            <div class="rightBox" id="land_acquisition_method_label2">
+
+            </div>
+            <div class="leftBox">
+                建设性质
+            </div>
+            <div class="rightBox" id="construction_nature_label2">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                建设类型
+            </div>
+            <div class="rightBox" id="construction_type_label2">
+            </div>
+            <div class="leftBox">
+                总建筑面积（㎡）
+            </div>
+            <div class="rightBox" id="total_floor_area_sqm2">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                拟开工时间
+            </div>
+            <div class="rightBox" id="planned_start_date2">
+
+            </div>
+            <div class="leftBox">
+                拟建成时间
+            </div>
+            <div class="rightBox" id="planned_completion_date2">
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                经度
+            </div>
+            <div class="rightBox" id="longitude2">
+
+            </div>
+            <div class="leftBox">
+                纬度
+            </div>
+            <div class="rightBox" id="latitude2">
+
+            </div>
+        </div>
+        <div style="width: 100%;display: flex">
+            <div class="leftBox">
+                建设内容（包括必要性）
+            </div>
+            <div class="rightBox" id="construction_content2">
+
+            </div>
+<!--            <div class="leftBox">-->
+<!--                法人代表姓名-->
+<!--            </div>-->
+<!--            <div class="rightBox" id="legal_company_legal_representative">-->
+<!--            </div>-->
+        </div>
+    </div>
+    <div style="width: 100%;text-align: right">
+        <button class="xyClose2 layui-btn">关闭</button>
+        <!--        <button class="xyBand layui-btn" style="display: none" q-method="bandSave">绑定</button>-->
+<!--        <button class="xyBands2 layui-btn" style="display: none" q-method="bandSaves2">改绑</button>-->
+    </div>
+</div>
+<!--到账资金-->
+<div id="receivedMoneyBox" style="display: none;margin: 0 auto;padding:15px" class="layui-form"
+     lay-filter="receivedMoneyBox">
+    <div class="detail-content">
+        <div id="title">
+            <button type="button" class="layui-btn" q-method="addLi" id="addLi">
+                +
+            </button>
+            <button type="button" class="layui-btn" q-method="decr" id="decr">
+                -
+            </button>
+            <span>到账资金总计：</span>
+            <span id="total">12</span>
+            <span>(亿元)</span>
+        </div>
+        <div id="ulli" style="margin-top: 10px">
+        </div>
+        <div class="layui-row">
+            <div class="layui-form-item text-right" style="margin-right: 30px;">
+                <button id="btnCancelReceivedMoney" class="layui-btn layui-btn-primary"
+                        q-method="btnCancelReceivedMoney">取消
+                </button>
+                <button id="btnSaveReceivedMoney" class="layui-btn layui-bg-blue" q-method="btnSaveReceivedMoney">保存
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="pgInfo" class="layui-form detail-dialog" style="padding-top: 0">
+    <div class="layui-tab layui-tab-brief" lay-filter="xyPg">
+        <div class="layui-tab-content xyPg">
+            <div style="background: #eee;display: flex">
+                <span>部门</span>
+                <span>评估意见</span>
+            </div>
+            <ul id="pgUl">
+
+            </ul>
+        </div>
+    </div>
+</div>
+<!--新项目-->
+<div id="detailInfo" class="layui-form detail-dialog" style="padding-top: 0">
+    <div class="layui-tab layui-tab-brief" lay-filter="xyDb">
+        <ul class="layui-tab-title">
+            <li class="layui-this">添加信息</li>
+            <li>项目详细信息</li>
+<!--            <li>项目其他信息</li>-->
+        </ul>
+        <p style="color: red;padding: 5px 10px 0 10px">
+            1、金额在5亿以上的项目，需走质态评估（市级部门预警）流程；
+            金额在5亿以下的项目，无需走质态评估（市级部门预警）流程。</br>
+<!--            2、项目来源为自行接洽的，原签约审核流程不变；-->
+<!--            项目来源为市级机关推荐的，由项目专班进行审核。</br>-->
+            2、本次补录重点为亿元以上或涉及今年新签约、新开工、新竣工的项目，补录的项目无需重新生成协议。</br>
+            3、项目开工、竣工认定，由项目专班进行审核。
+        </p>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="detail-content layui-form" style=" height: calc(100% - 50px);padding-top: 0;">
+                    <table class="layui-table ">
+                        <tr>
+                            <td class="td-label" style="width: 80px;">市区<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <select id="district_code" name="district_code" class="layui-select" lay-reqtext="请选择市区" lay-verify="required" lay-filter="district_code">
+                                    <option value="">请选择</option>
+                                    <option value="001001">靖江市</option>
+                                    <option value="001002">泰兴市</option>
+                                    <option value="001003">兴化市</option>
+                                    <option value="001004">海陵区</option>
+                                    <!--                            <option value="001005">高港区</option>-->
+                                    <option value="001006">姜堰区</option>
+                                    <option value="001007">医药高新区(高港区)</option>
+                                </select>
+
+                            </td>
+                            <td class="td-label" style="width: 100px;">园区<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <select id="zone_code" name="zone_code" lay-filter="zone_code" lay-reqtext="请选择园区" lay-verify="required" class=" layui-select">
+                                    <option value="">请先选择市区</option>
+                                </select>
+
+                                <select id="town_code" name="town_code" lay-filter="town_code" class=" layui-select">
+                                    <option value="">请选择街镇</option>
+                                </select>
+
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目名称<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input id="_name" name="_name" type="text" class="layui-input" lay-reqtext="请输入项目名称"  lay-verify="required" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">项目类别<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input name="p_type" lay-verify="radioVerify" type="radio" value="1" title="内资" checked lay-filter="p_type">
+                                <input name="p_type" lay-verify="radioVerify" type="radio" value="2" title="外资" lay-filter="p_type">
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目总投资<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input id="invest_money" name="invest_money" type="text" class="layui-input" lay-reqtext="请输入项目总投资" lay-verify="required" autocomplete="off"
+                                       rule="ffs" style="width: 150px" min="0" maxlength="10"/>
+                                <span id="span" style="width: 45px;text-align: center"></span>
+                            </td>
+                            <td class="td-label">协议利用外资<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input id="foreign_money" name="foreign_money" type="text" rule="ffs" disabled class="layui-input layui-disabled "
+                                       autocomplete="off"
+                                       style="width: 150px" min="0" maxlength="10"/> 万美元
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目类型<span style="color: red;font-size: 18px">*</span></td>
+                            <td class="indus-tag-c" style="width: 180px;">
+                                <div>
+                                    <input id="proj_type" name="proj_type" type="text" lay-reqtext="请选择项目类型" lay-verify="required" lay-filter="proj_type" style="display: none;"
+                                           readonly class="layui-input "/>
+                                </div>
+                            </td>
+                            <td class="td-label">产业大类名称<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <select id="industry_first_code" name="industry_first_code" lay-reqtext="请选择产业大类" lay-verify="required" class="layui-select"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">行业编码<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="industry_name" name="industry_name" type="hidden" class="layui-input  "/>
+                                <div>
+                                    <input id="industry_code" name="industry_code" lay-reqtext="请选择行业编码" lay-verify="required" lay-filter="industry_code" class="layui-input"
+                                           style="display: none;" type="text" autocomplete="off"/>
+                                </div>
+                            </td>
+                            <td class="td-label">所属行业<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 220px;">
+                                <div class="layui-inline"><input name="b_industry" type="radio" checked value="1"
+                                                                           title="服务业"
+                                                                           lay-filter="b_industry"></div>
+                                <div class="layui-inline"><input name="b_industry" type="radio" value="2" title="工业"
+                                                                           lay-filter="b_industry"></div>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td class="td-label">投资方名称<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input id="investor" name="investor" type="text" lay-reqtext="请输入投资方名称" lay-verify="required" class="layui-input" autocomplete="off">
+                            </td>
+                            <td class="td-label">投资方性质<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <select id="investor_type" name="investor_type" lay-reqtext="请输入投资方性质" lay-verify="required" class="layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="10">央企</option>
+                                    <option value="20">民营巨头</option>
+                                    <option value="30">世界500强或跨国公司</option>
+                                    <option value="40">其它</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td class="td-label">投资方注册地<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <select id="investor_place" name="investor_place"  lay-reqtext="请选择投资方注册地" lay-verify="required" class="layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="10">北京</option>
+                                    <option value="20">上海</option>
+                                    <option value="30">广州</option>
+                                    <option value="40">深圳</option>
+                                    <option value="50">苏州</option>
+                                    <option value="60">长三角其他城市</option>
+                                    <option value="70">其他</option>
+                                </select>
+                            </td>
+                            <td class="td-label">是否属于上市企业<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <select id="is_listed" name="is_listed" lay-reqtext="请选择是否上市公司" lay-verify="required" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+<!--                            <td class="td-label">投资方联系人</td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <input id="qy_linker" name="qy_linker" type="text" class="layui-input" autocomplete="off"/>-->
+<!--                            </td>-->
+                        </tr>
+<!--                        <tr>-->
+<!--&lt;!&ndash;                            <td class="td-label" style="width: 80px;">联系电话</td>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <td style="width: 280px;">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <input id="qy_phone" name="qy_phone" type="text" class="layui-input" autocomplete="off"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </td>&ndash;&gt;-->
+<!--                            -->
+<!--                        </tr>-->
+                        <tr>
+<!--                            <td class="td-label">是否重点项目<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <div>-->
+<!--                                    <input name="is_import_proj" lay-verify="radioVerify" type="radio" disabled value="是" title="是"-->
+<!--                                           lay-filter="is_import_proj">-->
+<!--                                    <input name="is_import_proj" lay-verify="radioVerify" type="radio" disabled value="否" title="否"-->
+<!--                                           lay-filter="is_import_proj">-->
+<!--                                </div>-->
+<!--                                <div id="import_proj_div" style="display: none">-->
+<!--                                    类型-->
+<!--                                    <select id="import_proj_type" name="import_proj_type" class=" layui-select">-->
+<!--                                        <option value="">请选择</option>-->
+<!--                                        <option value="省级">省级</option>-->
+<!--                                        <option value="市级">市级</option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </td>-->
+                            <td class="td-label">是否高新技术企业<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <select id="is_gxjs" name="is_gxjs" lay-reqtext="请选择是否高新技术企业" lay-verify="required" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="是">是</option>
+                                    <option value="否">否</option>
+                                </select>
+                            </td>
+<!--                            <td class="td-label">是否科创项目<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <div>-->
+<!--                                    <input name="is_kc_proj" type="radio" disabled value="是" title="是"-->
+<!--                                           lay-filter="is_kc_proj">-->
+<!--                                    <input name="is_kc_proj" type="radio" disabled value="否" title="否"-->
+<!--                                           lay-filter="is_kc_proj">-->
+<!--                                </div>-->
+<!--                                <div id="kc_proj_div" style="display: none">-->
+<!--                                    符合科创项目认定条件-->
+<!--                                    <input id="kc_proj_tj" name="kc_proj_tj" type="text" class="layui-input" autocomplete="off"/>-->
+<!--                                </div>-->
+<!--                            </td>-->
+                        </tr>
+                        <tr>
+
+                            <td class="td-label">是否有融资需求<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input name="is_rzxq" type="radio" lay-verify="radioVerify" disabled value="是" title="是"
+                                       lay-filter="is_rzxq">
+                                <input name="is_rzxq" type="radio" lay-verify="radioVerify" disabled value="否" title="否"
+                                       lay-filter="is_rzxq">
+                            </td>
+                            <td class="rz_tr" style="display: none" class="td-label">融资金额<span style="color: red;font-size: 18px">*</span></td>
+                            <td class="rz_tr" style="width: 180px;display: none">
+                                <input id="rz_money" name="rz_money" type="text" lay-reqtext="请输入融资金额" class="layui-input" autocomplete="off">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否科创项目<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <div>
+                                    <input name="is_kc_proj" type="radio" lay-verify="radioVerify" disabled value="是" title="是"
+                                           lay-filter="is_kc_proj">
+                                    <input name="is_kc_proj" type="radio" lay-verify="radioVerify" disabled value="否" title="否"
+                                           lay-filter="is_kc_proj">
+                                </div>
+                                <div id="kc_proj_div" style="display: none">
+                                    符合科创项目认定条件
+                                    <input id="kc_proj_tj" name="kc_proj_tj" lay-reqtext="请输入符合科创项目认定条件" type="text" class="layui-input" autocomplete="off"/>
+                                    <select id="kc_proj_type" name="kc_proj_type" lay-reqtext="请选择科创项目类型" lay-filter="kc_proj_type" class=" layui-select">
+                                        <option value="">请选择</option>
+                                        <option value="知识产权类">知识产权类</option>
+                                        <option value="高层次人才类">高层次人才类</option>
+                                        <option value="科技计划或大赛类">科技计划或大赛类</option>
+                                        <option value="风险投资类">风险投资类</option>
+                                        <option value="省市产研院类">省市产研院类</option>
+                                        <option value="重大创新平台类">重大创新平台类</option>
+                                    </select>
+                                    <div>
+                                        <p id="file_message" style="color: red"></p>
+<!--                                        <p id="file_message" style="color: red">请上传投资企业专利证书或受理通知书等证明材料</p>-->
+                                        <!--                                        <p>请上传人才学历、职称、获奖等证明材料</p>-->
+                                        <!--                                        <p>请上传计划项目立项或大赛获奖文件等证明材料</p>-->
+                                        <!--                                        <p>请上传投资协议等证明材料</p>-->
+                                        <!--                                        <p>请上传签约协议</p>-->
+                                        <!--                                        <p>请上传合作共建协议等证明材料</p>-->
+                                        <ul id="file_project_new6">
+                                        </ul>
+                                        <button id="uploadDetail_new6" type="button" class="layui-btn"
+                                                style="text-align: center;float: right;">
+                                            <i class="layui-icon">&#xe67c;</i>上传文件
+                                        </button>
+                                    </div>
+                                </div>
+<!--                                <tr>-->
+<!--                                    <td class="td-label">科创材料<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                                    <td colspan="3">-->
+<!--                                        <p id="file_message">请上传投资企业专利证书或受理通知书等证明材料</p>-->
+<!--                                        <ul id="file_project_new6">-->
+<!--                                        </ul>-->
+<!--                                        <button id="uploadDetail_new6" type="button" class="layui-btn"-->
+<!--                                                style="text-align: center;float: right;">-->
+<!--                                            <i class="layui-icon">&#xe67c;</i>上传文件-->
+<!--                                        </button>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">QFLP外资项目<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <select id="is_qflp" name="is_qflp" lay-reqtext="请选择是否QFLP外资项目" lay-verify="required" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="是">是</option>
+                                    <option value="否">否</option>
+                                </select>
+                            </td>
+                            <td style="width: 180px;" class="td-label">项目信息来源<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 220px;">
+                                <div class="layui-inline required "><input name="b_resource" type="radio" checked value="1"
+                                                                           title="自行接洽"
+                                                                           lay-filter="b_resource"></div>
+                                <div class="layui-inline required "><input name="b_resource" type="radio" value="2" title="市级机关推荐"
+                                                                           lay-filter="b_resource"></div>
+                                <div id="orgBox" style="display: none">
+                                    <input type="text" name="sjjg_name" id="sjjg_name" class="layui-input"
+                                           placeholder="请选择下方搜索结果" readOnly value="" autocomplete="off">
+                                    <div>
+                                        <input type="text" name="sjjg_name_search" id="sjjg_name_search" class="layui-input"
+                                               placeholder="搜索" style="position:absolute;z-index:2;width:80%;" value="" autocomplete="off">
+                                        <select id="orgname" class="xySelect" placeholder="请输入名称搜索" name="orgname" lay-filter="orgname" >
+                                            <option value="">请输入名称搜索</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目简介<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <input id="_desc" name="_desc" lay-reqtext="请输入项目简介" lay-verify="required" type="textarea" class="layui-textarea" autocomplete="off"/>
+                                <span style="color: red">（填写包括：占地、建筑面积、设备、原料、工艺、产品、产能。
+参考格式：项目占地**亩，新建建筑面积**平方米（土建必填），计容面积**平方米，包括****，总投资***万，设备投资***万，购置***等设备多少台（套），主要原料有***，主要工艺有***，形成年产****。）</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目选址位置<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="project_address" name="project_address" type="text" lay-reqtext="请输入项目选址位置" lay-verify="required" class="layui-input" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">预计开工时间<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="plan_start_date" name="plan_start_date" type="text" lay-reqtext="请输入预计开工时间" lay-verify="required" class="layui-input" autocomplete="off">
+                                <!--                                <input id="plan_start" type="text" class="layui-input" autocomplete="off"/>-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">预计竣工时间<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="plan_end_date" name="plan_end_date" type="text" lay-reqtext="请输入预计竣工时间" lay-verify="required" class="layui-input" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">注册资本（<span class="moneyText">万元</span>）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="zhuce_money" name="zhuce_money" type="text" lay-reqtext="请输入注册资本" lay-verify="required" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">签约日期<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <!--                                <div class="layui-inline">-->
+                                <input id="signed_date" name="signed_date" type="text" lay-reqtext="请输入签约日期" lay-verify="required" class="layui-input  layui-inline"
+                                       autocomplete="off" readonly>
+                                <!--                                    <i class="icon-riqi iconfont date-input-icon layui-inline"></i>-->
+                                <!--                                </div>-->
+                            </td>
+                            <td class="td-label">签约信息统计日期<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="signed_stat_date" name="signed_stat_date" type="text" class="layui-input layui-disabled" readonly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">成效情况说明<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <textarea id="cg_remark" name="cg_remark" type="text" lay-reqtext="请输入成效情况说明" lay-verify="required" class="layui-textarea" autocomplete="off"></textarea>
+                                <span style="color: red">（请对照成效评估办法，补充其他需要说明的情况）</span>
+                            </td>
+                        </tr>
+                        <!--                        基本信息-->
+<!--                        <tr style="height: 50px;">-->
+<!--                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;text-align: left">基本信息</td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">团队力量<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="team" name="team" lay-reqtext="请选择团队力量" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="核心管理人才">核心管理人才</option>-->
+<!--                                    <option value="核心技术人才">核心技术人才</option>-->
+<!--                                    <option value="财务、市场、运营等岗位人才">财务、市场、运营等岗位人才</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">资金来源<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <select id="zjly" name="zjly" lay-reqtext="请选择资金来源" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="单一依赖接待或短期融资">单一依赖接待或短期融资</option>-->
+<!--                                    <option value="自有资金占比高，且融资渠道多元">自有资金占比高，且融资渠道多元</option>-->
+<!--                                    <option value="政府或平台投资资金">政府或平台投资资金</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">资产负债表<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="zcfz" name="zcfz" lay-reqtext="请选择资产负债情况" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="正常">正常</option>-->
+<!--                                    <option value="异常">异常</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">利润表<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <select id="lirun" name="lirun" lay-reqtext="请选择利润情况" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="正常">正常</option>-->
+<!--                                    <option value="异常">异常</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">现金流量表<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="xjll" name="xjll" lay-reqtext="请选择现金流量情况" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="正常">正常</option>-->
+<!--                                    <option value="异常">异常</option>-->
+<!--                                </select>-->
+<!--                                <span style="color: red">（应优先排除连续两年经营现金流为负的）</span>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">固定资产与流动资产占比<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <select id="zczb" name="zczb" lay-reqtext="请选择固定资产与流动资产占比情况" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="正常">正常</option>-->
+<!--                                    <option value="异常">异常</option>-->
+<!--                                </select>-->
+<!--                                <span style="color: red">（应优先选择流动资产占比较高的）</span>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <tr>
+                            <td class="td-label">产业关联度<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <select id="cy_gl" name="cy_gl" lay-reqtext="请选择产业关联度" lay-verify="required" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="强相关">强相关</option>
+                                    <option value="一般">一般</option>
+                                    <option value="不相关">不相关</option>
+                                </select>
+                            </td>
+                            <!--                            <td class="td-label">工艺水平（生产效率）<span style="color: red;font-size: 18px">*</span></td>-->
+                            <!--                            <td style="width: 180px;">-->
+                            <!--                                <select id="gy_xl" class=" layui-select required">-->
+                            <!--                                    <option value="">请选择</option>-->
+                            <!--                                    <option value="高">高</option>-->
+                            <!--                                    <option value="中">中</option>-->
+                            <!--                                    <option value="低">低</option>-->
+                            <!--                                </select>-->
+                            <!--                            </td>-->
+                        </tr>
+                        <!--                        准入条件-->
+                        <tr style="height: 50px;">
+                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;text-align: left">准入条件</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">特殊行业<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <select id="tshy" name="tshy" lay-reqtext="请选择是否特殊行业" lay-verify="required" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="是">是</option>
+                                    <option value="否">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">准入限制<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <select id="zrxz" name="zrxz" lay-reqtext="请选择有无准入限制" lay-verify="required" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="有">有</option>
+                                    <option value="无">无</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">两高项目<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <select id="lgxm" name="lgxm" lay-reqtext="请选择是否两高项目" lay-verify="required" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="是">是</option>
+                                    <option value="否">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">重金属排放<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <select id="zjspf" name="zjspf" lay-reqtext="请选择有无重金属排放" lay-verify="required" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="有">有</option>
+                                    <option value="无">无</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">预计年耗能情况(吨标煤)<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="total_use" name="total_use" type="text" lay-reqtext="请输入预计年耗能情况" lay-verify="required" class="layui-input" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">预计年排污情况（废水、废气等）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="is_wuran" name="is_wuran" lay-reqtext="请输入预计年排污情况" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <!--                        投资规模-->
+                        <tr style="height: 50px;">
+                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;text-align: left">投资规模</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">申请用地面积（亩）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="sq_land_area" name="sq_land_area" lay-reqtext="请输入申请用地面积" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">租赁厂房面积（平方米）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="zl_land_area" name="zl_land_area" lay-reqtext="请输入租赁厂房面积" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">折算用地（亩）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="zl_land_area_zs" name="zl_land_area_zs" lay-reqtext="请输入折算用地" disabled lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">计划总投资（<span class="moneyText">万元</span>）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="plan_total1" name="plan_total1" lay-reqtext="请输入计划总投资" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">计划投资强度（<span class="moneyText">万元</span>/亩）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="invest_level" name="invest_level" lay-reqtext="请输入计划投资强度" lay-verify="required" type="text" disabled class="layui-input" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">固定资产投资（<span>万元</span>）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="fixed_invest" name="fixed_invest" lay-reqtext="请输入固定资产投资" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+<!--                            <td class="td-label">本期投资额（<span class="moneyText">万元</span>）<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <input id="plan_total2" name="plan_total2" type="text" lay-reqtext="请输入本期投资额" lay-verify="required" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+                        </tr>
+<!--                        <tr>-->
+<!--                            -->
+<!--&lt;!&ndash;                            <td class="td-label">设备投资（<span class="moneyText">万元</span>）<span style="color: red;font-size: 18px">*</span></td>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <td style="width: 180px;">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <input id="device_invest" name="device_invest" lay-reqtext="请输入设备投资" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </td>&ndash;&gt;-->
+<!--                        </tr>-->
+                        <!--                        预期效益-->
+                        <tr style="height: 50px;">
+                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;text-align: left">预期效益</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">预期年均产值（万元）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="yq_cz1" name="yq_cz1" lay-reqtext="请输入预期年均产值" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+<!--                            <td class="td-label">预期产值（第二年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <input id="yq_cz2" name="yq_cz2" lay-reqtext="请输入预期产值（第二年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+                            <td class="td-label">预期年均开票销售（万元）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="yq_kpxs1" name="yq_kpxs1" lay-reqtext="请输入预期年均开票销售" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+<!--                        <tr>-->
+<!--                            <td class="td-label">预期产值（第三年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <input id="yq_cz3" name="yq_cz3" lay-reqtext="请输入预期产值（第三年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">预期开票销售（第一年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <input id="yq_kpxs1" name="yq_kpxs1" lay-reqtext="请输入预期开票销售（第一年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">预期开票销售（第二年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <input id="yq_kpxs2" name="yq_kpxs2" lay-reqtext="请输入预期开票销售（第二年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">预期开票销售（第三年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <input id="yq_kpxs3" name="yq_kpxs3" lay-reqtext="请输入预期开票销售（第三年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <tr>
+                            <td class="td-label">预期年均税收（万元）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <input id="yq_ss1" name="yq_ss1" lay-reqtext="请输入预期年均税收" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+<!--                            <td class="td-label">预期税收（第二年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <input id="yq_ss2" name="yq_ss2" lay-reqtext="请输入预期税收（第二年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+                            <td class="td-label">预期年均亩均税收（万元）<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 180px;">
+                                <input id="yq_mjtax1" name="yq_mjtax1" lay-reqtext="请输入预期年均亩均税收" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+<!--                        <tr>-->
+<!--                            <td class="td-label">预期税收（第三年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <input id="yq_ss3" name="yq_ss3" lay-reqtext="请输入预期税收（第三年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">预期亩均税收（第一年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <input id="yq_mjtax1" name="yq_mjtax1" lay-reqtext="请输入预期亩均税收（第一年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">预期亩均税收（第二年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <input id="yq_mjtax2" name="yq_mjtax2" lay-reqtext="请输入预期亩均税收（第二年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">预期亩均税收（第三年）（万元）<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <input id="yq_mjtax3" name="yq_mjtax3" lay-reqtext="请输入预期亩均税收（第三年）" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <!--                        产品前景-->
+<!--                        <tr style="height: 50px;">-->
+<!--                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;text-align: left">产品前景</td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">产品市场现状<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="cpscxz" name="cpscxz" lay-reqtext="请选择产品市场现状" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="导入期">导入期</option>-->
+<!--                                    <option value="成长期">成长期</option>-->
+<!--                                    <option value="成熟期">成熟期</option>-->
+<!--                                    <option value="衰退期">衰退期</option>-->
+<!--                                </select>-->
+<!--                                <span style="color: red">（综合行业趋势、供需关系、竞争力、潜在客户群等）</span>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">工艺水平<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="gysp" name="gysp" lay-reqtext="请选择工艺水平" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="先进">先进</option>-->
+<!--                                    <option value="良好">良好</option>-->
+<!--                                    <option value="一般">一般</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">生产效率<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="scxl" name="scxl" lay-reqtext="请选择生产效率" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="高">高</option>-->
+<!--                                    <option value="中">中</option>-->
+<!--                                    <option value="低">低</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">良品率<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="lpl" name="lpl" lay-reqtext="请选择良品率" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="高">高</option>-->
+<!--                                    <option value="中">中</option>-->
+<!--                                    <option value="低">低</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <!--                        科创属性-->
+<!--                        <tr style="height: 50px;">-->
+<!--                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;text-align: left">科创属性</td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">高新技术企业<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <input name="is_gxjs" type="radio" disabled value="是" title="是"-->
+<!--                                       lay-filter="is_gxjs">-->
+<!--                                <input name="is_gxjs" type="radio" disabled value="否" title="否"-->
+<!--                                       lay-filter="is_gxjs">-->
+<!--                            </td>-->
+<!--                            <td class="td-label">是否建立企业研发中心<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <div>-->
+<!--                                    <input name="is_build_yfzx" type="radio" disabled value="是" title="是"-->
+<!--                                           lay-filter="is_build_yfzx">-->
+<!--                                    <input name="is_build_yfzx" type="radio" disabled value="否" title="否"-->
+<!--                                           lay-filter="is_build_yfzx">-->
+<!--                                </div>-->
+<!--                                <div id="build_yfzx_div" style="display: none">-->
+<!--                                    企业研发中心-->
+<!--                                    <input id="build_yfzx" name="build_yfzx" type="text" class="layui-input" autocomplete="off"/>-->
+<!--                                </div>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">专利数</td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <input id="zl_num" name="zl_num" type="text" class="layui-input" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">是否获得省级以上科技或人才等项目支持<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <div>-->
+<!--                                    <input name="is_sj_proj" type="radio" disabled value="是" title="是"-->
+<!--                                           lay-filter="is_sj_proj">-->
+<!--                                    <input name="is_sj_proj" type="radio" disabled value="否" title="否"-->
+<!--                                           lay-filter="is_sj_proj">-->
+<!--                                </div>-->
+<!--                                <div id="sj_proj_div" style="display: none">-->
+<!--                                    省级以上科技或人才等项目-->
+<!--                                    <input id="sj_proj" name="sj_proj" type="text" class="layui-input" autocomplete="off"/>-->
+<!--                                </div>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">风险投资（<span class="moneyText">万元</span>）<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <input id="is_warning_invest" name="is_warning_invest" lay-reqtext="请输入风险投资" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">风险投资方名称<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <input id="fx_name" name="fx_name" lay-reqtext="请输入风险投资方名称" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <!--                        风险研判-->
+<!--                        <tr style="height: 50px;">-->
+<!--                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;text-align: left">风险研判</td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">纳税合规性<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <select id="hegui" name="hegui" lay-reqtext="请选择纳税合规性" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="正常">正常</option>-->
+<!--                                    <option value="异常">异常</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">投资方风险评估<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <select id="gy_xl" name="gy_xl" lay-reqtext="请选择投资方风险评估" lay-verify="required" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="高">高</option>-->
+<!--                                    <option value="中">中</option>-->
+<!--                                    <option value="低">低</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td class="td-label">金融机构信用评级<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 280px;">-->
+<!--                                <input id="xypj" name="xypj" lay-reqtext="请输入金融机构信用评级" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                            <td class="td-label">行业协会评价<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td style="width: 180px;">-->
+<!--                                <input id="xhpj" name="xhpj" lay-reqtext="请输入行业协会评价" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <!--                        市（区）联合评审结论-->
+                        <tr style="height: 50px;">
+                            <td class="td-label" style="border: none;font-weight: bold;background: #fff;width: 240px;text-align: left">市（区）联合评审结论</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">各市（区）联合评审结论<span style="color: red;font-size: 18px">*</span></td>
+                            <td style="width: 280px;">
+                                <select id="zhpg" name="zhpg" lay-reqtext="请选择各市（区）联合评审结论" lay-verify="required" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="优秀">优秀</option>
+                                    <option value="良好">良好</option>
+                                    <option value="一般">一般</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目情况分析和评审结果<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+
+                                <ul id="file_project1">
+                                </ul>
+                                <button id="uploadDetail1" type="button" class="layui-btn"
+                                        style="text-align: center;float: right;">
+                                    <i class="layui-icon">&#xe67c;</i>上传文件
+                                </button>
+                            </td>
+                        </tr>
+                        <tr id="tzf_div">
+                            <td class="td-label">市级部门风险提示<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <textarea id="tzf_fx" name="tzf_fx" placeholder="自动同步，无需填写" disabled class="layui-textarea" rows="3"></textarea>
+                            </td>
+                        </tr>
+                        <tr id="zsf_div">
+                            <td class="td-label">项目签约协议招商方<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <input id="zsf" name="zsf" lay-reqtext="请输入招商方" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr id="tzfs_div">
+                            <td class="td-label">项目签约协议投资方<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <input id="tzf" name="tzf" lay-reqtext="请输入投资方" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr  id="tzdz_div">
+                            <td class="td-label">项目签约协议投资地址<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <input id="tzdz" name="tzdz" lay-reqtext="请输入投资地址" lay-verify="required" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr id="xyBox">
+                            <td class="td-label">项目签约协议附则</td>
+                            <td colspan="3">
+                                <div id="fzList" style="margin-bottom: 5px">
+                                </div>
+                                <div>
+                                    <textarea id="fzValue" placeholder="请输入项目签约协议附则" class="layui-textarea" rows="3"></textarea>
+                                    <button style="margin-top: 10px;" id="addFz" type="button" class="layui-btn">
+                                        添加附则
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="zzBox">
+                            <td class="td-label">佐证材料<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+
+                                <ul id="file_project">
+                                </ul>
+                                <button id="uploadDetail" type="button" class="layui-btn"
+                                        style="text-align: center;float: right;">
+                                    <i class="layui-icon">&#xe67c;</i>上传文件
+                                </button>
+                                <button id="scxy" type="button" class="layui-btn"
+                                        style="text-align: center;float: right;margin-right: 10px" lay-submit lay-filter="scxy-submit">生成协议</button>
+
+                                <!--                    <button id="cleanDetail" type="button" class="layui-btn"-->
+                                <!--                            style="background-color: #c2c2c2">-->
+                                <!--                        清除-->
+                                <!--                    </button>-->
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="detail-content" style=" height: calc(100% - 50px);padding-top: 0;">
+                    <table class="layui-table ">
+                        <tr>
+                            <td class="td-label" style="width: 80px;">项目评级</td>
+                            <td style="width: 280px;">
+                                <input id="proj_level" name="proj_level" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                            <td class="td-label" style="width: 100px;">是否为新引进企业</td>
+                            <td style="width: 180px;">
+                                <select id="is_new" name="is_new" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否为世界500强或全球专业领域行业龙头企业</td>
+                            <td style="width: 280px;">
+                                <select id="is_world" name="is_world" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">是否为国内500强或国内行业排名前100企业</td>
+                            <td style="width: 180px;">
+                                <select id="is_china" name="is_china" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <!--                            <td class="td-label"><span style="color: red;font-size: 18px">*</span>是否属于上市企业</td>-->
+                            <!--                            <td style="width: 280px;">-->
+                            <!--                                <select id="is_listed" class=" layui-select required">-->
+                            <!--                                    <option value="">请选择</option>-->
+                            <!--                                    <option value="1">是</option>-->
+                            <!--                                    <option value="2">否</option>-->
+                            <!--                                </select>-->
+                            <!--                            </td>-->
+                            <td class="td-label">是否为瞪羚企业</td>
+                            <td style="width: 280px;">
+                                <select id="is_gazelle" name="is_gazelle" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">是否为专精特新企业</td>
+                            <td style="width: 180px;">
+                                <select id="is_specialized" name="is_specialized" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否为独角兽企业</td>
+                            <td style="width: 180px;">
+                                <select id="is_unicorn" name="is_unicorn" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                            <!--                            <td class="td-label">是否获得省级以上科技或人才等项目支持</td>-->
+                            <!--                            <td style="width: 180px;">-->
+                            <!--                                <input name="is_sj_proj" type="radio" disabled value="是" title="是"-->
+                            <!--                                       lay-filter="is_sj_proj">-->
+                            <!--                                <input name="is_sj_proj" type="radio" disabled value="否" title="否"-->
+                            <!--                                       lay-filter="is_sj_proj">-->
+                            <!--                            </td>-->
+                        </tr>
+                        <tr>
+                            <td class="td-label">已投资项目对属地政府亩均税收（万元）</td>
+                            <td style="width: 280px;">
+                                <input id="mujun_tax" name="mujun_tax" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">主要客户</td>
+                            <td style="width: 180px;">
+                                <input id="main_customer" name="main_customer" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目使用主要原、辅材料</td>
+                            <td style="width: 280px;">
+                                <input id="project_material" name="project_material" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">主要流程工艺</td>
+                            <td style="width: 180px;">
+                                <input id="main_process" name="main_process" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否为新供地项目</td>
+                            <td style="width: 280px;">
+                                <select id="is_newproject" name="is_newproject" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">行业是否属于高新技术产业分类目录</td>
+                            <td style="width: 180px;">
+                                <select id="is_gx" name="is_gx" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否为高技术项目</td>
+                            <td style="width: 280px;">
+                                <select id="is_gjs" name="is_gjs" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">是否为国家工业战略性新兴产业</td>
+                            <td style="width: 180px;">
+                                <select id="is_gyzl" name="is_gyzl" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">容积率</td>
+                            <td style="width: 280px;">
+                                <input id="far" name="far" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">预期用工人数（人）</td>
+                            <td style="width: 280px;">
+                                <input id="yq_worker" name="yq_worker" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">固定资产投资占比（%）</td>
+                            <td style="width: 180px;">
+                                <input id="fixed_percent" name="fixed_percent" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">项目是否含有研发团队、产学研合作及研发机构建设内容</td>
+                            <td style="width: 280px;">
+                                <select id="is_yanfa" name="is_yanfa" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">项目是否拥有相关有效发明专利</td>
+                            <td style="width: 280px;">
+                                <select id="is_zhuanli" name="is_zhuanli" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否拟列入重点活动签约项目库</td>
+                            <td style="width: 280px;">
+                                <select id="is_important" name="is_important" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">是否为招商会项目</td>
+                            <td style="width: 280px;">
+                                <select id="is_zsh" name="is_zsh" class=" layui-select">
+                                    <option value="">请选择</option>
+                                    <option value="1">是</option>
+                                    <option value="2">否</option>
+                                </select>
+                            </td>
+                            <td class="td-label">招商会名称</td>
+                            <td style="width: 280px;">
+                                <input id="zsh_name" name="zsh_name" placeholder="请输入" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">预计年销售（万元）</td>
+                            <td style="width: 280px;">
+                                <input id="yj_year" name="yj_year" placeholder="请输入" type="text" class="layui-input" autocomplete="off"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">备注</td>
+                            <td>
+                                <textarea id="remark" name="remark" placeholder="请输入" class="layui-textarea" rows="3"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+<!--            <div class="layui-tab-item">-->
+<!--                <div class="detail-content" style=" height: calc(100% - 50px);padding-top: 0;">-->
+<!--                    <table class="layui-table ">-->
+<!--                        -->
+<!--                    </table>-->
+<!--                </div>-->
+<!--            </div>-->
+        </div>
+    </div>
+        <div class="text-right" id="issure">
+            <div style="padding-right: 30px;">
+<!--                <button id="scxy" class="layui-btn layui-bg-blue" q-method="scxy">生成协议-->
+<!--                </button>-->
+                <button id="drafts" class="layui-btn" q-method="drafts">存入草稿箱</button>
+                <button id="btnCancel" class="layui-btn layui-btn-primary" q-method="btnCancel">取消
+                </button>
+<!--                <button id="btnSave" class="layui-btn layui-bg-blue" q-method="save1">提交</button>-->
+                <button id="btnSave" class="layui-btn layui-bg-blue" lay-submit lay-filter="demo-submit">提交</button>
+            </div>
+        </div>
+</div>
+<!-- 报批信息-->
+<div class="layui-tab layui-tab-brief" lay-filter="approbationBox" id="approbationBox"
+     style="display: none;margin: 0 auto;padding:15px">
+    <ul class="layui-tab-title">
+        <li class="layui-this" id="approbationLi">报批信息</li>
+        <li id="beginningLi">开工信息</li>
+        <li id="endLi">竣工信息</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show" id="approbationDiv">
+            <div class="detail-content">
+                <ul class="layui-timeline">
+                    <!--注册信息-->
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text " id="register">
+                            <h3 class="layui-timeline-title">公司注册</h3>
+                            <div class="layui-form">
+                                <table id="RegiMSG" class="layui-table">
+                                    <tr>
+                                        <td class="td-label">统一社会信用代码证<span style="color: red;font-size: 18px">*</span>
+                                        </td>
+                                        <td><input id="u_code" type="text" disabled class="layui-input required"
+                                                   autocomplete="off"></td>
+                                        <td class="td-label">注册公司名称<span style="color: red;font-size: 18px">*</span>
+                                        </td>
+                                        <td><input id="company_name" type="text" disabled class="layui-input  required"
+                                                   autocomplete="off"/></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td class="td-label">注册资金(亿元)<span style="color: red;font-size: 18px">*</span>
+                                        </td>
+                                        <td><input id="reg_money" type="text" rule="ffs" disabled
+                                                   class="layui-input required"
+                                                   autocomplete="off"
+                                                   oninput="if(value.length>10)value=value.slice(0,10)"
+                                                   min="0"/></td>
+                                        <td class="td-label" id="wztd">注册协议外资<span
+                                                style="color: red;font-size: 18px">*</span></td>
+                                        <td id="wztd2"><input id="reg_foreign_money" type="text" class="layui-input "
+                                                              autocomplete="off"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-label">注册日期<span style="color: red;font-size: 18px">*</span></td>
+                                        <td><input id="reg_date" type="text" disabled class="layui-input required "
+                                                   autocomplete="off" readonly/></td>
+                                        <td class="td-label">注册信息统计日期<span style="color: red;font-size: 18px">*</span>
+                                        </td>
+                                        <td><input id="reg_stat_date" type="text" disabled
+                                                   class="layui-input  layui-disabled required"
+                                                   autocomplete="off" readonly/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-label">佐证资料（营业执照）<span style="color: red;font-size: 18px">*</span>
+                                        </td>
+                                        <td colspan="3" style="text-align: right;">
+                                            <ul style="width: 300px;text-align: left" id="ulRegister"></ul>
+                                            <button id="uploadRegi" type="button" disabled class="layui-btn required "
+                                                    style="text-align: center">
+                                                <i class="layui-icon">&#xe67c;</i>上传文件
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" style="text-align: right;">
+                                            <!--                                            <button id="cancelRegi" class="layui-btn layui-btn-primary"-->
+                                            <!--                                                    q-method="cancelRegi">取消-->
+                                            <!--                                            </button>-->
+                                            <button id="saveRegi" class="layui-btn layui-bg-blue" disabled
+                                                    q-method="saveRegi">
+                                                提交
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </li>
+                    <!--备案信息-->
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text" id="beian">
+                            <h3 class="layui-timeline-title">备案信息</h3>
+                            <div class="layui-form">
+                                <table id="BAMSG" class="layui-table ">
+<!--                                    <tr>-->
+<!--                                        <td class="td-label">备案（核准）项目名称<span style="color: red;font-size: 18px">*</span>-->
+<!--                                        </td>-->
+<!--                                        <td><input id="check_name" type="text" disabled class="layui-input required "-->
+<!--                                                   autocomplete="off"/></td>-->
+<!--                                        <td class="td-label">备案（核准）投资总额（亿元）<span-->
+<!--                                                style="color: red;font-size: 18px">*</span></td>-->
+<!--                                        <td><input id="check_money" type="text" disabled rule="ffs"-->
+<!--                                                   class="layui-input required "-->
+<!--                                                   autocomplete="off"-->
+<!--                                                   oninput="if(value.length>10)value=value.slice(0,10)"-->
+<!--                                                   min="0"/></td>-->
+
+<!--                                    </tr>-->
+                                    <tr>
+<!--                                        <td class="td-label">备案（核准）日期<span style="color: red;font-size: 18px">*</span>-->
+<!--                                        </td>-->
+<!--                                        <td><input id="check_date" type="text" disabled class="layui-input required"-->
+<!--                                                   autocomplete="off" readonly>-->
+<!--                                        </td>-->
+                                        <td class="td-label">备案信息统计日期<span style="color: red;font-size: 18px">*</span>
+                                        </td>
+                                        <td><input id="check_stat_date" disabled type="text"
+                                                   class="layui-input layui-disabled required"
+                                                   autocomplete="off" readonly/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-label">
+                                            佐证资料（项目备案（核准）文件）<span style="color: red;font-size: 18px">*</span>
+                                        </td>
+                                        <td colspan="3" style="text-align: right;">
+                                            <ul style="width: 300px;text-align: left" id="ulBA"></ul>
+                                            <button id="uploadBA" type="button" class="layui-btn required"
+                                                    style="text-align: center">
+                                                <i class="layui-icon">&#xe67c;</i>上传文件
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <button id="bandBtn" class="layui-btn layui-bt-green" q-method="bandBtn">绑定在线审批项目</button>
+<!--                                            <div id="bandBtn1" class="layui-btn" style="background: grey;display: none;position: relative">-->
+<!--                                                绑定在线审批项目-->
+<!--                                                <ul class="bandUl" style="position: absolute;top: 0;left: 0;background: #fff;display: none;color: #666;width: 100%;text-align: center;padding: 0;margin: 0">-->
+<!--                                                    <li style="list-style: none;padding: 0;margin: 0" q-method="bandSuccess">正常绑定</li>-->
+<!--                                                    <li style="list-style: none;padding: 0;margin: 0" q-method="bandErrors">异常绑定</li>-->
+<!--                                                </ul>-->
+<!--                                            </div>-->
+                                        </td>
+                                        <td colspan="1" style="text-align: right;">
+                                            <!--                                            <button id="btnCancelBA" class="layui-btn layui-btn-primary"-->
+                                            <!--                                                    q-method="btnCancelBA">取消-->
+                                            <!--                                            </button>-->
+                                            <button id="btnSaveBA" disabled class="layui-btn layui-bg-blue "
+                                                    q-method="btnSaveBA">提交
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div id="error1" style="display: none">
+                                </div>
+                                <div id="tableBox1">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!--报批-->
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text" id="approval">
+                            <h3 class="layui-timeline-title">报批</h3>
+                            <div class="layui-form">
+                                <table id="approvalMSG" class="layui-table ">
+                                    <td class="td-label">完成报批统计日期<span style="color: red;font-size: 18px">*</span></td>
+                                    <td><input id="finish_check_date" disabled type="text"
+                                               class="layui-input layui-disabled required"
+                                               autocomplete="off" readonly/>
+                                    </td>
+                                    <tr>
+                                        <td class="td-label">
+                                            佐证资料<span style="color: red;font-size: 18px">*</span>
+                                        </td>
+                                        <td colspan="3" style="text-align: right;">
+                                            <ul style="width: 300px;text-align: left" id="ulApprove"></ul>
+                                            <button id="uploadApprove" type="button" disabled
+                                                    class="layui-btn required ">
+                                                <i class="layui-icon">&#xe67c;</i>上传文件
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <button id="bandBtn2" class="layui-btn layui-bt-green" q-method="bandBtn2">绑定工程审批项目</button>
+<!--                                            <div id="bandBtn2s" class="layui-btn" style="background: grey;display: none;position: relative">-->
+<!--                                                绑定工程审批项目-->
+<!--                                                <ul class="bandUl" style="position: absolute;top: 0;left: 0;background: #fff;display: none;color: #666;width: 100%;text-align: center;padding: 0;margin: 0">-->
+<!--                                                    <li style="list-style: none;padding: 0;margin: 0" q-method="bandSuccess2">正常绑定</li>-->
+<!--                                                    <li style="list-style: none;padding: 0;margin: 0" q-method="bandErrors2">异常绑定</li>-->
+<!--                                                </ul>-->
+<!--                                            </div>-->
+                                        </td>
+                                        <td colspan="1" style="text-align: right;">
+                                            <!--                                            <button id="btnCancelApproval"-->
+                                            <!--                                                    class="layui-btn layui-btn-primary"-->
+                                            <!--                                                    q-method="btnCancelApproval">取消-->
+                                            <!--                                            </button>-->
+                                            <button id="btnSaveApproval" disabled class="layui-btn layui-bg-blue "
+                                                    q-method="btnSaveApproval">提交
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div id="error2" style="display: none">
+                                </div>
+                                <div id="tableBox2">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--        开工-->
+        <div class="layui-tab-item" id="beginning">
+            <div class="detail-content ">
+                <div class="layui-form">
+                    <table id="beginMSG" class="layui-table ">
+<!--                        <tr>-->
+<!--                            <td class="td-label">开工确认<span style="color: red;font-size: 18px">*</span>-->
+<!--                            </td>-->
+<!--                            <td><input name="kgqr" type="radio" disabled value="1" title="是"-->
+<!--                                       lay-filter="kgqr">-->
+<!--                                <input name="kgqr" type="radio" disabled value="0" title="否"-->
+<!--                                       lay-filter="kgqr"></td>-->
+<!--                        </tr>-->
+<!--                        不是科创项目；是否签约工业、服务业项目转科创项目（是: 如果高校人才：人才实际出资；上传符合科创项
+目条件的证明材料 ， 否： 下一步）-->
+                        <tr id="kg_zkc_div" style="display: none">
+                            <td class="td-label">是否为签约工业、服务业项目转科创项目<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input name="kg_is_zkc" type="radio" disabled value="是" title="是"
+                                       lay-filter="kg_is_zkc">
+                                <input name="kg_is_zkc" type="radio" disabled value="否" title="否"
+                                       lay-filter="kg_is_zkc">
+                            </td>
+                        </tr>
+                        <tr id="rc_div" style="display: none">
+                            <td class="td-label">人才实际出资证明材料<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <ul id="file_project_new7">
+                                </ul>
+                                <button id="uploadDetail_new7" type="button" class="layui-btn"
+                                        style="text-align: center;float: right;">
+                                    <i class="layui-icon">&#xe67c;</i>上传文件
+                                </button>
+                            </td>
+                        </tr>
+                        <tr id="kc_div" style="display: none">
+                            <td class="td-label">符合科创项目条件的证明材料<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <ul id="file_project_new8">
+                                </ul>
+                                <button id="uploadDetail_new8" type="button" class="layui-btn"
+                                        style="text-align: center;float: right;">
+                                    <i class="layui-icon">&#xe67c;</i>上传文件
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">招引单位<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="kg_zone_name" type="text" disabled class="layui-input required layui-disabled" autocomplete="off"/></td>
+                            <td class="td-label">项目名称<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="kg_name" type="text" class="layui-input required " autocomplete="off"/></td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">投资方名称<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="kg_investor" type="text" class="layui-input required " autocomplete="off"/></td>
+                            <td class="td-label">项目地址<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="kg_project_address" type="text" class="layui-input required " autocomplete="off"/></td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">签约日期<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="kg_signed_date" type="text" lay-reqtext="请输入签约日期" lay-verify="required" class="layui-input  layui-inline required "
+                                       autocomplete="off" readonly></td>
+                            <td class="td-label">项目类型<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <div class="layui-inline required "><input name="kg_b_industry" type="radio" checked value="1"
+                                                                           title="服务业"
+                                                                           lay-filter="kg_b_industry"></div>
+                                <div class="layui-inline required "><input name="kg_b_industry" type="radio" value="2" title="工业"
+                                                                           lay-filter="kg_b_industry"></div>
+                            </td>
+                        </tr>
+<!--                        <tr>-->
+<!--                            <td class="td-label">科创项目<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td>-->
+<!--                                <div>-->
+<!--                                    <input name="kg_is_kc_proj" type="radio" disabled value="是" title="是"-->
+<!--                                           lay-filter="kg_is_kc_proj">-->
+<!--                                    <input name="kg_is_kc_proj" type="radio" disabled value="否" title="否"-->
+<!--                                           lay-filter="kg_is_kc_proj">-->
+<!--                                </div>-->
+<!--                                <div id="kg_kc_proj_div" style="display: none">-->
+<!--                                    符合科创项目认定条件-->
+<!--                                    <input id="kg_kc_proj_tj" type="text" class="layui-input" autocomplete="off"/>-->
+<!--                                </div>-->
+<!--                                <select id="kg_kc_proj_type" name="kg_kc_proj_type" class=" layui-select required">-->
+<!--                                    <option value="">请选择</option>-->
+<!--                                    <option value="知识产权类">知识产权类</option>-->
+<!--                                    <option value="高层次人才类">高层次人才类</option>-->
+<!--                                    <option value="科技计划或大赛类">科技计划或大赛类</option>-->
+<!--                                    <option value="风险投资类">风险投资类</option>-->
+<!--                                    <option value="省市产研院类">省市产研院类</option>-->
+<!--                                    <option value="重大创新平台类">重大创新平台类</option>-->
+<!--                                    <option value="签约工业、服务业项目转科创项目">签约工业、服务业项目转科创项目</option>-->
+<!--                                </select>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <tr>
+<!--                            <td class="td-label">科创项目<span style="color: red;font-size: 18px">*</span></td>-->
+<!--                            <td><div>-->
+<!--                                <input name="kg_is_kc_proj" type="radio" disabled value="是" title="是"-->
+<!--                                       lay-filter="kg_is_kc_proj">-->
+<!--                                <input name="kg_is_kc_proj" type="radio" disabled value="否" title="否"-->
+<!--                                       lay-filter="kg_is_kc_proj">-->
+<!--                            </div>-->
+<!--                            <div id="kg_kc_proj_div" style="display: none">-->
+<!--                                符合科创项目认定条件-->
+<!--                                <input id="kg_kc_proj_tj" type="text" class="layui-input" autocomplete="off"/>-->
+<!--                            </div></td>-->
+                            <td class="td-label">QFLP外资项目<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <select id="kg_is_qflp" class=" layui-select required">
+                                    <option value="">请选择</option>
+                                    <option value="是">是</option>
+                                    <option value="否">否</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">统一社会信用代码<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="kg_u_code" type="text" class="layui-input required " autocomplete="off"/></td>
+                            <td class="td-label">注册日期<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="kg_reg_date" type="text" disabled class="layui-input required "
+                                       autocomplete="off" readonly/></td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">主要产品、产能及主要建设内容<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="kg_desc" type="text" class="layui-input required " autocomplete="off"/></td>
+                            <td class="td-label">行业分类及代码<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input id="kg_industry_name" type="hidden" class="layui-input  "/>
+                                <div>
+                                    <input id="kg_industry_code" name="industry_code" lay-filter="kg_industry_code" class="layui-input"
+                                            type="text" autocomplete="off"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">产业方向<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <div>
+                                    <input id="kg_proj_type" type="text" lay-filter="kg_proj_type"
+                                           readonly class="layui-input "/>
+                                </div>
+                            </td>
+                            <td class="td-label">总投资<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input id="kg_invest_money" type="text" class="layui-input required" lay-reqtext="请输入项目总投资" lay-verify="required" autocomplete="off"
+                                       rule="ffs" style="width: 150px" min="0" maxlength="10"/>
+                                <span id="span1" style="width: 45px;text-align: center"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">固定资产投资（<span>万元</span>）<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input id="kg_fixed_invest" lay-reqtext="请输入固定资产投资" lay-verify="required" type="text" class="layui-input required" autocomplete="off"/>
+                            </td>
+                            <td class="td-label">批准部门及文号<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="pzwh" placeholder="内资填核准、备案机关文号，外资填商务部门审批文号。" type="text" class="layui-input required " autocomplete="off"/></td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">批准日期<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input id="pzrq" type="text" disabled class="layui-input required "
+                                       autocomplete="off" readonly/>
+                            </td>
+                            <td class="td-label">成效情况说明<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="cxqk" type="text" placeholder="请对照成效评估办法，补充其他需要说明的情况。" class="layui-input required " autocomplete="off"/></td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">佐证材料<span style="color: red;font-size: 18px">*</span></td>
+                            <td colspan="3">
+                                <ul id="file_project2">
+                                </ul>
+                                <button id="uploadDetail2" type="button" class="layui-btn"
+                                        style="text-align: center;float: right;">
+                                    <i class="layui-icon">&#xe67c;</i>上传文件
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">开工日期<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="start_date_commit" type="text" disabled class="layui-input required "
+                                       autocomplete="off" readonly/></td>
+                        </tr>
+<!--                        <tr id="saveBeginningTT" need-hide style="display: none">-->
+<!--                            <td colspan="4" style="text-align: center;font-weight: 600;line-height: 3;">-->
+<!--                                请确认该项目是否已通过发改委开工认定，开工确认后不可修改确认时间。-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <tr id="saveBeginningTR">
+                            <td colspan="4" style="text-align: right;">
+                                <!--                                <button id="cancelBeginning" class="layui-btn layui-btn-primary"-->
+                                <!--                                        q-method="cancelBeginning">取消-->
+                                <!--                                </button>-->
+                                <button id="saveBeginning" disabled class="layui-btn layui-bg-blue  "
+                                        q-method="saveBeginning">开工确认
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--        竣工-->
+        <div class="layui-tab-item" id="end">
+            <div class="detail-content">
+                <div class="layui-form">
+                    <table id="endMSG" class="layui-table ">
+<!--                        <tr>-->
+<!--                            <td class="td-label">竣工确认<span style="color: red;font-size: 18px">*</span>-->
+<!--                            </td>-->
+<!--                            <td><input name="jgqr" type="radio" disabled value="1" title="是"-->
+<!--                                       lay-filter="jgqr">-->
+<!--                                <input name="jgqr" type="radio" disabled value="0" title="否"-->
+<!--                                       lay-filter="jgqr"></td>-->
+<!--                        </tr>-->
+                        <tr id="jg_zkc_div" style="display: none">
+                            <td class="td-label">是否为签约工业、服务业项目转科创项目<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <input name="jg_is_zkc" type="radio" disabled value="是" title="是"
+                                       lay-filter="jg_is_zkc">
+                                <input name="jg_is_zkc" type="radio" disabled value="否" title="否"
+                                       lay-filter="jg_is_zkc">
+                            </td>
+                        </tr>
+                        <tr class="qy_info" style="display: none">
+                            <td class="td-label">企业总人数<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="qy_total_num" type="text" class="layui-input " autocomplete="off"/></td>
+                            <td class="td-label">缴纳社保2个月以上人数<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="qy_sb_num" type="text" class="layui-input " autocomplete="off"/></td>
+                        </tr>
+                        <tr class="qy_info" style="display: none">
+                            <td class="td-label">企业在泰研发人数<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="qy_tzyf_num" type="text" class="layui-input " autocomplete="off"/></td>
+                            <td class="td-label">企业当年度研发投入（万元）<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="qy_yf_money" type="text" class="layui-input " autocomplete="off"/></td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">佐证材料<span style="color: red;font-size: 18px">*</span></td>
+                            <td>
+                                <p id="jg_message" style="color: red;display: none" >除上传竣工所需佐证材料外，还需上传如下证明材料：企业缴纳社保参保单、专利证书或受理通知书证明材料</p>
+                                <ul id="file_project3">
+                                </ul>
+                                <button id="uploadDetail3" type="button" class="layui-btn"
+                                        style="text-align: center;float: right;">
+                                    <i class="layui-icon">&#xe67c;</i>上传文件
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">竣工日期<span style="color: red;font-size: 18px">*</span></td>
+                            <td><input id="complete_date" type="text" disabled class="layui-input required "
+                                       autocomplete="off" readonly/></td>
+                        </tr>
+<!--                        <tr id="saveEndTT" need-hide style="display: none">-->
+<!--                            <td colspan="4" style="text-align: center;font-weight: 600;line-height: 3;">-->
+<!--                                请确认该项目是否已经通过发改委竣工认定，竣工确认后不可修改确认时间。-->
+<!--                            </td>-->
+<!--                        </tr>-->
+                        <tr id="saveEndTR">
+                            <td colspan="4" style="text-align: right;">
+                                <!--                                <button id="cancelEnd" class="layui-btn layui-btn-primary" q-method="cancelEnd">取消-->
+                                <!--                                </button>-->
+                                <button id="saveEnd" class="layui-btn layui-bg-blue " disabled q-method="saveEnd">竣工确认
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--审核不通过-->
+<div lay-filter="failBack" id="failBack" style="display: none;width:600px;height: 400px;">
+
+    <table class="layui-table">
+        <tr>
+            <td>驳回原因</td>
+        </tr>
+        <tr>
+            <td>
+                <div id="backText" name="backValue" style="height: 300px;" type="text" class="layui-textarea"
+                     autocomplete="off" readonly></div>
+            </td>
+        </tr>
+    </table>
+</div>
+<!--备注信息-->
+<div id="remarksDetail" style="display: none;margin: 0 auto;width: 500px;height: 300px;" class="layui-form"
+     lay-filter="remarksDetail">
+    <div class="detail-content" style="padding-top: 0;">
+        <table class="layui-table">
+            <tr>
+                <td>备注信息</td>
+            </tr>
+            <tr>
+                <td>
+                    <textarea class="layui-textarea" id="remarks" type="text" autocomplete="off"></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="text-right">
+                <div class="layui-form-item" style="margin-right: 30px;">
+                    <button class="layui-btn layui-btn-primary" q-method="btnCancel">取消</button>
+                    <button class="layui-btn layui-bg-blue" q-method="saveRemarks">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="htmlToPdfDetail" style="display: none;margin: 0 auto;width: 800px;height: 550px;" class="layui-form"
+     lay-filter="htmlToPdfDetail">
+    <iframe id="xyIframe" src="" style="width:100%;height: 1000px" frameborder="0"></iframe>
+    <!--    <div class="detail-content" style="padding-top: 0;">-->
+<!--        <h2>项目签约协议书</h2>-->
+<!--        <p>招商方：XXXXXXXXXXXXX开发区管理委员会    （下称甲方）</p>-->
+<!--        <p>投资方：                                  （下称乙方）</p>-->
+<!--        <p>为发展经济，实现共赢，甲、乙双方本着诚实信用和平等自愿的原则，就乙方赴XX 经济开发区   投资兴办实体项目事宜，经协商一致，订立本项目签约协议。</p>-->
+<!--        <h3>一、项目概况</h3>-->
+<!--        <p>1、项目名称：                       项目。</p>-->
+<!--        <p>2、项目计划总投资    亿元。</p>-->
+<!--        <p>3、项目由乙方出资，负责项目的实施和运营，注册资本不低-->
+<!--            于       万元。-->
+<!--        </p>-->
+<!--        <h3>二、项目用地</h3>-->
+<!--        <p>项目拟用土地位于                     ，面积约    亩（具体以自规部门挂牌出让面积为准），土地用途为工业用地，使用年限为50年，按法定程序取得土地使用权。</p>-->
+<!--        <h3>三、规划建设</h3>-->
+<!--        <p>1、项目建设须服从国家有关规定及开发区整体规划，且不得擅自改变土地用途。</p>-->
+<!--        <p>2、项目建设规划设计方案必须经自规部门批准。</p>-->
+<!--        <p>3、项目建设须通过相关部门评审并履行报建手续。</p>-->
+<!--        <h3>四、甲方的权利和义务</h3>-->
+<!--        <p>1、有权监督乙方依法进行项目建设和运营。</p>-->
+<!--        <p>2、负责项目用地的征地补偿、清障工作，负担相关费用；负责与自规部门对接，尽快促成自规部门组织项目用地挂牌。</p>-->
+<!--        <p>3、指导乙方按照项目建设的有关程序进行项目立项、规划设计、工程招标、报建及受监，指导乙方按规划要求施工；负责将基础设施配套至乙方项目用地红线外，专户供电等特殊要求除外。</p>-->
+<!--        <p>4、为乙方建设过程中各项手续办理，提供一条龙服务，但有关部门收取的费用由乙方负担。</p>-->
+<!--        <p>5、协调乙方在项目设计、建设、经营过程中遇到的矛盾和问题。</p>-->
+<!--        <p>6、帮助乙方申报国家、省、市、区的政策扶持。</p>-->
+<!--        <h3>五、乙方的权利和义务</h3>-->
+<!--        <p>1、有权独立自主经营、独立享有经营收益、独立承担民事责任。</p>-->
+<!--        <p>2、依法及时参加自规部门组织的项目用地使用权出让活动，主动申请办理用地和建设许可及相关手续，按规定全额缴纳相关费用。</p>-->
+<!--        <p>3、自乙方取得项目用地手续后，       前全部开工建设；开工建设后于     完成全部厂房建设，并投产运营。</p>-->
+<!--        <p>4、自乙方达产后，第一年开票销售不低于     万元，入库税收不低于     万元；第二年开票销售不低于     万元，入库税收不低于     万元；第三年开票销售不低于     万元，入库税收不低于_     万元（开票销售和入库税收金额以甲方辖区内税务机关提供的数据为准）。</p>-->
+<!--        <h3>六、违约责任</h3>-->
+<!--        <p>1、乙方未完全履行本协议约定义务的（因不可抗拒的原因除外），甲方有权责令乙方限期改正；经责令限改无效或者乙方在合理的宽限期内未改正到位；或者不存在顺延理由；甲方有权解除或终止本协议。</p>-->
+<!--        <p>2、因乙方原因导致本协议解除或终止时，甲方有权收购土地及地上建筑物、构筑物、附属设施等，并由双方共同认可的有资质的评估机构进行价格评估，双方如不能共同选定评估机构，由甲方从有资质的评估机构中，采用招标方法确定评估机构进行价格评估，并以不高于评估价的80%确定收购价款（差额部分系作为对甲方因履行招商引资协议第四条第2款、第3款约定义务的补偿）。</p>-->
+<!--        <p>3、如因甲方责任或其他非乙方责任使项目用地未挂牌或交付，导致项目延期的，乙方履行义务的期限相应顺延。</p>-->
+<!--        <h3>七、附则 </h3>-->
+<!--        <p>1、本协议与国家法律、法规相悖的，按国家法律、法规执行。</p>-->
+<!--        <p>2、如因履行本协议发生纠纷而引起诉讼的，由甲方所在地人民法院管辖。</p>-->
+<!--        <p>3、本协议书一式四份，甲方执存两份，乙方执存两份，本协议自双方签字盖章之日起生效。</p>-->
+<!--        <p>-->
+<!--            <span>甲方盖章:</span>-->
+<!--            <span>乙方盖章:</span>-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            <span>代表签名:</span>-->
+<!--            <span>代表签名:</span>-->
+<!--        </p>-->
+<!--        <p>签约时间: 年 月 日</p>-->
+<!--    </div>-->
+<!--    <div class="xmqyxy">-->
+<!--        <div class="watermark">项目签约协议书</div>-->
+<!--        <div class="page-border">-->
+<!--            <div class="header">-->
+<!--                <h1>项目签约协议书</h1>-->
+<!--            </div>-->
+
+<!--            <div class="parties">-->
+<!--                <p>招商方：<span class="underline">${jf}开发区管理委员会</span>（下称甲方）</p>-->
+<!--                <p>投资方：<span class="underline">${yf}</span>（下称乙方）</p>-->
+<!--            </div>-->
+
+<!--            <p class="agreement-text">为发展经济，实现共赢，甲、乙双方本着诚实信用和平等自愿的原则，就乙方赴<span class="underline">${jjkfq}经济开发区</span>投资兴办实体项目事宜，经协商一致，订立本项目签约协议。</p>-->
+
+<!--            <div class="section-title">一、项目概况</div>-->
+<!--            <div class="section-content">-->
+<!--                <ol>-->
+<!--                    <li>项目名称：<span class="underline">${name}</span>项目。</li>-->
+<!--                    <li>项目计划总投资<span class="underline">${ztz}</span>亿元。</li>-->
+<!--                    <li>项目由乙方出资，负责项目的实施和运营，注册资本不低于<span class="underline">${zcz}</span>万元。</li>-->
+<!--                </ol>-->
+<!--            </div>-->
+
+<!--            <div class="section-title">二、项目用地</div>-->
+<!--            <div class="section-content">-->
+<!--                <p>项目拟用土地位于<span class="underline">${wz}</span>，面积约<span class="underline">${wj}</span>亩（具体以自规部门挂牌出让面积为准），土地用途为工业用地，使用年限为50年，按法定程序取得土地使用权。</p>-->
+<!--            </div>-->
+
+<!--            <div class="section-title">三、规划建设</div>-->
+<!--            <div class="section-content">-->
+<!--                <ol>-->
+<!--                    <li>1、项目建设须服从国家有关规定及开发区整体规划，且不得擅自改变土地用途。</li>-->
+<!--                    <li>2、项目建设规划设计方案必须经自规部门批准。</li>-->
+<!--                    <li>3、项目建设须通过相关部门评审并履行报建手续。</li>-->
+<!--                </ol>-->
+<!--            </div>-->
+
+<!--            <div class="section-title">四、甲方的权利和义务</div>-->
+<!--            <div class="section-content">-->
+<!--                <ol>-->
+<!--                    <li>1、有权监督乙方依法进行项目建设和运营。</li>-->
+<!--                    <li>2、负责项目用地的征地补偿、清障工作，负担相关费用；负责与自规部门对接，尽快促成自规部门组织项目用地挂牌。</li>-->
+<!--                    <li>3、指导乙方按照项目建设的有关程序进行项目立项、规划设计、工程招标、报建及受监，指导乙方按规划要求施工；负责将基础设施配套至乙方项目用地红线外，专户供电等特殊要求除外。</li>-->
+<!--                    <li>4、为乙方建设过程中各项手续办理，提供一条龙服务，但有关部门收取的费用由乙方负担。</li>-->
+<!--                    <li>5、协调乙方在项目设计、建设、经营过程中遇到的矛盾和问题。</li>-->
+<!--                    <li>6、帮助乙方申报国家、省、市、区的政策扶持。</li>-->
+<!--                </ol>-->
+<!--            </div>-->
+
+<!--            <div class="section-title">五、乙方的权利和义务</div>-->
+<!--            <div class="section-content">-->
+<!--                <ol>-->
+<!--                    <li>1、有权独立自主经营、独立享有经营收益、独立承担民事责任。</li>-->
+<!--                    <li>2、依法及时参加自规部门组织的项目用地使用权出让活动，主动申请办理用地和建设许可及相关手续，按规定全额缴纳相关费用。</li>-->
+<!--                    <li>3、自乙方取得项目用地手续后，<span class="underline">${kgrq}</span>前全部开工建设；开工建设后于<span class="underline">${wcrq}</span>完成全部厂房建设，并投产运营。</li>-->
+<!--                    <li>4、自乙方达产后，第一年开票销售不低于<span class="underline">${xe}</span>万元，入库税收不低于<span class="underline">${rk}</span>万元；第二年开票销售不低于<span class="underline">${xe2}</span>万元，入库税收不低于<span class="underline">${rk2}</span>万元；第三年开票销售不低于<span class="underline">${xe3}</span>万元，入库税收不低于<span class="underline">${rk3}</span>万元（开票销售和入库税收金额以甲方辖区内税务机关提供的数据为准）。</li>-->
+<!--                </ol>-->
+<!--            </div>-->
+
+<!--            <div class="section-title">六、违约责任</div>-->
+<!--            <div class="section-content">-->
+<!--                <ol>-->
+<!--                    <li>1、乙方未完全履行本协议约定义务的（因不可抗拒的原因除外），甲方有权责令乙方限期改正；经责令限改无效或者乙方在合理的宽限期内未改正到位；或者不存在顺延理由；甲方有权解除或终止本协议。</li>-->
+<!--                    <li>2、因乙方原因导致本协议解除或终止时，甲方有权收购土地及地上建筑物、构筑物、附属设施等，并由双方共同认可的有资质的评估机构进行价格评估，双方如不能共同选定评估机构，由甲方从有资质的评估机构中，采用招标方法确定评估机构进行价格评估，并以不高于评估价的80%确定收购价款（差额部分系作为对甲方因履行招商引资协议第四条第2款、第3款约定义务的补偿）。</li>-->
+<!--                    <li>3、如因甲方责任或其他非乙方责任使项目用地未挂牌或交付，导致项目延期的，乙方履行义务的期限相应顺延。</li>-->
+<!--                </ol>-->
+<!--            </div>-->
+
+<!--            <div class="section-title">七、附则</div>-->
+<!--            <div class="section-content">-->
+<!--                <ol class="word-fz">-->
+<!--                    <li>1、本协议与国家法律、法规相悖的，按国家法律、法规执行。</li>-->
+<!--                    <li>2、如因履行本协议发生纠纷而引起诉讼的，由甲方所在地人民法院管辖。</li>-->
+<!--                    <li>3、本协议书一式四份，甲方执存两份，乙方执存两份，本协议自双方签字盖章之日起生效。</li>-->
+<!--                </ol>-->
+<!--            </div>-->
+
+<!--            <div class="signature-area">-->
+<!--                <div class="signature-row">-->
+<!--                    <div class="signature-item">甲方盖章：</div>-->
+<!--                    <div class="signature-item">乙方盖章：</div>-->
+<!--                </div>-->
+
+<!--                <div class="signature-row">-->
+<!--                    <div class="signature-item">代表签名：</div>-->
+<!--                    <div class="signature-item">代表签名：</div>-->
+<!--                </div>-->
+
+<!--                <div class="signature-date">签约时间：<span class="sd-i">年</span><span class="sd-i">月</span><span class="sd-i">日</span></div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="layui-row">-->
+<!--        <div class="layui-col-md12">-->
+<!--            <div class="text-right">-->
+<!--                <div class="layui-form-item" style="margin-right: 30px;">-->
+<!--                    <button class="layui-btn layui-btn-primary" q-method="btnCancel">取消</button>-->
+<!--                    <button class="layui-btn layui-bg-blue">下载PDF</button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+</div>
+<!--创建园区树-->
+<div id="zone" style="display: none;">
+    <div id="ZoneData"></div>
+    <button id="selectZoneOk" class="layui-btn" style="margin-left: 150px">确定</button>
+</div>
+<!--头部创建园区树-->
+<div id="zoneTitle" style="display: none;">
+    <div id="ZoneDataTitle"></div>
+    <button id="selectZoneTitleOk" class="layui-btn" style="margin-left: 150px">确定</button>
+</div>
+<!--创建街道树-->
+<div id="town" style="display: none;">
+    <div id="TownData"></div>
+    <button id="selectTownOk" class="layui-btn" style="margin-left: 150px">确定</button>
+</div>
+<!--创建头部街道数-->
+<div id="townTitle" style="display: none;">
+    <div id="TownDataTitle"></div>
+    <button id="selectTownTitleOk" class="layui-btn" style="margin-left: 150px">确定</button>
+</div>
+<!--创建项目类型树-->
+<div id="selectParentProjTypeTree" class="treediv" style="display: none;width: 380px; height: 300px">
+    <div id="ProjTypeTree" class="tree">&nbsp;</div>
+    <div style="text-align: center">
+        <button id="btnSelectParentProjTypeOk" class="layui-btn">确定</button>
+    </div>
+</div>
+<!--创建头部项目类型树-->
+<div id="selectParentProjTypeTreeTitle" class="treediv" style="display: none;width: 380px; height: 300px">
+    <div id="ProjTypeTreeTitle" class="tree">&nbsp;</div>
+    <div style="text-align: center">
+        <button id="btnSelectParentProjTypeTitleOk" class="layui-btn">确定</button>
+    </div>
+</div>
+<!--创建行业树-->
+<div id="select_industry_tree" class="treediv" style="display: none;width: 380px; height: 300px">
+    <div id="selectIndustry" class="tree">&nbsp;</div>
+    <div style="text-align: center">
+        <button id="btnSelectIndustryOk" class="layui-btn">确定</button>
+    </div>
+</div>
+<!--p_type:1.内 2.外资    invest_money:投资额  check_status:审核状态 1-市级审核通过 2-市区审核通过  progress：进度-->
+<!--市区审核通过或者市级审核通过==根据项目p_type,invest_money,check_status-->
+<!--大表格操作通过模板-->
+<!--check_status=1，progress！=2，3 市级审核通过,进度不为2，3·-->
+<!--d.progress===0 &&  d.check_status=== 0 ||d.progress===0 &&  d.check_status=== 3 ||d.progress===0 &&  d.check_status=== 4||d.progress===0 && d.check_status=== 2 && d.invest_money>5 && d.p_type===1 ||d.progress===0 && d.check_status=== 2 && d.invest_money>3000 && d.p_type===2-->
+<script type="text/html" id="operations">
+    {{#
+    var user_info = JSON.parse(_UTIL.storage.get("USER_INFO"));
+    }}
+    <a title="备注" permission="saveRemarks" class="layui-btn layui-btn-xs layui-bg-green" lay-event="remarks"><i
+            class="iconfont">&#xe63a;</i></a>
+    {{#  if( (d.progress === 0 && d.check_status == 1) || d.progress > 0 ){ }}
+    <a title="项目进度" class="layui-btn layui-btn-xs layui-bg-green" lay-event="progress1"><i
+            class="iconfont icon-xuexijindu "></i></a>
+    {{#  } }}
+    <a title="到账资金" class="layui-btn layui-btn-xs" lay-event="receivedMoneyEdit"><i
+            class="iconfont  icon-zidongtoubiao"></i></a>
+    {{# if((user_info.user_level != 3 && user_info.user_level != 4 && user_info.user_level != 2) || d.check_status == 4 || ((user_info.user_level == 3 || user_info.user_level == 4 || user_info.user_level == 2) && ((d.progress === 0 && (d.check_status == 0 || d.check_status == 3 )) || d.progress === undefined || d.progress === null))){ }}
+    <a title="查看修改" class="layui-btn layui-btn-xs layui-bg-orange" lay-event="edit"><i class="iconfont">&#xe6b7;</i></a>
+    {{#  } }}
+    {{# if( user_info.user_level == 1 || d.check_status == 4 || (user_info.user_level != 1 && (d.progress == 0 && (d.check_status == 0 || d.check_status == 3 )))){ }}
+    <a title="删除" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i
+            class="iconfont">&#xe71a;</i></a>
+    {{#  } }}
+</script>
+<script type="text/html" id="operations1">
+    <a title="详情" class="layui-btn layui-btn-xs layui-bg-green" lay-event="showband" style="margin-left: 20px">详情</a>
+    <a title="绑定" class="layui-btn layui-btn-xs layui-bg-green" lay-event="band">绑定</a>
+</script>
+<script type="text/html" id="operations2">
+    <a title="详情" class="layui-btn layui-btn-xs layui-bg-green" lay-event="showband2" style="margin-left: 20px">详情</a>
+    <a title="绑定" class="layui-btn layui-btn-xs layui-bg-green" lay-event="band2">绑定</a>
+</script>
+<!--项目类别-->
+<script type="text/html" id="colsp_type">
+    {{#  if(d.p_type=== 1){ }}
+    <span>内资</span>
+    {{#  } else if(d.p_type === 2) { }}
+    <span style="color: #08aeef">外资</span>
+    {{#  } }}
+</script>
+<script type="text/html" id="tpl_invest_money">
+    {{#  if(d.p_type=== 1){ }}
+    <span>{{d.invest_money}} 亿元</span>
+    {{#  } else if(d.p_type === 2) { }}
+    <span style="color: #08aeef">{{d.invest_money}} 万美元</span>
+    {{#  } }}
+</script>
+<!--审核状态-->
+<script type="text/html" id="colscheck_status">
+    {{#  if(d.check_status=== 0){ }}
+    <span>待审核</span>
+    {{#  } else if(d.check_status ===1) { }}
+    <span>市级审核通过</span>
+    {{#  } else if(d.check_status === 2) { }}
+    <span>市区审核通过</span>
+    {{#  } else if(d.check_status === 3) { }}
+    <span lay-event="failPass1" title="点击查看原因" style="color: red;cursor: pointer">审核不通过</span>
+    {{#  } else if(d.check_status === 4) { }}
+    <span>保存未提交</span>
+    {{#  } }}
+</script>
+<!--项目名称-->
+<script type="text/html" id="colsname">
+    <span style="color: #08aeef;cursor: pointer;" lay-event="details">{{d._name}}</span>
+</script>
+<!--评估状态-->
+<script type="text/html" id="pgStatus">
+    <span style="color: #08aeef;cursor: pointer;" lay-event="pgDetails">{{d.pg_status == 2 ? '已评估' : d.pg_status == 1 ? '未评估' : d.pg_status == 3 ? '无需评估' : '暂无'}}</span>
+</script>
+<!--当前进度-->
+<script type="text/html" id="colsprogress">
+    {{#  if(d.progress=== 0){ }}
+    <span>已签约</span>
+    {{#  }else if(d.progress === 1) { }}
+    <span>已注册</span>
+    {{#  }else if(d.progress === 2) { }}
+    <span>已开工</span>
+    {{#  }else if(d.progress === 3) { }}
+    <span>已竣工</span>
+    {{#  } else if(d.progress === 4) { }}
+    <span>完成报批</span>
+    {{#  } else if(d.progress === 5) { }}
+    <span>已备案</span>
+    {{#  } }}
+</script>
+<!--认定进度-->
+<script type="text/html" id="colspassProgress">
+    {{#  if(d.progress=== 0 && d.check_status === 1 ||d.progress=== 1 && d.check_status != 1){ }}
+    <span>已签约</span>
+    {{#  }else if(d.progress=== 1 && d.check_status === 1 || d.progress=== 5 && d.check_status != 1) { }}
+    <span>已注册</span>
+    {{#  }else if(d.progress=== 2 && d.check_status === 1 || d.progress=== 3 && d.check_status != 1) { }}
+    <span>已开工</span>
+    {{#  }else if(d.progress=== 3 && d.check_status === 1) { }}
+    <span>已竣工</span>
+    {{#  } else if(d.progress=== 4 && d.check_status === 1 || d.progress=== 2 && d.check_status != 1) { }}
+    <span>已报批</span>
+    {{#  } else if(d.progress=== 5 && d.check_status === 1 || d.progress=== 4 && d.check_status != 1) { }}
+    <span>已备案</span>
+    {{#  } }}
+</script>
+<!--是否为六大产业-->
+<script type="text/html" id="showis_sixpro">
+    {{#  if(d.is_sixpro === 1){ }}
+    <span>是</span>
+    {{#  }else if(d.is_sixpro === 2) { }}
+    <span>否</span>
+    {{#  } }}
+</script>
+<!--六大产业名称-->
+<script type="text/html" id="showSixpro_code">
+    {{#  if(d.sixpro_code === 1){ }}
+    <span>高技术船舶</span>
+    {{#  }else if(d.sixpro_code === 2) { }}
+    <span>汽车及零部件</span>
+    {{#  }else if(d.sixpro_code === 3) { }}
+    <span>精细化工</span>
+    {{#  }else if(d.sixpro_code === 4) { }}
+    <span>石油化工</span>
+    {{#  } else if(d.sixpro_code === 5) { }}
+    <span>生物医药</span>
+    {{#  } else if(d.sixpro_code === 6) { }}
+    <span>新能源</span>
+    {{#  } }}
+</script>
+<!--所属行业-->
+<script type="text/html" id="closB_industry">
+    {{#  if(d.b_industry=== 1){ }}
+    <span>服务业</span>
+    {{#  } else if(d.b_industry === 2) { }}
+    <span>工业</span>
+    {{#  } }}
+</script>
+<!--投资方注册地-->
+<script type="text/html" id="closInvestor_place">
+    <span>{{ getInvestorPlaceName(d.investor_place) }}</span>
+</script>
+<!--投资方性质-->
+<script type="text/html" id="closInvestor_type">
+    {{#  if(d.investor_type === 10){ }}
+    <span>央企</span>
+    {{#  }else if(d.investor_type === 20) { }}
+    <span>民营巨头</span>
+    {{#  }else if(d.investor_type === 30) { }}
+    <span>世界500强或跨国公司</span>
+    {{#  }else if(d.investor_type === 40) { }}
+    <span>其他</span>
+    {{#  } }}
+</script>
+<!--所属行业-->
+<script type="text/html" id="colsis_fixed_asset">
+    {{#  if(d.is_fixed_asset=== 1){ }}
+    <span>是</span>
+    {{#  } else if(d.is_fixed_asset === 2) { }}
+    <span>否</span>
+    {{#  } }}
+</script>
+<script type="text/html" id="toolbars">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add"><i class="iconfont  icon-weibiaoti--"></i>&nbsp;&nbsp;新项目
+        </button>
+        <button id="out" class="layui-btn layui-btn-sm" lay-event="out">导出</button>
+    </div>
+</script>
+
+<script type="text/javascript" src="../../assets/libs/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../assets/libs/layui/layui.js?v=20"></script>
+<script type="text/javascript" src="../../assets/js/common.js?v=20210902"></script>
+<script type="text/javascript" src="../../assets/jstree/jstree.js"></script>
+<script type="text/javascript" src="../../assets/js/util.js?v=20210902"></script>
+<script type="text/javascript" src="signed.js?v=202109028"></script>
+
+</body>
+</html>

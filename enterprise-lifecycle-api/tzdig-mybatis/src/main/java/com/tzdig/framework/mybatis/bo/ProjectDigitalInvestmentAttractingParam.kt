@@ -1,0 +1,109 @@
+package com.tzdig.framework.mybatis.bo
+
+import io.swagger.v3.oas.annotations.media.Schema
+import java.time.LocalDate
+
+data class ProjectDigitalInvestmentAttractingParam(
+    @get:Schema(description = "年份")
+    val year: Int? = null,
+    @get:Schema(description = "园区")
+    val park: String? = null,
+    @get:Schema(description = "市区")
+    val district: String? = null,
+    @get:Schema(description = "是否仅当月", defaultValue = "false")
+    val currentMonth: Boolean = false,
+    @get:Schema(description = "项目代码")
+    val projectCode: String? = null,
+    @get:Schema(description = "项目名称")
+    val projectName: String? = null,
+    @get:Schema(description = "当前项目进度", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    val currentProjectProgress: List<String> = emptyList(),
+    @get:Schema(description = "是否已签约")
+    val signedProject: Boolean? = null,
+    @get:Schema(description = "项目来源")
+    val projectSource: String? = null,
+    @get:Schema(description = "产业链类型")
+    val projectCategory: String? = null,
+    @get:Schema(description = "项目内容")
+    val projectContent: String? = null,
+    @get:Schema(description = "投资标识")
+    val investmentFlag: String? = null,
+    @get:Schema(description = "投资人")
+    val investor: String? = null,
+    @get:Schema(description = "投资金额1")
+    val investmentAmount1: Double? = null,
+    @get:Schema(description = "投资金额2")
+    val investmentAmount2: Double? = null,
+    @get:Schema(description = "是否是质量评价")
+    val isQualityEvaluation: Boolean? = null,
+    @get:Schema(description = "质量评价是否已完成")
+    val qualityEvaluationCompleted: Boolean? = null,
+    @get:Schema(description = "是否需要项目审核")
+    val isProjectReview: Boolean? = null,
+    @get:Schema(description = "项目审核是否已完成")
+    val projectReviewCompleted: Boolean? = null,
+    @get:Schema(description = "是否显示全部", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    val showAll: Boolean = true,
+    @get:Schema(description = "是否需要开工认定")
+    val isStartApproval: Boolean? = null,
+    @get:Schema(description = "是否需要竣工认定")
+    val isCompletionApproval: Boolean? = null,
+    @get:Schema(description = "招引单位")
+    val attractorUnit: String? = null,
+    @get:Schema(description = "是否三个大抓项目")
+    val isSDZProject: Boolean? = null,
+    @get:Schema(description = "工业或服务业")
+    val industryOrService: String? = null,
+    @get:Schema(description = "签约审核状态")
+    val signedProjectStatus: Int? = null,
+    @get:Schema(description = "开工审核状态")
+    val startApprovalStatus: Int? = null,
+    @get:Schema(description = "竣工审核状态")
+    val endApprovalStatus: String? = null,
+    @get:Schema(description = "质态评估审核状态")
+    val qualityEvaluationStatus: Int? = null,
+    @get:Schema(description = "申请时间开始")
+    val applyTime1: LocalDate? = null,
+    @get:Schema(description = "申请时间结束")
+    val applyTime2: LocalDate? = null,
+    @get:Schema(description = "实际签约时间开始")
+    val actualSigningTime1: LocalDate? = null,
+    @get:Schema(description = "实际签约时间结束")
+    val actualSigningTime2: LocalDate? = null,
+    @get:Schema(description = "签约统计时间开始")
+    val signingTime1: LocalDate? = null,
+    @get:Schema(description = "签约统计时间结束")
+    val signingTime2: LocalDate? = null,
+    @get:Schema(description = "开工审核完成时间开始")
+    val startApprovalTime1: LocalDate? = null,
+    @get:Schema(description = "开工审核完成时间结束")
+    val startApprovalTime2: LocalDate? = null,
+    @get:Schema(description = "竣工审核完成时间开始")
+    val endApprovalTime1: LocalDate? = null,
+    @get:Schema(description = "竣工审核完成时间结束")
+    val endApprovalTime2: LocalDate? = null,
+    @get:Schema(description = "备案统计时间开始")
+    val recordTime1: LocalDate? = null,
+    @get:Schema(description = "备案统计时间结束")
+    val recordTime2: LocalDate? = null,
+    @get:Schema(description = "开工时间开始")
+    val startTime1: LocalDate? = null,
+    @get:Schema(description = "开工时间结束")
+    val startTime2: LocalDate? = null,
+    @get:Schema(description = "竣工时间开始")
+    val endTime1: LocalDate? = null,
+    @get:Schema(description = "竣工时间结束")
+    val endTime2: LocalDate? = null,
+    @get:Schema(description = "是否项目推荐项目")
+    val isRecommendedProject: Boolean? = null,
+    @get:Schema(description = "是否列统项目")
+    val isListedProject: Boolean? = null,
+    @get:Schema(description = "备案证号")
+    val recordNumber: String? = null,
+    @get:Schema(description = "备案证名称")
+    val recordName: String? = null,
+    @get:Schema(description = "是否科创")
+    val isKc: Boolean? = null,
+    @get:Schema(description = "是否qflp")
+    val isQflp: Boolean? = null,
+)

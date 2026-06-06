@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>项目各阶段情况</title>
+    <!-- ECharts & Font Awesome -->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #f5f7fc;
+            font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+            padding-bottom: 70px;
+            color: #1e293b;
+        }
+
+        /* 返回按钮 */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 18px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.1rem;
+            z-index: 10;
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        .back-btn:active {
+            transform: scale(0.95);
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 50px;
+        }
+
+        /* 主容器 */
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #f5f7fc;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            min-height: 100vh;
+        }
+
+        /* 头部 */
+        .header {
+            background: linear-gradient(135deg, #0f2b3d 0%, #1b4a6e 100%);
+            color: white;
+            padding: 20px 18px 18px;
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+        }
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .header h1 i {
+            font-size: 1.5rem;
+            background: rgba(255,255,255,0.2);
+            padding: 6px;
+            border-radius: 50%;
+        }
+        .sub {
+            font-size: 0.75rem;
+            opacity: 0.85;
+            margin-top: 6px;
+            display: flex;
+            justify-content: right;
+            align-items: center;
+        }
+        .data-note {
+            background: rgba(255,255,255,0.12);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+        }
+
+        /* 底部导航栏 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 12px 16px;
+            border-top: 1px solid #e2e8f0;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.04);
+            z-index: 20;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            color: #5b6e8c;
+            transition: all 0.2s;
+            cursor: pointer;
+            flex: 1;
+            padding: 6px 0 4px;
+            border-radius: 30px;
+        }
+        .nav-item i {
+            font-size: 1.35rem;
+        }
+        .nav-item.active {
+            color: #1e6f3f;
+            background: #e9f4ef;
+            font-weight: 500;
+        }
+        /* 内容区 */
+        .page-content {
+            padding: 18px 16px 20px;
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .page-content.active-page {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /*内容区筛选按钮*/
+        .filter-btn {
+            padding: 2px 12px;
+            border: 1px solid #4e73df;
+            background: #fff;
+            color: #4e73df;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: #f8f9fc;
+        }
+
+        .filter-btn.active {
+            background: #4e73df;
+            color: #fff;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 16px 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #eef2f8;
+        }
+        .card-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            /*justify-content: space-between;*/
+            justify-content: space-between;
+            gap: 8px;
+            border-left: 4px solid #1e6f3f;
+            padding-left: 12px;
+            color: #0f2b3d;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s;
+        }
+        .card-title:hover {
+            opacity: 0.9;
+        }
+        .card-title i.toggle-icon {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+            color: #5b6e8c;
+        }
+        .card-title.collapsed i.toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .card-title a {
+            font-weight: 600;
+            font-size: 0.8rem;
+            align-items: flex-end;
+            margin-left: auto;
+        }
+
+        .collapse-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            max-height: 500px;
+            opacity: 1;
+        }
+        .collapse-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+        .stat-badge {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 12px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 1.7rem;
+            font-weight: 800;
+            /*color: #1e6f3f;*/
+            line-height: 1.2;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: #5b6e8c;
+            margin-top: 4px;
+        }
+        .rank-list {
+            margin-top: 8px;
+        }
+        .rank-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .rank-name {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .rank-num {
+            font-weight: 700;
+            color: #1f4f3a;
+        }
+        .medal {
+            width: 24px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .progress-bar {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .progress-fill {
+            background: #1e6f3f;
+            height: 100%;
+            border-radius: 4px;
+            width: 0%;
+        }
+        .chart-container {
+            height: 280px;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .insight-text {
+            font-size: 0.7rem;
+            color: #6c86a3;
+            background: #f1f5f9;
+            padding: 10px 12px;
+            border-radius: 18px;
+            margin-top: 12px;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .value-highlight {
+            font-weight: 700;
+            color: #1f4f3a;
+        }
+        hr {
+            margin: 12px 0;
+            border-color: #eef2f8;
+        }
+        .tag-sm {
+            background: #eef2ff;
+            color: #1e6f3f;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            /*绝对定位*/
+            /*position: absolute;*/
+            /*right: 50px;*/
+            margin-left: auto;
+        }
+        i.icon-mr {
+            margin-right: 6px;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.6rem;
+            color: #7c8ea0;
+            margin-top: 10px;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='dragonIndex.html'" title="返回首页">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <h1>重点项目情况</h1>
+        <div class="sub">
+            <span>2026 年 1-3 月</span>
+            <span class="data-note"><i class="far fa-calendar-alt"></i> 数据截至 3.20</span>
+        </div>
+    </div>
+
+    <!-- 页面内容容器 -->
+    <div id="homePage" class="page-content active-page">
+        <!--金额筛选-->
+        <div class="justify-content" style="gap: 10px; margin: 15px 0;">
+            <div style="display: flex; align-items: flex-start; gap: 10px; width: 100%;">
+                <span style="font-size: 13px; color: #666; min-width: 70px;">项目类型：</span>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; flex: 1;">
+                    <button class="filter-btn active" data-amount-key="shengKey">省重大</button>
+                    <button class="filter-btn" data-amount-key="shiKey">市重点</button>
+                </div>
+            </div>
+        </div>
+        <!-- 项目基本情况卡片 -->
+        <div class="card">
+            <div class="card-title" onclick="toggleCollapse('districtRankContent1', this)">
+               <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-trophy"></i> 项目基本情况
+               </span>
+               <i class="fas fa-chevron-up toggle-icon"></i>
+           </div>
+            <div id="districtRankContent1" class="collapse-content"><div style="display: flex; flex-direction: column; gap: 16px;">
+                <div><div class="flex-between"><span><i class="fas fa-handshake"></i> 项目数量排名</span><span class="tag-sm">龙头引领</span></div>
+                    <div id="proNumRankList" class="rank-list"></div></div>
+                <div><div class="flex-between"><span><i class="fas fa-hard-hat"></i> 计划总投资排名</span><span class="tag-sm">建设热度</span></div>
+                    <div id="jihuaRankList" class="rank-list"></div></div>
+                <div><div class="flex-between"><span><i class="fas fa-handshake"></i>年度投资排名</span><span class="tag-sm">目标进度</span></div>
+                    <div id="yearRankList" class="rank-list"></div></div>
+<!--            </div><div class="insight-text"><i class="fas fa-chart-line"></i> 医药高新区固投完成率 12.65% 领跑，姜堰区开工项目达 34 个全市第一。</div>-->
+            </div>
+            </div>
+        </div>
+            <!-- 年度投资完成情况卡片 -->
+        <div class="card">
+            <div class="card-title" onclick="toggleCollapse('districtRankContent2', this)">
+               <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-trophy"></i> 年度投资完成情况
+               </span>
+                <i class="fas fa-chevron-up toggle-icon"></i>
+            </div>
+            <div id="districtRankContent2" class="collapse-content collapsed"><div style="display: flex; flex-direction: column; gap: 16px;">
+                <div><div class="flex-between"><span><i class="fas fa-handshake"></i> 列统项目数排名</span><span class="tag-sm">龙头引领</span></div>
+                    <div id="lietongRankList" class="rank-list"></div></div>
+                <div><div class="flex-between"><span><i class="fas fa-hard-hat"></i> 实际入库投资排名</span><span class="tag-sm">建设热度</span></div>
+                    <div id="rukuRankList" class="rank-list"></div></div>
+                <div><div class="flex-between"><span><i class="fas fa-handshake"></i> 投资完成率排名</span><span class="tag-sm">目标进度</span></div>
+                    <div id="wanchenglvRankList" class="rank-list"></div></div>
+<!--            </div><div class="insight-text"><i class="fas fa-chart-line"></i> 医药高新区固投完成率 12.65% 领跑，姜堰区开工项目达 34 个全市第一。</div>-->
+                </div>
+            </div>
+        </div>
+            <!-- 项目开工情况卡片 -->
+        <div class="card">
+            <div class="card-title" onclick="toggleCollapse('districtRankContent3', this)">
+               <span style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-trophy"></i> 项目开工情况
+               </span>
+                <i class="fas fa-chevron-up toggle-icon"></i>
+            </div>
+            <div id="districtRankContent3" class="collapse-content collapsed"><div style="display: flex; flex-direction: column; gap: 16px;">
+                <div><div class="flex-between"><span><i class="fas fa-handshake"></i> 新开工项目数排名</span><span class="tag-sm">龙头引领</span></div>
+                    <div id="xinkaigongRankList" class="rank-list"></div></div>
+                <div><div class="flex-between"><span><i class="fas fa-hard-hat"></i> 已开工项目数排名</span><span class="tag-sm">建设热度</span></div>
+                    <div id="yikaigongRankList" class="rank-list"></div></div>
+                <div><div class="flex-between"><span><i class="fas fa-handshake"></i> 开工率排名</span><span class="tag-sm">目标进度</span></div>
+                    <div id="kaigonglvRankList" class="rank-list"></div></div>
+            </div><div class="insight-text"><i class="fas fa-chart-line"></i> 备注：
+                ①29个省重大产业项目中不包括市直高铁南站项目；
+                ②实际入库投资指1-2月实际入库投资情况；
+                ③投资完成率指实际入库投资占年度投资的比重；
+                ④新开工项目数指2026年计划新开工项目数；
+                ⑤已开工项目数指2026年计划新开工项目中已开工建设项目数；
+                数据由市发改委、市统计局提供。</div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<script>
+    // 省重大项目数据
+    const shengKey_districts = [
+        { name: "靖江市", pro_num_1e: 7,jihua_le:199.9 , year_1e: 38.0  , lietong_1e: 4, ruku_1e: 7.07 , wanchenglv_1e: "18.6%", xinkaigong_1e: 4, yikaigong_1e: 1, kaigonglv_1e: "25.0%"},
+        { name: "泰兴市", pro_num_1e: 5,jihua_le:125.7 , year_1e: 27.0  , lietong_1e: 3, ruku_1e: 1.81 , wanchenglv_1e: "6.7%", xinkaigong_1e:  4, yikaigong_1e: 3, kaigonglv_1e: "75.0%"},
+        { name: "兴化市", pro_num_1e: 5,jihua_le:186.1 , year_1e: 26.0  , lietong_1e: 3, ruku_1e: 4.31 , wanchenglv_1e: "16.6%", xinkaigong_1e: 3, yikaigong_1e: 1, kaigonglv_1e: "33.0%"},
+        { name: "海陵区", pro_num_1e: 1,jihua_le:10.0 , year_1e: 3.0 ,    lietong_1e: 0, ruku_1e: 0.00 , wanchenglv_1e: "0.0%", xinkaigong_1e:  1, yikaigong_1e: 0, kaigonglv_1e: "0.0%"},
+        { name: "姜堰区", pro_num_1e: 6,jihua_le:120.2 , year_1e: 20.0  , lietong_1e: 3, ruku_1e: 2.35 , wanchenglv_1e: "11.8%", xinkaigong_1e: 5, yikaigong_1e: 2, kaigonglv_1e: "40.0%"},
+        { name: "医药高新区（高港区）", pro_num_1e: 5,jihua_le:145.2, year_1e: 27.0, lietong_1e: 2, ruku_1e: 5.95, wanchenglv_1e: "22%", xinkaigong_1e:   3, yikaigong_1e: 1, kaigonglv_1e: "33.0%"}
+    ];
+    // 市重点项目数据
+    const shiKey_districts = [
+        { name: "靖江市", pro_num_1e: 75,jihua_le:392.2 , year_1e:109.8  , lietong_1e:47, ruku_1e: 10.4 , wanchenglv_1e:"9.5%", xinkaigong_1e:33, yikaigong_1e: 14, kaigonglv_1e:"42.4%"},
+        { name: "泰兴市", pro_num_1e: 64,jihua_le:598.7 , year_1e:88.4  , lietong_1e: 25, ruku_1e: 7.4 , wanchenglv_1e: "8.4%", xinkaigong_1e:33, yikaigong_1e: 5, kaigonglv_1e: "15.2%"},
+        { name: "兴化市", pro_num_1e: 69,jihua_le:486.3 , year_1e:150.3  , lietong_1e:34, ruku_1e: 12.4 , wanchenglv_1e:"8.3%", xinkaigong_1e:31, yikaigong_1e: 6, kaigonglv_1e: "19.4%"},
+        { name: "海陵区", pro_num_1e: 38,jihua_le:183.2, year_1e: 62.7,    lietong_1e:6, ruku_1e:  3.5 , wanchenglv_1e: "5.6%", xinkaigong_1e:30, yikaigong_1e: 15, kaigonglv_1e:"50.0%"},
+        { name: "姜堰区", pro_num_1e: 68,jihua_le:511.4 , year_1e:123.9  , lietong_1e:36, ruku_1e: 8.6 , wanchenglv_1e: "6.9%", xinkaigong_1e:38, yikaigong_1e: 13, kaigonglv_1e:"34.2%"},
+        { name: "医药高", pro_num_1e: 46,jihua_le:254.8, year_1e: 83.7, lietong_1e:   9, ruku_1e:  4.7 , wanchenglv_1e: "5.6%", xinkaigong_1e:37, yikaigong_1e: 11, kaigonglv_1e:"29.7%"}
+    ];
+
+
+
+    // 更新首页动态数据
+    function updateHomeStats() {
+        // 排名渲染
+        renderRankList('signRankList', all_districts, 'sign_1e', '个');
+        renderRankList('recordRankList', all_districts, 'record_1e', '个');
+        renderRankList('startRankList', all_districts, 'start_1e', '个');
+        renderRankList('completeRankList', all_districts, 'complete_1e', '个');
+    }
+
+    function renderRankList(containerId, data, key, suffix, isPercent = false) {
+        const sorted = [...data].sort((a,b) => b[key] - a[key]);
+        const html = sorted.map((item, idx) => {
+            let value = isPercent ? (item[key] * 100).toFixed(2) + suffix : item[key] + suffix;
+            let medal = `${idx + 1}`;
+            return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span> ${item.name}</div><div class="rank-num">${value}</div></div>`;
+        }).join('');
+        document.getElementById(containerId).innerHTML = html;
+    }
+
+    // 图表通用函数 (柱状图)
+    function renderBarChart(elementId, xAxisData, seriesData, yName = '项目数', color = '#2c7a4d') {
+        const chart = echarts.init(document.getElementById(elementId));
+        chart.setOption({
+            grid: { top: 30, left: 45, right: 10, bottom: 25, containLabel: true },
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            xAxis: { type: 'category', data: xAxisData, axisLabel: { rotate: 30, fontSize: 10, interval: 0 } },
+            yAxis: { type: 'value', name: yName, nameStyle: { fontSize: 10 } },
+            series: [{
+                data: seriesData, type: 'bar', barWidth: '40%', itemStyle: { borderRadius: [6,6,0,0], color: color },
+                label: { show: true, position: 'top', fontSize: 10 }
+            }]
+        });
+        return chart;
+    }
+
+
+
+
+    // 初始化所有图表
+    function initAllCharts() {
+        const names = all_districts.map(d => d.name);
+        // 签约柱状图
+        // renderBarChart('signChart', names, districts.map(d => d.sign_1e), '签约项目数', '#3b82f6');
+        // renderHorizontalList('signDetailList', all_districts, 'sign_1e', null);
+
+        // 备案: 备案1亿+ 及增资扩产展示双维度 (展示备案总数柱状)
+        // renderBarChart('recordChart', names, all_districts.map(d => d.record_1e), '备案项目数(1亿+)', '#f97316');
+        // const recordHtml = [...above_districts].sort((a,b)=>b.record_1e - a.record_1e).map(d =>
+        //     `<div class="rank-item"><span>${d.name}</span><span>备案:${d.record_1e}个 / 增资扩产:${d.record_expand}个</span><span class="rank-num">${d.record_expand}个</span></div>`
+        // ).join('');
+        // document.getElementById('recordDetailList').innerHTML = recordHtml;
+
+        // 开工柱状图
+        // renderBarChart('startChart', names, all_districts.map(d => d.start_1e), '开工项目数(1亿+)', '#16a34a');
+        // const startHtml = [...all_districts].sort((a,b)=>b.start_1e - a.start_1e).map(d => {
+        //     let rate = (d.invest_rate_1e * 100).toFixed(2);
+        //     return `<div class="rank-item"><span>${d.name}</span><span>开工:${d.start_1e}个</span><span class="rank-num">投资完成率 ${rate}%</span></div>`;
+        // }).join('');
+        // document.getElementById('startDetailList').innerHTML = startHtml;
+
+        // 竣工柱状图
+        // renderBarChart('completeChart', names, all_districts.map(d => d.complete_1e), '竣工项目数(1亿+)', '#6b7280');
+        // const completeHtml = [...all_districts].sort((a,b)=>b.complete_1e - a.complete_1e).map(d =>
+        //     `<div class="rank-item"><span>${d.name}</span><span>竣工1亿+ : ${d.complete_1e}个</span><span class="tag-sm">小规模竣工:${d.complete_addMonth_small}个</span></div>`
+        // ).join('');
+        // document.getElementById('completeDetailList').innerHTML = completeHtml;
+
+        // 首页投资完成率图表(1亿+开工投资完成率)
+        // const investChart = echarts.init(document.getElementById('investRateChart'));
+        // investChart.setOption({
+        //     tooltip: { trigger: 'axis', formatter: params => `${params[0].axisValue}<br/>投资完成率: ${params[0].value}%` },
+        //     xAxis: { type: 'category', data: names, axisLabel: { rotate: 30, fontSize: 9 } },
+        //     yAxis: { type: 'value', name: '完成率 (%)' },
+        //     series: [{
+        //         data: all_districts.map(d => (d.invest_rate_1e * 100).toFixed(2)), type: 'bar', color: '#2b6e4e',
+        //         label: { show: true, position: 'top', formatter: p => p.value + '%' }
+        //     }]
+        // });
+
+        // 亿元以下投资完成额饼图
+        // createSimplePieChart('belowInvestPieChart', below_invest_districts, 'finished_invest_addMonth', '亿元以下月度新增投资');
+
+        //累计完成投资饼图
+        document.getElementById('investCompleteChart').innerHTML ='<div id="allInvestCompleteChart">这是一个饼图111111</div>'
+
+        //累计完成投资饼图
+        document.getElementById('investCompletionRateChart').innerHTML ='<div id="allInvestCompletionRateChart">这是一个柱状图22222</div>'
+    }
+
+    // 折叠/展开功能
+    function toggleCollapse(contentId, titleElement) {
+        const content = document.getElementById(contentId);
+        const isCollapsed = content.classList.contains('collapsed');
+
+        if (isCollapsed) {
+            content.classList.remove('collapsed');
+            titleElement.classList.remove('collapsed');
+        } else {
+            content.classList.add('collapsed');
+            titleElement.classList.add('collapsed');
+        }
+    }
+
+    // 筛选状态
+    let currentKeyFilter = 'shengKey';
+
+    // 签约子页面-金额筛选按钮事件处理
+    document.querySelectorAll('[data-amount-sign]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-amount-sign]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentAmountFilter = btn.getAttribute('data-amount-sign');
+            filterSignList(currentKeyFilter);
+        });
+    });
+
+    // 签约子页面-数据类型筛选按钮事件处理
+    document.querySelectorAll('[data-type-sign]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-type-sign]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentTypeFilter = btn.getAttribute('data-type-sign');
+            filterSignList(currentKeyFilter);
+        });
+    });
+
+    //签约子页面-根据金额筛选和数据类型筛选返回不同的列表
+    function filterSignList(keyFilter) {
+        const signListDiv1 = document.getElementById('proDetailList');
+        const signListDiv2 = document.getElementById('proYearDetailList');
+        const signListDiv3 = document.getElementById('proKaigongDetailList');
+        let detailHtml1 = null;
+        let detailHtml2 = null;
+        let detailHtml3 = null;
+        //全部累计
+        if (keyFilter === 'shengKey'){
+            const sortedSign1 = [...all_districts].sort((a,b)=>b.pro_num_1e - a.pro_num_1e);
+            detailHtml1 = sortedSign1.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span class="rank-num">${d.pro_num_1e}个</span></div>`
+            }).join('');
+            const sortedSign2 = [...all_districts].sort((a,b)=>b.year_1e - a.year_1e);
+            detailHtml2 = sortedSign2.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span class="rank-num">${d.year_1e}亿元</span></div>`
+            }).join('');
+            const sortedSign3 = [...all_districts].sort((a,b)=>b.lietong_1e - a.lietong_1e);
+            detailHtml3 = sortedSign3.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span class="rank-num">${d.lietong_1e}个</span></div>`
+            }).join('');
+
+        }
+        //全部当月新增
+        else if (amountFilter === 'all' && typeFilter === 'add_month'){
+            const sortedSign = [...all_districts].sort((a,b)=>b.sign_addMonth - a.sign_addMonth);
+            detailHtml = sortedSign.map((d, idx) => {
+                let medal = `${idx + 1}`;
+                return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_addMonth}个</span></div>`
+            }).join('');
+        }
+
+        signListDiv1.innerHTML = detailHtml1;
+        signListDiv2.innerHTML = detailHtml2;
+        signListDiv3.innerHTML = detailHtml3;
+    }
+
+
+    // 补充细微数据展示
+    function enhanceDataNote() {
+        // 确保签约当月新增也展示在签约子页面详细排名中丰富信息
+        const signListDiv = document.getElementById('signDetailList');
+        const recordListDiv = document.getElementById('recordDetailList');
+        const startListDiv = document.getElementById('startDetailList');
+        const completeListDiv = document.getElementById('completeDetailList');
+        const sortedSign = [...all_districts].sort((a,b)=>b.sign_1e - a.sign_1e);
+        const sortedRecord = [...all_districts].sort((a,b)=>b.record_1e - a.record_1e);
+        const sortedStart = [...all_districts].sort((a,b)=>b.start_1e - a.start_1e);
+        const sortedComplete = [...all_districts].sort((a,b)=>b.complete_1e - a.complete_1e);
+        const detailHtmlSign = sortedSign.map((d, idx) => {
+            let medal = `${idx + 1}`;
+            return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.sign_1e}个</span></div>`
+        }).join('');
+        const detailHtmlRecord = sortedRecord.map((d, idx) => {
+            let medal = `${idx + 1}`;
+            return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.record_1e}个</span></div>`
+        }).join('');
+        const detailHtmlStart = sortedStart.map((d, idx) => {
+            let medal = `${idx + 1}`;
+            return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.start_1e}个</span></div>`
+        }).join('');
+        const detailHtmlComplete = sortedComplete.map((d, idx) => {
+            let medal = `${idx + 1}`;
+            return `<div class="rank-item"><div class="rank-name"><span class="medal">${medal}</span>${d.name}</div><span>${d.complete_1e}个</span></div>`
+        }).join('');
+        signListDiv.innerHTML = detailHtmlSign;
+        recordListDiv.innerHTML = detailHtmlRecord;
+        startListDiv.innerHTML = detailHtmlStart;
+        completeListDiv.innerHTML = detailHtmlComplete;
+    }
+
+    // 初始化所有及 resize 适配
+    window.addEventListener('load', () => {
+        updateHomeStats();
+        initAllCharts();
+        enhanceDataNote();
+        setupNavigation();
+        window.addEventListener('resize', () => {
+            ['signChart','recordChart','startChart','completeChart','fixedRateChart','fourNewChart','investRateChart'].forEach(id => {
+                let dom = document.getElementById(id);
+                if(dom && echarts.getInstanceByDom(dom)) echarts.getInstanceByDom(dom).resize();
+            });
+        });
+    });
+</script>
+</body>
+</html>
