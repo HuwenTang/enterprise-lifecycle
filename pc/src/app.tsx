@@ -74,8 +74,24 @@ const localPreviewMenu = (): MenuVo[] => ([
   { path: '/industrial-smart-body', name: '工信智能体', icon: 'audit' },
   { path: '/qa-manage', name: '平台问题反馈', icon: 'infoCircle' },
   { path: '/user/user', name: '用户管理', icon: 'user' },
-  { path: '/system/settings', name: '系统管理', icon: 'setting' },
+  {
+    path: '/system',
+    name: '系统管理',
+    icon: 'setting',
+    children: [
+      { path: '/system/menu', name: '菜单管理', icon: 'table' },
+      { path: '/system/settings', name: '系统配置', icon: 'setting' },
+    ],
+  },
 ] as MenuVo[]);
+
+const filterPcMenus = (menus: MenuVo[] = []): MenuVo[] =>
+  menus
+    .filter((item) => item.endpoint === 'PC')
+    .map((item) => ({
+      ...item,
+      children: filterPcMenus(item.children ?? []),
+    }));
 
 const withTimeout = async <T,>(task: Promise<T>, fallback: T, timeout = 1800): Promise<T> => {
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -288,9 +304,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     onCollapse: onCollapse,
     menu: {
       request: async () => {
-        if (isLocalPreview()) return fixMenuItemIcon(localPreviewMenu());
-        const menuData = await withTimeout<MenuVo[]>(systemApi2.getCurrentMenu().catch(() => []), []);
-        return fixMenuItemIcon(menuData);
+        const configuredMenus = await withTimeout<MenuVo[]>(systemApi.getMenuList().catch(() => []), []);
+        const pcMenus = filterPcMenus(configuredMenus);
+        return fixMenuItemIcon(pcMenus.length > 0 ? pcMenus : localPreviewMenu());
       },
     },
     actionsRender: () => [<Question key="doc"/>],

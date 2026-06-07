@@ -1,17 +1,17 @@
 server:
-  prefer-ip-prefix: '192.168.192.'
-  pc-host: http://192.168.192.21:8000
-  h5-host: http://192.168.0.224:5173
+  prefer-ip-prefix: '127.0.0.'
+  pc-host: http://localhost:8000
+  h5-host: http://localhost:5173
 
 spring:
   datasource:
-    url: jdbc:mysql://192.168.192.2:3306/enterprise_lifecycle
+    url: jdbc:mysql://localhost:3306/enterprise_lifecycle
     username: enterprise_lifecycle
     password: enterprise_lifecycle
   data:
     redis:
-      host: 192.168.192.2
-      database: 35
+      host: localhost
+      database: 0
 
 springdoc:
   api-docs:
@@ -20,12 +20,12 @@ springdoc:
 mybatis-flex:
   datasource:
     gong-gai:
-      url: jdbc:mysql://172.22.71.96:3306/gonggai
+      url: jdbc:mysql://localhost:3306/gonggai
       username: enterprise_lifecycle
       password: enterprise_lifecycle
       read-only: true
     invest-online:
-      url: jdbc:mysql://172.22.26.71:54930/invest_online
+      url: jdbc:mysql://localhost:3306/invest_online
       username: zs_test
       password: Dj3wGnmur5SV
       read-only: true
@@ -35,7 +35,7 @@ logging:
 
 s3:
   provider: minio
-  endpoint: http://192.168.192.25:9000
+  endpoint: http://localhost:9000
   bucket: house-repairing
   access-key: 'm14Un3bKm2b83sTOFr4e'
   secret-key: 'thrUmEo3rnIXS9EhrZqIwEzbECtf3JklfH0RMyRa'

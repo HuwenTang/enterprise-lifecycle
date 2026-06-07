@@ -1,5 +1,5 @@
 mysql:
-  host: '192.168.192.2'
+  host: localhost
   username: 'enterprise_lifecycle'
   password: 'enterprise_lifecycle'
   schema: 'enterprise_lifecycle'
